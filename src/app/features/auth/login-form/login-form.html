@@ -1,0 +1,22 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <h2 class="login-title">Iniciar sesión</h2>
+
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Usuario</mat-label>
+        <input matInput formControlName="username" autocomplete="username" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" autocomplete="current-password" />
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" class="login-button" [disabled]="form.invalid" (click)="login()">
+        <mat-icon>login</mat-icon>
+        Ingresar
+      </button>
+    </form>
+  </mat-card>
+</div>

@@ -1,0 +1,11 @@
+<div class="context-container">
+  <mat-card class="context-card">
+    <h2 class="context-title">Selecciona tu franquicia y punto de venta</h2>
+
+    <app-work-context-selector
+      [franchises]="franchises"
+      [stores]="stores"
+      (contextSelected)="onContextSelected($event)">
+    </app-work-context-selector>
+  </mat-card>
+</div>
