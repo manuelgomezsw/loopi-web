@@ -1,0 +1,12 @@
+.mat-table-custom {
+  width: 100%;
+}
+
+.centered {
+  text-align: center;
+}
+
+mat-header-cell, mat-cell {
+  padding: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}

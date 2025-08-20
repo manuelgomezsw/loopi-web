@@ -1,0 +1,37 @@
+<app-page-title entityName="Puntos de venta"></app-page-title>
+
+<a class="create-link" [routerLink]="['/admin/stores/new']">
+  Nuevo punto de venta
+</a>
+<mat-table class="mat-mdc-table mat-mdc-table-responsive">
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+    <mat-cell *matCellDef="let f">{{ f.name }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="location">
+    <mat-header-cell *matHeaderCellDef>Ubicación</mat-header-cell>
+    <mat-cell *matCellDef="let f">
+      <mat-icon color="primary">{{ f.active ? 'check_circle' : 'cancel' }}</mat-icon>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="address">
+    <mat-header-cell *matHeaderCellDef>Dirección</mat-header-cell>
+    <mat-cell *matCellDef="let f">
+      <mat-icon color="primary">{{ f.active ? 'check_circle' : 'cancel' }}</mat-icon>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="active">
+    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+    <mat-cell *matCellDef="let f">{{ f.location || '—' }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let f">
+      <button mat-icon-button color="primary" [routerLink]="['/admin/franchises', f.id, 'edit']">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columnsToDisplay"></mat-row>
+</mat-table>

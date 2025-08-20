@@ -1,0 +1,23 @@
+<h2>Selecciona la franquicia y punto de venta</h2>
+
+<div class="form-row form-row--2">
+  <mat-form-field appearance="outline">
+    <mat-label>Franquicia</mat-label>
+    <mat-select [(value)]="selectedFranchiseId">
+      <mat-option *ngFor="let f of franchises" [value]="f.id">{{ f.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Punto de venta</mat-label>
+    <mat-select [(value)]="selectedStoreId" [disabled]="!selectedFranchiseId">
+      <mat-option *ngFor="let s of filteredStores" [value]="s.id">{{ s.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="footer">
+  <button mat-flat-button color="primary" (click)="confirm()" [disabled]="!selectedFranchiseId || !selectedStoreId">
+    Confirmar
+  </button>
+</div>

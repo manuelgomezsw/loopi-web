@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.active {
+  font-weight: bold;
+  color: #1976d2; /* color primario Material */
+}
+
+/* Contenido principal */
+.content {
+  padding: 24px 32px;
+}
+
+.create-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #1976d2; /* color primario */
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  margin-bottom: 16px;
+}
+
+.create-link:hover {
+  color: #0d47a1; /* azul más oscuro */
+  text-decoration: underline;
+  text-underline-offset: 4px; /* más separado del texto */
+}

@@ -1,0 +1,18 @@
+/* Estilos para las columnas dentro de los formularios principales */
+.form-row {
+  display: grid;
+  gap: 16px;
+  align-items: end;
+}
+
+.form-row--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.form-row--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.full-width {
+  width: 100%;
+}

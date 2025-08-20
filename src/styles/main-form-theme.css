@@ -1,0 +1,53 @@
+/* Estilos para los formularios principales */
+.main-form {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.main-form-card {
+  width: 70%;
+  margin: 0 auto; /* Para centrar horizontalmente */
+  background-color: #FFFFFF;
+}
+
+.main-form-input {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Estilos para los títulos dentro de los formularios principales */
+.form-section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #546e7a;
+  padding-bottom: 18px;
+  margin-top: 4px;
+}
+
+/* Para iPhones medianos y grandes */
+@media (max-width: 430px) {
+  .main-form-card {
+    width: 90%;
+    margin: 0 auto; /* Para centrar horizontalmente */
+    background-color: #FFFFFF;
+  }
+}
+
+/* Para pantallas de escritorio estándar */
+@media (min-width: 1024px) {
+  .main-form-card {
+    width: 90%;
+    margin: 0 auto; /* Para centrar horizontalmente */
+    background-color: #FFFFFF;
+  }
+}
+
+/* Para pantallas de escritorio grandes */
+@media (min-width: 1440px) {
+  .main-form-card {
+    width: 70%;
+    margin: 0 auto; /* Para centrar horizontalmente */
+    background-color: #FFFFFF;
+  }
+}

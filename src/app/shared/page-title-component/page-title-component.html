@@ -1,0 +1,11 @@
+<section class="page-header">
+  @if (mode === formHeaderEnum.New) {
+    <h1>New {{ entityName }}</h1>
+  }
+  @else if (mode === formHeaderEnum.Edit) {
+    <h1>Edit {{ entityName }}</h1>
+  }
+  @else {
+    <h1>{{ entityName }}</h1>
+  }
+</section>

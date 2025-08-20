@@ -1,0 +1,14 @@
+/* Estilos para los footer de los formularios principales */
+.main-form-footer {
+  padding: 10px;
+  display: flex;
+  gap: 8px; /* opcional: espacio entre botones */
+}
+
+.main-form-footer--left {
+  justify-content: flex-start;
+}
+
+.main-form-footer--right {
+  justify-content: flex-end;
+}

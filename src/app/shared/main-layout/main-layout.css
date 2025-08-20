@@ -1,0 +1,61 @@
+.main-layout-spacer {
+  flex: 1 1 auto;
+}
+
+.main-layout-icon {
+  color: #005cbb;
+}
+
+.arrow-icon {
+  font-size: 18px;
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+}
+
+.arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.main-layout-context-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.context-label {
+  font-size: 14px;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+/* 🔽 Menú hamburguesa: oculto por defecto */
+.menu-toggle {
+  display: none;
+}
+
+/* 📱 Responsive: iPhone, pantallas < 768px */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: inline-flex !important;
+  }
+
+  .main-layout-icon,
+  .main-layout-context-button,
+  button[mat-button] {
+    display: none !important;
+  }
+
+  .context-label {
+    display: none;
+  }
+}
+
+/* 💻 Escritorio o tablets medianas (iPad en portrait) */
+@media (min-width: 401px) and (max-width: 800px) {
+  .context-label {
+    max-width: 120px;
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,34 @@
+.mdc-data-table__header-row {
+  background-color: #dbe9f7 !important;
+}
+
+.mdc-data-table__header-cell {
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px;
+}
+
+.mdc-data-table__row:nth-of-type(even) {
+  background-color: #fafafa; /*f9f7f7*/
+}
+
+.mdc-data-table__row:nth-of-type(odd) {
+  background-color: #ffffff;
+}
+
+.mdc-data-table__cell {
+  font-size: 14px;
+  color: #333333;
+  padding: 12px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.mdc-data-table__table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Permite el desplazamiento horizontal */
+}
+
+.mdc-data-table__table-responsive table {
+  white-space: nowrap; /* Evita que el texto salte de línea */
+}

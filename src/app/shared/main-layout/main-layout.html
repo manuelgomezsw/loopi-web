@@ -1,0 +1,70 @@
+<mat-toolbar color="primary">
+
+  <!-- 📱 Botón hamburguesa para móviles -->
+  <button mat-icon-button class="menu-toggle" (click)="menuTrigger.openMenu()" #menuTrigger="matMenuTrigger"
+          [matMenuTriggerFor]="responsiveMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <!-- 💻 Menú horizontal (visible solo en desktop) -->
+  <button mat-button [matMenuTriggerFor]="belowParameters" #menuParametersTrigger="matMenuTrigger">
+    Parámetros
+    <mat-icon
+      class="arrow-icon"
+      [class.rotated]="menuParametersTrigger.menuOpen">
+      keyboard_arrow_down
+    </mat-icon>
+  </button>
+
+  <mat-menu #belowParameters="matMenu" yPosition="below">
+    <button mat-menu-item routerLink="/admin/franchises">Franquicias</button>
+    <button mat-menu-item routerLink="/admin/stores">Puntos de venta</button>
+    <button mat-menu-item routerLink="/quotes/new">Variables de entorno</button>
+  </mat-menu>
+
+  <button mat-button routerLink="/employees">Empleados</button>
+
+  <button mat-button [matMenuTriggerFor]="belowShifts" #menuShiftsTrigger="matMenuTrigger">
+    Turnos
+    <mat-icon
+      class="arrow-icon"
+      [class.rotated]="menuShiftsTrigger.menuOpen">
+      keyboard_arrow_down
+    </mat-icon>
+  </button>
+
+  <mat-menu #belowShifts="matMenu" yPosition="below">
+    <button mat-menu-item routerLink="/shifts/config/list">Configurar</button>
+    <button mat-menu-item routerLink="/shifts">Planear</button>
+  </mat-menu>
+
+  <span class="main-layout-spacer"></span>
+
+  <button mat-icon-button class="main-layout-icon" aria-label="Notificaciones">
+    <mat-icon>notifications</mat-icon>
+  </button>
+
+  <button mat-button class="main-layout-context-button" [matMenuTriggerFor]="belowAccount">
+    <mat-icon>person</mat-icon>
+    <span class="context-label" [matTooltip]="franchiseLabel + ' | ' + storeLabel">
+      {{ franchiseLabel }} | {{ storeLabel }}
+    </span>
+  </button>
+
+  <mat-menu #belowAccount="matMenu" yPosition="below">
+    <button mat-menu-item (click)="openContextSelector()">
+      Cambiar franquicia y punto de venta
+    </button>
+    <button mat-menu-item routerLink="/quotes/search">Información de la cuenta</button>
+    <button mat-menu-item routerLink="/quotes/new">Cerrar sesión</button>
+  </mat-menu>
+</mat-toolbar>
+
+<!-- 📱 Menú responsivo oculto en desktop -->
+<mat-menu #responsiveMenu="matMenu">
+  <button mat-menu-item routerLink="/admin/franchises">Franquicias</button>
+  <button mat-menu-item routerLink="/admin/stores">Puntos de venta</button>
+  <button mat-menu-item routerLink="/employees">Empleados</button>
+  <button mat-menu-item routerLink="/shifts/config/list">Turnos: Configurar</button>
+  <button mat-menu-item routerLink="/shifts">Turnos: Planear</button>
+</mat-menu>

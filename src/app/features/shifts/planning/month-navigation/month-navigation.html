@@ -1,0 +1,11 @@
+<div class="month-navigation">
+  <button mat-icon-button (click)="previousMonth()">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
+  <h2>{{ currentMonth | date: 'MMMM yyyy' | titlecase }}</h2>
+
+  <button mat-icon-button (click)="nextMonth()">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+</div>

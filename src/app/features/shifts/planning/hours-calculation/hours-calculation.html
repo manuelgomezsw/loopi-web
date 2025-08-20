@@ -1,0 +1,44 @@
+<app-page-title entityName="Horas laboradas"></app-page-title>
+
+<a class="create-link" routerLink="absence/new">
+  Registrar ausencia
+</a>
+<mat-card>
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z1 mat-table-custom">
+    <ng-container matColumnDef="employee">
+      <mat-header-cell *matHeaderCellDef>Empleado</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.employee }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ordinary">
+      <mat-header-cell *matHeaderCellDef>Horas Ordinarias</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.ordinary }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="extra">
+      <mat-header-cell *matHeaderCellDef>Extras</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.extra }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="sunday">
+      <mat-header-cell *matHeaderCellDef>Dominicales</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.sunday }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="absences">
+      <mat-header-cell *matHeaderCellDef>Ausencias</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-icon class="absence-icon"
+                  *ngIf="row.hasAbsences"
+                  (click)="viewAbsences(row.employee)"
+                  matTooltip="Ver ausencias">
+          visibility
+        </mat-icon>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnsToDisplay">
+    </mat-row>
+  </mat-table>
+</mat-card>

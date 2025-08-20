@@ -1,0 +1,39 @@
+<app-page-title entityName="Turnos configurados"></app-page-title>
+
+<a class="create-link" [routerLink]="['/shifts/config/new']">
+  Configurar turno
+</a>
+<mat-table class="mat-mdc-table mat-mdc-table-responsive">
+  <ng-container matColumnDef="shift">
+    <mat-header-cell *matHeaderCellDef>Turno</mat-header-cell>
+    <mat-cell *matCellDef="let f">{{ f.name }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="startTime">
+    <mat-header-cell *matHeaderCellDef>Hora inicio</mat-header-cell>
+    <mat-cell *matCellDef="let f">
+      <mat-icon color="primary">{{ f.active ? 'check_circle' : 'cancel' }}</mat-icon>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="endTime">
+    <mat-header-cell *matHeaderCellDef>Hora fin</mat-header-cell>
+    <mat-cell *matCellDef="let f">{{ f.location || '—' }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="lunchTime">
+    <mat-header-cell *matHeaderCellDef>Minutos almuerzo</mat-header-cell>
+    <mat-cell *matCellDef="let f">{{ f.location || '—' }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="workDays">
+    <mat-header-cell *matHeaderCellDef>Días</mat-header-cell>
+    <mat-cell *matCellDef="let f">{{ f.location || '—' }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let f">
+      <button mat-icon-button color="primary" [routerLink]="['/config', f.id, 'edit']">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columnsToDisplay"></mat-row>
+</mat-table>

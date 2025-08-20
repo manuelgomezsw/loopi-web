@@ -1,0 +1,7 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ label }}</mat-label>
+  <mat-select [value]="value" (selectionChange)="updateValue($event.value)">
+    <mat-option [value]="true">Activo</mat-option>
+    <mat-option [value]="false">Inactivo</mat-option>
+  </mat-select>
+</mat-form-field>

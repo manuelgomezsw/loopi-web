@@ -1,0 +1,56 @@
+<app-page-title entityName="Empleado"></app-page-title>
+
+<div class="main-form">
+  <mat-card class="main-form-card" appearance="outlined">
+    <mat-card-content>
+      <form class="main-form-input">
+        <div class="form-row form-row--2">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombres</mat-label>
+            <input matInput type="text" name="firstName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input matInput type="text" name="lastName" />
+          </mat-form-field>
+        </div>
+        <div class="form-row form-row--2">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de documento</mat-label>
+            <mat-select>
+              <mat-option [value]="'CC'">Cédula de Ciudadanía</mat-option>
+              <mat-option [value]="'CE'">Cédula de Extranjería</mat-option>
+              <mat-option [value]="'PA'">Pasaporte</mat-option>
+              <mat-option [value]="'PTP'">Permisos especiales</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Número de documento</mat-label>
+            <input matInput type="text" name="documentNumber" />
+          </mat-form-field>
+        </div>
+        <div class="form-row form-row--2">
+          <mat-form-field appearance="outline">
+            <mat-label>Número de contacto</mat-label>
+            <input matInput type="text" name="phone" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput type="text" name="email" />
+          </mat-form-field>
+        </div>
+        <div class="form-row form-row--2">
+          <app-status-select class="full-width"></app-status-select>
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-card-footer class="main-form-footer main-form-footer--left">
+      <button mat-flat-button type="button" color="primary">
+        {{ 'GUARDAR' }}
+      </button>
+      <button mat-button class="btn-cancel" routerLink="/employees">
+        CANCELAR
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</div>
