@@ -46,8 +46,8 @@
 
   <button mat-button class="main-layout-context-button" [matMenuTriggerFor]="belowAccount">
     <mat-icon>person</mat-icon>
-    <span class="context-label" [matTooltip]="franchiseLabel + ' | ' + storeLabel">
-      {{ franchiseLabel }} | {{ storeLabel }}
+    <span class="context-label" [matTooltip]="context?.franchiseName + ' | ' + context?.storeName">
+      {{ context?.franchiseName }} | {{ context?.storeName }}
     </span>
   </button>
 
@@ -56,7 +56,7 @@
       Cambiar franquicia y punto de venta
     </button>
     <button mat-menu-item routerLink="/quotes/search">Información de la cuenta</button>
-    <button mat-menu-item routerLink="/quotes/new">Cerrar sesión</button>
+    <button mat-menu-item (click)="logout()">Cerrar sesión</button>
   </mat-menu>
 </mat-toolbar>
 
@@ -68,3 +68,7 @@
   <button mat-menu-item routerLink="/shifts/config/list">Turnos: Configurar</button>
   <button mat-menu-item routerLink="/shifts">Turnos: Planear</button>
 </mat-menu>
+
+<main class="content">
+  <router-outlet></router-outlet>
+</main>

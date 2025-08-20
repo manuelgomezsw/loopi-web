@@ -3,7 +3,6 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(to bottom right, #e3f2fd, #ffffff);
   padding: 16px;
 }
 
@@ -42,4 +41,16 @@
 
 .login-button:hover {
   background-color: #1565c0;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.logo-wrapper img {
+  max-height: 64px;
+  width: auto;
+  filter: grayscale(100%) brightness(0.5); /* opcional para un look sobrio */
 }

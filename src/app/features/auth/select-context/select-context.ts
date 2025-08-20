@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 import {Franchise} from '../../../model/franchise';
 import {WorkContextSelectorComponent} from '../../../shared/work-context-selector/work-context-selector';
+import {WorkContextService} from '../../../core/services/work-context/work-context';
 
 @Component({
   selector: 'app-select-context',
@@ -17,8 +18,6 @@ import {WorkContextSelectorComponent} from '../../../shared/work-context-selecto
   ]
 })
 export class SelectContextComponent {
-  router: Router | undefined;
-
   franchises: Franchise[] = [
     {id: 1, name: 'Urbania', location: '', active: true},
     {id: 2, name: 'Madelo', location: '', active: true}
@@ -29,6 +28,9 @@ export class SelectContextComponent {
     {id: 102, name: 'San Nicolás', franchiseId: 1},
     {id: 201, name: 'Vayúh', franchiseId: 2}
   ];
+
+  constructor(private router: Router, private workContextService: WorkContextService) {
+  }
 
   onContextSelected(ctx: { franchiseId: number; storeId: number }) {
     const franchise = this.franchises.find(f => f.id === ctx.franchiseId);
@@ -41,6 +43,7 @@ export class SelectContextComponent {
       storeName: store?.name ?? ''
     };
 
-    this.router?.navigate(['/home']);
+    this.workContextService.set(context);
+    this.router.navigate(['/home']);
   }
 }

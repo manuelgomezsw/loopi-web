@@ -18,7 +18,7 @@ import {Router} from '@angular/router';
     MatButtonModule,
     MatCardModule,
     ReactiveFormsModule,
-    MatIcon
+    MatIcon,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css'
@@ -35,6 +35,7 @@ export class LoginFormComponent {
 
   login(): void {
     if (this.form.valid) {
+      localStorage.setItem('authToken', 'token_ejemplo');
       this.router.navigate(['/auth/select-context']);
       // Aquí iría tu lógica de autenticación (servicio, token, etc.)
     }

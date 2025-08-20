@@ -3,11 +3,13 @@ import {MatToolbar} from '@angular/material/toolbar';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {WorkContextSelectorComponent} from '../work-context-selector/work-context-selector';
 import {MatTooltip} from '@angular/material/tooltip';
 import {Franchise} from '../../model/franchise';
+import {AuthService} from '../../core/services/auth-service/auth-service';
+import {WorkContextService} from '../../core/services/work-context/work-context';
 
 @Component({
   selector: 'app-main-layout',
@@ -21,17 +23,24 @@ import {Franchise} from '../../model/franchise';
     MatMenuItem,
     RouterLink,
     MatTooltip,
+    RouterOutlet,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css'
 })
 export class MainLayoutComponent implements OnInit {
   private dialog = inject(MatDialog);
-
   franchises: Franchise[] = [];
   stores: Store[] = [];
-
   context: WorkContext | null = null;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private workContextService: WorkContextService
+  ) {
+    this.context = this.workContextService.get();
+  }
 
   ngOnInit(): void {
     this.loadFranchisesAndStores();
@@ -98,5 +107,10 @@ export class MainLayoutComponent implements OnInit {
 
   get storeLabel(): string {
     return this.context?.storeName ?? 'Jardines Llanogrande';
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
   }
 }
