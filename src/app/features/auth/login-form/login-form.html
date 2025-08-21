@@ -1,12 +1,8 @@
 <div class="login-container">
   <mat-card class="login-card">
-
-    <!-- ✨ Logo minimalista -->
     <div class="logo-wrapper">
-      <img src="/assets/logo.webp" alt="Logo" height="127" width="349"/>
+      <img src="./assets/logo.webp" alt="Logo" height="127" width="349"/>
     </div>
-
-    <h2 class="login-title">Iniciar sesión</h2>
 
     <form [formGroup]="form">
       <mat-form-field appearance="outline" class="full-width">
@@ -19,7 +15,7 @@
         <input matInput type="password" formControlName="password" autocomplete="current-password" />
       </mat-form-field>
 
-      <button mat-flat-button color="primary" class="login-button" [disabled]="form.invalid" (click)="login()">
+      <button mat-flat-button class="login-button" [disabled]="form.invalid" (click)="login()">
         <mat-icon>login</mat-icon>
         Ingresar
       </button>

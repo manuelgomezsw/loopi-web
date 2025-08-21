@@ -1,6 +1,4 @@
-<h2>Selecciona la franquicia y punto de venta</h2>
-
-<div class="form-row form-row--2">
+<div class="form-row form-row--1">
   <mat-form-field appearance="outline">
     <mat-label>Franquicia</mat-label>
     <mat-select [(value)]="selectedFranchiseId">
@@ -17,7 +15,7 @@
 </div>
 
 <div class="footer">
-  <button mat-flat-button color="primary" (click)="confirm()" [disabled]="!selectedFranchiseId || !selectedStoreId">
+  <button mat-flat-button class="loopi-button-primary" (click)="confirm()" [disabled]="!selectedFranchiseId || !selectedStoreId">
     Confirmar
   </button>
 </div>

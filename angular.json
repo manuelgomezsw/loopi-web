@@ -19,16 +19,24 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              { "glob": "**/*", "input": "public" },
-              { "glob": "**/*", "input": "src/assets" }
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/custom-theme.scss",
               "src/styles.css",
-              "src/styles/main-form-theme.css",
-              "src/styles/main-form-footer.css",
-              "src/styles/main-form-row.css",
-              "src/styles/table-theme.css"
+              "src/styles/loopi-button-theme.css",
+              "src/styles/loopi-form-footer.css",
+              "src/styles/loopi-form-row.css",
+              "src/styles/loopi-form-theme.css",
+              "src/styles/loopi-table-theme.css"
             ]
           },
           "configurations": {
@@ -79,8 +87,15 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              { "glob": "**/*", "input": "public" },
-              { "glob": "**/*", "input": "src/assets" }
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/styles.css"

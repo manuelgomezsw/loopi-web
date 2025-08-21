@@ -1,0 +1,50 @@
+/* 🔵 Primario (azul claro → azul intenso) */
+.loopi-button-primary {
+  background-color: #3B82F6 !important;
+  color: white !important;
+  transition: background-color 0.3s ease;
+}
+
+.loopi-button-primary:hover {
+  background-color: #2563EB !important;
+}
+
+.loopi-button-primary:disabled {
+  background-color: #93C5FD !important; /* Azul muy claro */
+  color: white !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ✅ Éxito (verde vibrante → verde más profundo) */
+.loopi-button-success {
+  background-color: #10B981 !important;
+  color: white !important;
+  transition: background-color 0.3s ease;
+}
+
+.loopi-button-success:hover {
+  background-color: #059669 !important;
+}
+
+/* ⚠️ Advertencia (naranja suave → naranja fuerte) */
+.loopi-button-warn {
+  background-color: #F59E0B !important;
+  color: white !important;
+  transition: background-color 0.3s ease;
+}
+
+.loopi-button-warn:hover {
+  background-color: #D97706 !important;
+}
+
+/* 🧊 Neutral (gris cálido → gris más intenso) */
+.loopi-button-neutral {
+  background-color: #E5E7EB !important;
+  color: #111827 !important;
+  transition: background-color 0.3s ease;
+}
+
+.loopi-button-neutral:hover {
+  background-color: #D1D5DB !important;
+}
