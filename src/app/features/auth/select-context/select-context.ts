@@ -1,10 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
-import {Franchise} from '../../../model/franchise';
 import {WorkContextSelectorComponent} from '../../../shared/work-context-selector/work-context-selector';
-import {WorkContextService} from '../../../core/services/work-context/work-context';
+import {AuthService} from '../../../core/services/auth/auth-service';
 
 @Component({
   selector: 'app-select-context',
@@ -18,32 +17,26 @@ import {WorkContextService} from '../../../core/services/work-context/work-conte
   ]
 })
 export class SelectContextComponent {
-  franchises: Franchise[] = [
-    {id: 1, name: 'Urbania', location: '', active: true},
-    {id: 2, name: 'Madelo', location: '', active: true}
-  ];
+  private router = inject(Router);
+  private auth = inject(AuthService);
 
-  stores: Store[] = [
-    {id: 101, name: 'Jardines Llanogrande', franchiseId: 1},
-    {id: 102, name: 'San Nicolás', franchiseId: 1},
-    {id: 201, name: 'Vayúh', franchiseId: 2}
-  ];
+  franchises: any[] = [];
+  stores: any[] = [];
 
-  constructor(private router: Router, private workContextService: WorkContextService) {
-  }
+  onContextSelected(ctx: WorkContext): void {
+    this.auth.selectContext({
+      franchise_id: ctx.franchiseID,
+      store_id: ctx.storeID
+    }).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('work-context', JSON.stringify(ctx));
 
-  onContextSelected(ctx: { franchiseId: number; storeId: number }) {
-    const franchise = this.franchises.find(f => f.id === ctx.franchiseId);
-    const store = this.stores.find(s => s.id === ctx.storeId);
-
-    const context: WorkContext = {
-      franchiseId: ctx.franchiseId,
-      storeId: ctx.storeId,
-      franchiseName: franchise?.name ?? '',
-      storeName: store?.name ?? ''
-    };
-
-    this.workContextService.set(context);
-    this.router.navigate(['/home']);
+        this.router.navigate(['/home']);
+      },
+      error: () => {
+        alert('No se pudo establecer el contexto.');
+      }
+    });
   }
 }

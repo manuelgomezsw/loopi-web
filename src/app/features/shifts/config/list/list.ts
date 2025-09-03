@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -8,10 +8,12 @@ import {
   MatHeaderRowDef,
   MatRow, MatRowDef, MatTable
 } from '@angular/material/table';
-import {MatIconButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
+import {ShiftService} from '../../../../core/services/shift/shift';
+import {Shift} from '../../../../model/shift';
+import {TitleCasePipe} from '@angular/common';
 
 @Component({
   selector: 'app-shift-list',
@@ -24,16 +26,41 @@ import {PageTitleComponent} from '../../../../shared/page-title-component/page-t
     MatHeaderRow,
     MatHeaderRowDef,
     MatIcon,
-    MatIconButton,
     MatRow,
     MatRowDef,
     MatTable,
     RouterLink,
     MatHeaderCellDef,
+    TitleCasePipe,
   ],
   templateUrl: './list.html',
   styleUrl: './list.css'
 })
-export class ShiftConfigListComponent {
+export class ShiftConfigListComponent implements OnInit {
   columnsToDisplay = ['shift', 'startTime', 'endTime', 'lunchTime', 'workDays', 'actions'];
+
+  shifts: Shift[] = [];
+  loading = false;
+  error = '';
+
+  constructor(private shiftService: ShiftService) {
+  }
+
+  ngOnInit(): void {
+    this.fetchShifts();
+  }
+
+  fetchShifts(): void {
+    this.loading = true;
+    this.shiftService.getAll().subscribe({
+      next: (data) => {
+        this.shifts = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Error al cargar los turnos';
+        this.loading = false;
+      }
+    });
+  }
 }

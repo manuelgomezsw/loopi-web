@@ -1,6 +1,6 @@
 interface WorkContext {
-  franchiseId: number;
-  storeId: number;
+  franchiseID: number;
+  storeID: number;
   franchiseName: string;
   storeName: string;
 }

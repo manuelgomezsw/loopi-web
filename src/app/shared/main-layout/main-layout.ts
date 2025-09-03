@@ -8,8 +8,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {WorkContextSelectorComponent} from '../work-context-selector/work-context-selector';
 import {MatTooltip} from '@angular/material/tooltip';
 import {Franchise} from '../../model/franchise';
-import {AuthService} from '../../core/services/auth-service/auth-service';
 import {WorkContextService} from '../../core/services/work-context/work-context';
+import {AuthService} from '../../core/services/auth/auth-service';
 
 @Component({
   selector: 'app-main-layout',
@@ -84,7 +84,7 @@ export class MainLayoutComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      /*if (result) {
         const franchise = this.franchises.find(f => f.id === result.franchiseId);
         const store = this.stores.find(s => s.id === result.storeId);
 
@@ -96,7 +96,7 @@ export class MainLayoutComponent implements OnInit {
         };
 
         localStorage.setItem('work-context', JSON.stringify(this.context));
-      }
+      }*/
     });
   }
 

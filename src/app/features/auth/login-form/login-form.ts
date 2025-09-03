@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {Router} from '@angular/router';
+import {AuthService} from '../../../core/services/auth/auth-service';
 
 @Component({
   selector: 'app-login-form',
@@ -24,20 +25,31 @@ import {Router} from '@angular/router';
   styleUrl: './login-form.css'
 })
 export class LoginFormComponent {
-  form: FormGroup;
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-  }
+  form = this.fb.group({
+    email: ['', Validators.required],
+    password: ['', Validators.required]
+  });
 
   login(): void {
-    if (this.form.valid) {
-      localStorage.setItem('authToken', 'token_ejemplo');
-      this.router.navigate(['/auth/select-context']);
-      // Aquí iría tu lógica de autenticación (servicio, token, etc.)
-    }
+    if (this.form.invalid) return;
+
+    const credentials = {
+      email: this.form.value.email!,
+      password: this.form.value.password!
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/auth/select-context']);
+      },
+      error: () => {
+        alert('Credenciales incorrectas');
+      }
+    });
   }
 }

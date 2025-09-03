@@ -4,7 +4,7 @@ import {CanActivateChildFn, Router} from '@angular/router';
 export const AuthGuard: CanActivateChildFn = (route, state) => {
   const router = inject(Router);
 
-  const isLoggedIn = !!localStorage.getItem('authToken'); // o 'session', 'user', etc.
+  const isLoggedIn = !!localStorage.getItem('token');
 
   if (!isLoggedIn) {
     return router.createUrlTree(['/auth/login']);

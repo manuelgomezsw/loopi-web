@@ -10,15 +10,11 @@
             <input matInput type="text" name="shiftName"/>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Días contemplados</mat-label>
-            <mat-select multiple>
-              <mat-option [value]="'LUN'">Lunes</mat-option>
-              <mat-option [value]="'MAR'">Martes</mat-option>
-              <mat-option [value]="'MIE'">Miércoles</mat-option>
-              <mat-option [value]="'JUE'">Jueves</mat-option>
-              <mat-option [value]="'VIE'">Viernes</mat-option>
-              <mat-option [value]="'SAB'">Sábado</mat-option>
-              <mat-option [value]="'DOM'">Domingo</mat-option>
+            <mat-label>Periodo</mat-label>
+            <mat-select>
+              <mat-option [value]="'semanal'">Semanal</mat-option>
+              <mat-option [value]="'quincenal'">Quincenal</mat-option>
+              <mat-option [value]="'mensual'">Mensual</mat-option>
             </mat-select>
           </mat-form-field>
         </div>

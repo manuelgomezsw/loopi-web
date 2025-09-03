@@ -1,18 +1,16 @@
 import {inject} from '@angular/core';
 import {CanActivateFn, Router} from '@angular/router';
-import {WorkContextService} from '../services/work-context/work-context';
 
 export const WorkContextGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const contextService = inject(WorkContextService);
+  const workContext = JSON.parse(localStorage.getItem('work-context') || '{}');
 
-  const context = contextService.get(); // o contextService.context() si usás signal
+  const hasFranchise = !!workContext.franchiseID;
+  const hasStore = !!workContext.storeID;
 
-  const hasContext = context?.franchiseId && context?.storeId;
-
-  if (!hasContext) {
-    return router.createUrlTree(['/auth/select-context']);
+  if (hasFranchise && hasStore) {
+    return true;
   }
 
-  return true;
+  return router.parseUrl('/auth/select-context');
 };

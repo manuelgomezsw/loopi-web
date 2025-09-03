@@ -1,21 +1,27 @@
 <div class="form-row form-row--1">
+  <!-- Franquicia -->
   <mat-form-field appearance="outline">
     <mat-label>Franquicia</mat-label>
-    <mat-select [(value)]="selectedFranchiseId">
-      <mat-option *ngFor="let f of franchises" [value]="f.id">{{ f.name }}</mat-option>
+    <mat-select [(ngModel)]="workContext.franchiseID" name="franchise" (selectionChange)="onFranchiseSelected()">
+      @for (f of franchises; track f.id) {
+        <mat-option [value]="f.id">{{ f.name }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 
+  <!-- Punto de venta -->
   <mat-form-field appearance="outline">
     <mat-label>Punto de venta</mat-label>
-    <mat-select [(value)]="selectedStoreId" [disabled]="!selectedFranchiseId">
-      <mat-option *ngFor="let s of filteredStores" [value]="s.id">{{ s.name }}</mat-option>
+    <mat-select [(ngModel)]="workContext.storeID" name="store">
+      @for (s of stores; track s.id) {
+        <mat-option [value]="s.id">{{ s.name }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 </div>
 
 <div class="footer">
-  <button mat-flat-button class="loopi-button-primary" (click)="confirm()" [disabled]="!selectedFranchiseId || !selectedStoreId">
+  <button mat-flat-button class="loopi-button-primary" (click)="confirm()" [disabled]="!workContext.franchiseID || !workContext.storeID">
     Confirmar
   </button>
 </div>
