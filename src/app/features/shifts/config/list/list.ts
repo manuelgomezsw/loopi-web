@@ -14,6 +14,7 @@ import {PageTitleComponent} from '../../../../shared/page-title-component/page-t
 import {ShiftService} from '../../../../core/services/shift/shift';
 import {Shift} from '../../../../model/shift';
 import {TitleCasePipe} from '@angular/common';
+import {TimeFormatPipe} from '../../../../shared/time-format-pipe';
 
 @Component({
   selector: 'app-shift-list',
@@ -32,6 +33,7 @@ import {TitleCasePipe} from '@angular/common';
     RouterLink,
     MatHeaderCellDef,
     TitleCasePipe,
+    TimeFormatPipe,
   ],
   templateUrl: './list.html',
   styleUrl: './list.css'

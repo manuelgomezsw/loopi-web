@@ -1,28 +1,53 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatOptionModule} from '@angular/material/core';
+import {Component, forwardRef} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 
 @Component({
   selector: 'app-status-select',
-  standalone: true,
   templateUrl: './status-select.html',
-  styleUrls: ['./status-select.css'],
   imports: [
-    CommonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatOptionModule
+    MatFormField,
+    MatFormField,
+    MatSelect,
+    MatLabel,
+    MatOption
+  ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => StatusSelectComponent),
+      multi: true
+    }
   ]
 })
-export class StatusSelectComponent {
-  @Input() label: string = 'Estado';
-  @Input() value: boolean | null = null;
-  @Output() valueChange = new EventEmitter<boolean>();
+export class StatusSelectComponent implements ControlValueAccessor {
+  value: boolean = true;
 
-  updateValue(value: boolean) {
+  // 🔁 Métodos del ControlValueAccessor
+  onChange = (value: boolean) => {};
+  onTouched = () => {};
+
+  writeValue(value: boolean): void {
     this.value = value;
-    this.valueChange.emit(value);
+  }
+
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    // opcional, si querés manejar el disable
+  }
+
+  // 🚀 Cuando cambia la selección
+  updateValue(value: boolean): void {
+    this.value = value;
+    this.onChange(value);
+    this.onTouched();
   }
 }
