@@ -1,10 +1,10 @@
 import {Routes} from '@angular/router';
 import {ShiftPlanningComponent} from './planning/planning';
-import {ShiftFormComponent} from './planning/shift-form/shift-form';
+import {ShiftAssignFormComponent} from './planning/shift-form/shift-form';
 
 export const shiftRoutes: Routes = [
   {path: '', component: ShiftPlanningComponent},
-  {path: 'assign', component: ShiftFormComponent},
+  {path: 'assign', component: ShiftAssignFormComponent},
   {
     path: 'absence',
     loadChildren: () => import('./absences/absences.routes').then(m => m.absencesRoutes)

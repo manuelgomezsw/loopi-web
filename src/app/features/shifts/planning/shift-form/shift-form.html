@@ -4,73 +4,70 @@
   <mat-card class="main-form-card" appearance="outlined">
     <mat-card-content>
       <form class="main-form-input">
+
+        <!-- Mes y turno -->
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Mes</mat-label>
-            <mat-select>
-              <mat-option [value]="1">Enero</mat-option>
-              <mat-option [value]="2">Febrero</mat-option>
-              <mat-option [value]="3">Marzo</mat-option>
-              <mat-option [value]="4">Abril</mat-option>
-              <mat-option [value]="5">Mayo</mat-option>
-              <mat-option [value]="6">Junio</mat-option>
-              <mat-option [value]="7">Julio</mat-option>
-              <mat-option [value]="8">Agosto</mat-option>
-              <mat-option [value]="9">Septiembre</mat-option>
-              <mat-option [value]="10">Octubre</mat-option>
-              <mat-option [value]="11">Noviembre</mat-option>
-              <mat-option [value]="12">Diciembre</mat-option>
+            <mat-select formControlName="month">
+              @for (m of months; track m) {
+                <mat-option [value]="m">{{ m }}</mat-option>
+              }
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Turno</mat-label>
-            <mat-select>
-              <mat-option [value]="1">Apertura</mat-option>
-              <mat-option [value]="2">Intermedio</mat-option>
-              <mat-option [value]="3">Cierre</mat-option>
+            <mat-select formControlName="shift_id">
+              @for (s of shifts; track s.id) {
+                <mat-option [value]="s.id">{{ s.name }}</mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>
+
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Empleado</mat-label>
             <mat-select>
-              <mat-option [value]="1">Valentina</mat-option>
-              <mat-option [value]="2">Arnaldis</mat-option>
-              <mat-option [value]="3">Sirelda</mat-option>
+              @for (e of employees; track e.id) {
+                <mat-option [value]="e.id">{{ e.first_name }} {{ e.last_name }} — {{ e.position }}</mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>
         <div class="form-summary-grid">
           <div class="summary-item">
             <div class="summary-title">Días ordinarios</div>
-            <div class="summary-value">20 días</div>
+            <div class="summary-value">{{ monthSummary?.ordinary_days }}</div>
           </div>
           <div class="summary-item">
             <div class="summary-title">Días dominicales</div>
-            <div class="summary-value">4 días</div>
+            <div class="summary-value">{{ monthSummary?.sundays }}</div>
           </div>
           <div class="summary-item festivo">
             <div class="summary-title">Días festivos</div>
-            <div class="summary-value">2 días</div>
+            <div class="summary-value">{{ monthSummary?.holidays }}</div>
           </div>
           <div class="summary-item extra">
             <div class="summary-title">Extras ordinarias</div>
-            <div class="summary-value">4 horas</div>
+            <div class="summary-value">Diurnas: {{ projectedHours?.ordinary?.diurnal_extra }}</div>
+            <div class="summary-value">Nocturnas: {{ projectedHours?.ordinary?.nocturnal_extra }}</div>
           </div>
           <div class="summary-item extra">
             <div class="summary-title">Extras dominicales</div>
-            <div class="summary-value">2 horas</div>
+            <div class="summary-value">Diurnas: {{ projectedHours?.sunday?.diurnal_extra }}</div>
+            <div class="summary-value">Nocturnas: {{ projectedHours?.sunday?.nocturnal_extra }}</div>
           </div>
           <div class="summary-item extra festivo">
             <div class="summary-title">Extras festivas</div>
-            <div class="summary-value">2 horas</div>
+            <div class="summary-value">Diurnas: {{ projectedHours?.holiday?.diurnal_extra }}</div>
+            <div class="summary-value">Nocturnas: {{ projectedHours?.holiday?.nocturnal_extra }}</div>
           </div>
         </div>
       </form>
     </mat-card-content>
     <mat-card-footer class="main-form-footer main-form-footer--left">
-      <button mat-flat-button type="button" color="primary">
+      <button mat-flat-button type="button" color="primary" (click)="save()">
         {{ 'ASIGNAR' }}
       </button>
       <button mat-button class="btn-cancel" routerLink="/shifts">

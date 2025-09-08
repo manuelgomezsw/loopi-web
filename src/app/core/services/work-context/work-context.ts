@@ -17,6 +17,11 @@ export class WorkContextService {
     return this.context;
   }
 
+  getStoreId(): number {
+    const ctx = JSON.parse(localStorage.getItem('work-context') || '{}');
+    return +ctx.storeID;
+  }
+
   clear(): void {
     this.context = null;
     localStorage.removeItem('work-context');
