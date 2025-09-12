@@ -31,7 +31,7 @@ export const selectUserFullName = createSelector(selectUser, user => user?.fullN
 export const selectCurrentFranchise = createSelector(selectWorkContext, workContext =>
   workContext
     ? {
-        id: workContext.franchiseId,
+        id: workContext.franchiseID,
         name: workContext.franchiseName
       }
     : null
@@ -40,7 +40,7 @@ export const selectCurrentFranchise = createSelector(selectWorkContext, workCont
 export const selectCurrentStore = createSelector(selectWorkContext, workContext =>
   workContext
     ? {
-        id: workContext.storeId,
+        id: workContext.storeID,
         name: workContext.storeName
       }
     : null

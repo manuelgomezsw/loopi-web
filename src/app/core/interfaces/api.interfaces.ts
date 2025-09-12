@@ -5,8 +5,6 @@
 import {
   AbsenceStatus,
   AbsenceType,
-  EmployeeStatus,
-  EmployeeType,
   LoadingState,
   ShiftStatus,
   ShiftType,
@@ -77,28 +75,51 @@ export interface WorkContextInfo {
   permissions: string[];
 }
 
-// Empleado
+// Empleado - Coincide con el backend loopi-api
 export interface EmployeeResponse {
   id: number;
-  employeeNumber: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  email: string;
+  first_name: string;
+  last_name: string;
+  document_type: string;
+  document_number: string;
+  birthdate: string;
   phone: string;
+  email: string;
   position: string;
-  department: string;
-  status: EmployeeStatus;
-  type: EmployeeType;
-  hireDate: string;
-  terminationDate?: string;
-  hourlyRate?: number;
-  weeklyHours?: number;
-  storeId: number;
-  store: StoreInfo;
-  user?: UserInfo;
-  createdAt: string;
-  updatedAt: string;
+  salary: number;
+  is_active: boolean;
+  store_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+// Request para crear empleado
+export interface EmployeeCreateRequest {
+  first_name: string;
+  last_name: string;
+  document_type: string;
+  document_number: string;
+  birthdate: string;
+  phone: string;
+  email: string;
+  position: string;
+  salary: number;
+  is_active: boolean;
+  store_id: number;
+}
+
+// Request para actualizar empleado
+export interface EmployeeUpdateRequest {
+  first_name?: string;
+  last_name?: string;
+  document_type?: string;
+  document_number?: string;
+  birthdate?: string;
+  phone?: string;
+  email?: string;
+  position?: string;
+  salary?: number;
+  is_active?: boolean;
 }
 
 // Lista de empleados

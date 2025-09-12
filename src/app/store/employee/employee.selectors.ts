@@ -47,19 +47,11 @@ export const selectEmployeeById = (id: number) =>
   createSelector(selectEmployeeEntitiesFromState, entities => entities[id] || null);
 
 export const selectActiveEmployees = createSelector(selectAllEmployeesFromState, employees =>
-  employees.filter(employee => employee.status === 'ACTIVE')
+  employees.filter(employee => employee.is_active === true)
 );
 
-export const selectEmployeesByStatus = (status: string) =>
-  createSelector(selectAllEmployeesFromState, employees => employees.filter(employee => employee.status === status));
-
 export const selectEmployeesByStore = (storeId: number) =>
-  createSelector(selectAllEmployeesFromState, employees => employees.filter(employee => employee.storeId === storeId));
-
-export const selectEmployeesByDepartment = (department: string) =>
-  createSelector(selectAllEmployeesFromState, employees =>
-    employees.filter(employee => employee.department === department)
-  );
+  createSelector(selectAllEmployeesFromState, employees => employees.filter(employee => employee.store_id === storeId));
 
 export const selectEmployeesByPosition = (position: string) =>
   createSelector(selectAllEmployeesFromState, employees =>
@@ -79,27 +71,21 @@ export const selectFilteredEmployees = createSelector(
       // Text search
       if (filters['search']) {
         const searchTerm = filters['search'].toLowerCase();
-        const fullName = `${employee.firstName} ${employee.lastName}`.toLowerCase();
+        const fullName = `${employee.first_name} ${employee.last_name}`.toLowerCase();
         const email = employee.email.toLowerCase();
-        const employeeNumber = employee.employeeNumber.toLowerCase();
 
-        if (!fullName.includes(searchTerm) && !email.includes(searchTerm) && !employeeNumber.includes(searchTerm)) {
+        if (!fullName.includes(searchTerm) && !email.includes(searchTerm)) {
           return false;
         }
       }
 
-      // Status filter
-      if (filters['status'] && employee.status !== filters['status']) {
+      // Active filter
+      if (filters['isActive'] !== undefined && employee.is_active !== filters['isActive']) {
         return false;
       }
 
       // Store filter
-      if (filters['storeId'] && employee.storeId !== filters['storeId']) {
-        return false;
-      }
-
-      // Department filter
-      if (filters['department'] && employee.department !== filters['department']) {
+      if (filters['storeId'] && employee.store_id !== filters['storeId']) {
         return false;
       }
 
@@ -139,17 +125,11 @@ export const selectSortedEmployees = createSelector(
 // Statistics selectors
 export const selectEmployeeStats = createSelector(selectAllEmployeesFromState, employees => ({
   total: employees.length,
-  active: employees.filter(e => e.status === 'ACTIVE').length,
-  inactive: employees.filter(e => e.status === 'INACTIVE').length,
-  onLeave: employees.filter(e => e.status === 'ON_LEAVE').length,
-  fullTime: employees.filter(e => e.type === 'FULL_TIME').length,
-  partTime: employees.filter(e => e.type === 'PART_TIME').length
+  active: employees.filter(e => e.is_active === true).length,
+  inactive: employees.filter(e => e.is_active === false).length
 }));
 
-export const selectEmployeeDepartments = createSelector(selectAllEmployeesFromState, employees => {
-  const departments = new Set(employees.map(e => e.department));
-  return Array.from(departments).sort();
-});
+// Eliminar selector de departamentos ya que no existe en el nuevo modelo
 
 export const selectEmployeePositions = createSelector(selectAllEmployeesFromState, employees => {
   const positions = new Set(employees.map(e => e.position));

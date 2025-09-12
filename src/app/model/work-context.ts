@@ -3,4 +3,5 @@ export interface WorkContext {
   storeID: number;
   franchiseName: string;
   storeName: string;
+  permissions?: string[];
 }

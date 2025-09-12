@@ -5,16 +5,17 @@ import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
+import { EmployeeResponse } from '../../../../core/interfaces/api.interfaces';
 import { CalendarService } from '../../../../core/services/calendar/calendar';
 import { EmployeeService } from '../../../../core/services/employee/employee';
 import { NotificationService } from '../../../../core/services/notification/notification.service';
 import { ShiftService } from '../../../../core/services/shift/shift';
 import { WorkContextService } from '../../../../core/services/work-context/work-context';
-import { Employee } from '../../../../model/employee';
 import { MonthSummary } from '../../../../model/month-summary';
 import { ProjectedHours } from '../../../../model/projected-hours';
 import { Shift } from '../../../../model/shift';
 import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
+// import { HoursCalculationComponent } from '../hours-calculation/hours-calculation';
 
 @Component({
   selector: 'app-shift-form',
@@ -30,8 +31,7 @@ import { PageTitleComponent } from '../../../../shared/page-title-component/page
     MatOption,
     MatSelect,
     ReactiveFormsModule,
-    RouterLink,
-    MatFormField
+    RouterLink
   ],
   templateUrl: './shift-form.html',
   styleUrl: './shift-form.css'
@@ -46,7 +46,7 @@ export class ShiftAssignFormComponent implements OnInit {
 
   storeId!: number;
   shifts: Shift[] = [];
-  employees: Employee[] = [];
+  employees: EmployeeResponse[] = [];
   monthSummary: MonthSummary | null = null;
   projectedHours: ProjectedHours | null = null;
   months: string[] = [];

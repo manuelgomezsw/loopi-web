@@ -1,54 +1,126 @@
-<app-page-title entityName="Empleado"></app-page-title>
+<app-page-title [entityName]="isEditMode ? 'Editar Empleado' : 'Nuevo Empleado'"></app-page-title>
 
 <div class="main-form">
   <mat-card class="main-form-card" appearance="outlined">
     <mat-card-content>
-      <form class="main-form-input">
+      <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="main-form-input">
+        <!-- Información Personal -->
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Nombres</mat-label>
-            <input matInput type="text" name="firstName" />
+            <input matInput formControlName="first_name" type="text" />
+            @if (hasFieldError("first_name")) {
+              <mat-error>{{ getFieldError("first_name") }}</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Apellidos</mat-label>
-            <input matInput type="text" name="lastName" />
+            <input matInput formControlName="last_name" type="text" />
+            @if (hasFieldError("last_name")) {
+              <mat-error>{{ getFieldError("last_name") }}</mat-error>
+            }
           </mat-form-field>
         </div>
+
+        <!-- Documentación -->
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Tipo de documento</mat-label>
-            <mat-select>
-              <mat-option [value]="'CC'">Cédula de Ciudadanía</mat-option>
-              <mat-option [value]="'CE'">Cédula de Extranjería</mat-option>
-              <mat-option [value]="'PA'">Pasaporte</mat-option>
-              <mat-option [value]="'PTP'">Permisos especiales</mat-option>
+            <mat-select formControlName="document_type">
+              @for (docType of documentTypes; track docType.value) {
+                <mat-option [value]="docType.value">{{ docType.label }}</mat-option>
+              }
             </mat-select>
+            @if (hasFieldError("document_type")) {
+              <mat-error>{{ getFieldError("document_type") }}</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Número de documento</mat-label>
-            <input matInput type="text" name="documentNumber" />
+            <input matInput formControlName="document_number" type="text" />
+            @if (hasFieldError("document_number")) {
+              <mat-error>{{ getFieldError("document_number") }}</mat-error>
+            }
           </mat-form-field>
         </div>
+
+        <!-- Fecha de nacimiento -->
+        <div class="form-row form-row--1">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de nacimiento</mat-label>
+            <input matInput formControlName="birthdate" type="date" />
+            @if (hasFieldError("birthdate")) {
+              <mat-error>{{ getFieldError("birthdate") }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Contacto -->
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Número de contacto</mat-label>
-            <input matInput type="text" name="phone" />
+            <input matInput formControlName="phone" type="tel" />
+            @if (hasFieldError("phone")) {
+              <mat-error>{{ getFieldError("phone") }}</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Correo electrónico</mat-label>
-            <input matInput type="text" name="email" />
+            <input matInput formControlName="email" type="email" />
+            @if (hasFieldError("email")) {
+              <mat-error>{{ getFieldError("email") }}</mat-error>
+            }
           </mat-form-field>
         </div>
+
+        <!-- Información Laboral -->
         <div class="form-row form-row--2">
-          <app-status-select class="full-width"></app-status-select>
+          <mat-form-field appearance="outline">
+            <mat-label>Cargo</mat-label>
+            <input matInput formControlName="position" type="text" />
+            @if (hasFieldError("position")) {
+              <mat-error>{{ getFieldError("position") }}</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Salario</mat-label>
+            <input matInput formControlName="salary" type="number" step="0.01" min="0" />
+            @if (hasFieldError("salary")) {
+              <mat-error>{{ getFieldError("salary") }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-row form-row--1">
+          <mat-checkbox formControlName="is_active"> Empleado activo </mat-checkbox>
         </div>
       </form>
     </mat-card-content>
+
     <mat-card-footer class="main-form-footer main-form-footer--left">
-      <button mat-flat-button type="button" color="primary">
-        {{ "GUARDAR" }}
+      <button
+        mat-flat-button
+        type="submit"
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="(isLoading$ | async) || employeeForm.invalid">
+        @if (isLoading$ | async) {
+          Guardando...
+        } @else {
+          {{ isEditMode ? "ACTUALIZAR" : "GUARDAR" }}
+        }
       </button>
-      <button mat-button class="btn-cancel" routerLink="/employees">CANCELAR</button>
+      <button mat-button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="isLoading$ | async">
+        CANCELAR
+      </button>
+
+      <!-- Debug button - Solo para desarrollo -->
+      @if (!isEditMode) {
+        <button mat-button type="button" color="accent" (click)="debugFormData()" style="margin-left: 10px">
+          🔍 DEBUG
+        </button>
+      }
     </mat-card-footer>
   </mat-card>
 </div>

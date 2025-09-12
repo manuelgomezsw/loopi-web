@@ -16,7 +16,7 @@ export interface EmployeeState extends EntityState<EmployeeResponse> {
 
 export const employeeAdapter: EntityAdapter<EmployeeResponse> = createEntityAdapter<EmployeeResponse>({
   selectId: (employee: EmployeeResponse) => employee.id,
-  sortComparer: (a: EmployeeResponse, b: EmployeeResponse) => a.lastName.localeCompare(b.lastName)
+  sortComparer: (a: EmployeeResponse, b: EmployeeResponse) => a.last_name.localeCompare(b.last_name)
 });
 
 export const initialEmployeeState: EmployeeState = employeeAdapter.getInitialState({
@@ -33,7 +33,7 @@ export const initialEmployeeState: EmployeeState = employeeAdapter.getInitialSta
   },
   filters: {},
   sorting: {
-    field: 'lastName',
+    field: 'last_name',
     direction: 'asc'
   }
 });

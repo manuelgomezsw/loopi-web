@@ -16,6 +16,7 @@ import {
   MatRowDef,
   MatTable
 } from '@angular/material/table';
+import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -49,7 +50,8 @@ import {
     MatTable,
     RouterLink,
     MatHeaderCellDef,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatTooltip
   ],
   templateUrl: './list.html',
   styleUrl: './list.css',
@@ -66,13 +68,12 @@ export class EmployeeListComponent implements OnInit {
   error$: Observable<string | null> = this.store.select(selectEmployeeError);
   stats$: Observable<any> = this.store.select(selectEmployeeStats);
 
-  columnsToDisplay = ['employeeNumber', 'fullName', 'email', 'position', 'status', 'actions'];
+  columnsToDisplay = ['fullName', 'position', 'isActive', 'actions'];
 
   // TrackBy function para optimizar el rendering
   trackByEmployeeId: TrackByFunction<EmployeeResponse> = (index: number, employee: EmployeeResponse) => employee.id;
 
   ngOnInit(): void {
-    // Cargar empleados al inicializar
     this.store.dispatch(EmployeeActions.loadEmployees({ filters: {} }));
   }
 
@@ -80,10 +81,10 @@ export class EmployeeListComponent implements OnInit {
     this.store.dispatch(EmployeeActions.selectEmployee({ id: employeeId }));
   }
 
-  deleteEmployee(employeeId: number): void {
+  onDeleteEmployee(employee: EmployeeResponse): void {
     this.showDeleteConfirmation(() => {
-      this.store.dispatch(EmployeeActions.deleteEmployee({ id: employeeId }));
-      this.notificationService.info('Solicitud de eliminación enviada');
+      this.store.dispatch(EmployeeActions.deleteEmployee({ id: employee.id }));
+      this.notificationService.info(`Empleado ${employee.first_name} ${employee.last_name} eliminado`);
     });
   }
 

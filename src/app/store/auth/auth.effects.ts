@@ -72,29 +72,35 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.selectContext),
       exhaustMap(action =>
-        this.authService.selectContext(action.context).pipe(
-          map(response => {
-            // Crear el work context compatible con la interfaz existente
-            const workContext = {
-              franchiseID: action.context.franchise_id,
-              storeID: action.context.store_id,
-              franchiseName: '', // Se debe obtener del response o servicio
-              storeName: '' // Se debe obtener del response o servicio
-            };
-
-            // Almacenar en el servicio
-            this.workContextService.set(workContext);
-
-            return AuthActions.selectContextSuccess({
-              workContext,
-              token: response.token
-            });
-          }),
-          catchError(error => {
-            const errorMessage = error.error?.message ?? 'Error al seleccionar contexto';
-            return of(AuthActions.selectContextFailure({ error: errorMessage }));
+        this.authService
+          .selectContext({
+            franchise_id: action.context.franchise_id,
+            store_id: action.context.store_id
           })
-        )
+          .pipe(
+            map(response => {
+              // Crear el work context compatible con la interfaz existente
+              const workContext = {
+                franchiseID: action.context.franchise_id,
+                storeID: action.context.store_id,
+                franchiseName: action.context.franchise_name,
+                storeName: action.context.store_name,
+                permissions: [] // Por defecto vacío, se puede actualizar en el futuro
+              };
+
+              // Almacenar en el servicio
+              this.workContextService.set(workContext);
+
+              return AuthActions.selectContextSuccess({
+                workContext,
+                token: response.token
+              });
+            }),
+            catchError(error => {
+              const errorMessage = error.error?.message ?? 'Error al seleccionar contexto';
+              return of(AuthActions.selectContextFailure({ error: errorMessage }));
+            })
+          )
       )
     )
   );
@@ -105,7 +111,6 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.selectContextSuccess),
         tap(() => {
-          this.notificationService.success('Contexto seleccionado correctamente');
           this.router.navigate([ROUTES.HOME]);
         })
       ),

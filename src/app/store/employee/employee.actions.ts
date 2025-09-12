@@ -3,7 +3,13 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ApiMeta, EmployeeResponse, FilterRequest } from '../../core/interfaces/api.interfaces';
+import {
+  ApiMeta,
+  EmployeeCreateRequest,
+  EmployeeResponse,
+  EmployeeUpdateRequest,
+  FilterRequest
+} from '../../core/interfaces/api.interfaces';
 
 // Load Actions
 export const loadEmployees = createAction('[Employee] Load Employees', props<{ filters?: FilterRequest }>());
@@ -26,10 +32,7 @@ export const loadEmployeeSuccess = createAction(
 export const loadEmployeeFailure = createAction('[Employee] Load Employee Failure', props<{ error: string }>());
 
 // Create Actions
-export const createEmployee = createAction(
-  '[Employee] Create Employee',
-  props<{ employee: Partial<EmployeeResponse> }>()
-);
+export const createEmployee = createAction('[Employee] Create Employee', props<{ employee: EmployeeCreateRequest }>());
 
 export const createEmployeeSuccess = createAction(
   '[Employee] Create Employee Success',
@@ -41,7 +44,7 @@ export const createEmployeeFailure = createAction('[Employee] Create Employee Fa
 // Update Actions
 export const updateEmployee = createAction(
   '[Employee] Update Employee',
-  props<{ id: number; changes: Partial<EmployeeResponse> }>()
+  props<{ id: number; changes: EmployeeUpdateRequest }>()
 );
 
 export const updateEmployeeSuccess = createAction(

@@ -22,7 +22,7 @@ export const logoutFailure = createAction('[Auth] Logout Failure', props<{ error
 // Context Selection Actions
 export const selectContext = createAction(
   '[Auth] Select Context',
-  props<{ context: { franchise_id: number; store_id: number } }>()
+  props<{ context: { franchise_id: number; store_id: number; franchise_name: string; store_name: string } }>()
 );
 
 export const selectContextSuccess = createAction(

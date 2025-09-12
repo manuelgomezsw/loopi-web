@@ -22,7 +22,9 @@ export class SelectContextComponent {
       AuthActions.selectContext({
         context: {
           franchise_id: ctx.franchiseID,
-          store_id: ctx.storeID
+          store_id: ctx.storeID,
+          franchise_name: ctx.franchiseName,
+          store_name: ctx.storeName
         }
       })
     );

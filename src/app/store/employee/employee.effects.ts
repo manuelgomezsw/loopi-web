@@ -4,85 +4,159 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { exhaustMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
-// import { EmployeeService } from '../../core/services/employee/employee';
+import { EmployeeService } from '../../core/services/employee/employee';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { AppState } from '../app.state';
+import * as AuthActions from '../auth/auth.actions';
+import { selectCurrentStore } from '../auth/auth.selectors';
 import * as EmployeeActions from './employee.actions';
 
 @Injectable()
 export class EmployeeEffects {
   private actions$ = inject(Actions);
-  // private employeeService = inject(EmployeeService); // TODO: Uncomment when EmployeeService is available
+  private store = inject(Store<AppState>);
+  private employeeService = inject(EmployeeService);
   private notificationService = inject(NotificationService);
 
-  // Load Employees Effect (placeholder - requires EmployeeService implementation)
+  // Load Employees Effect - Connected to real API
   loadEmployees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployeeActions.loadEmployees),
-      exhaustMap(action => {
-        // TODO: Implement actual service call when EmployeeService is available
-        // For now, return mock data
-        const mockEmployees = [
-          {
-            id: 1,
-            employeeNumber: 'EMP001',
-            firstName: 'Juan',
-            lastName: 'Pérez',
-            fullName: 'Juan Pérez',
-            email: 'juan.perez@empresa.com',
-            phone: '123456789',
-            position: 'Vendedor',
-            department: 'Ventas',
-            status: 'ACTIVE' as any,
-            type: 'FULL_TIME' as any,
-            hireDate: '2023-01-15',
-            storeId: 1,
-            store: {
-              id: 1,
-              name: 'Tienda Central',
-              code: 'TC001',
-              address: 'Av. Principal 123',
-              phone: '987654321',
-              email: 'central@empresa.com',
-              franchiseId: 1,
-              franchise: {
-                id: 1,
-                name: 'Franquicia Principal',
-                code: 'FP001',
-                isActive: true,
-                createdAt: '2023-01-01T00:00:00Z',
-                updatedAt: '2023-01-01T00:00:00Z'
-              },
-              isActive: true,
-              createdAt: '2023-01-01T00:00:00Z',
-              updatedAt: '2023-01-01T00:00:00Z'
-            },
-            createdAt: '2023-01-15T00:00:00Z',
-            updatedAt: '2023-01-15T00:00:00Z'
-          }
-        ];
+      withLatestFrom(this.store.select(selectCurrentStore)),
+      switchMap(([_action, currentStore]) => {
+        // Verificar que hay una tienda seleccionada
+        if (!currentStore?.id) {
+          return of(
+            EmployeeActions.loadEmployeesFailure({
+              error: 'No hay tienda seleccionada. Por favor, selecciona una tienda.'
+            })
+          );
+        }
 
-        return of(
-          EmployeeActions.loadEmployeesSuccess({
-            employees: mockEmployees,
-            meta: {
+        // Llamada real al API usando el storeId del contexto actual
+        return this.employeeService.getByStore(currentStore.id).pipe(
+          map(employees => {
+            // Crear meta data básico (el API podría devolver esto en el futuro)
+            const meta = {
               currentPage: 1,
               totalPages: 1,
-              totalItems: 1,
-              itemsPerPage: 10,
+              totalItems: employees.length,
+              itemsPerPage: employees.length,
               hasNextPage: false,
               hasPreviousPage: false
-            }
+            };
+
+            return EmployeeActions.loadEmployeesSuccess({
+              employees,
+              meta
+            });
+          }),
+          catchError(error => {
+            const errorMessage = error.error?.message ?? `Error al cargar empleados de la tienda ${currentStore.name}`;
+            return of(EmployeeActions.loadEmployeesFailure({ error: errorMessage }));
           })
         );
       })
     )
   );
 
-  // Placeholder effects - will be implemented when EmployeeService is available
-  // TODO: Implement these effects when service is ready
+  // Create Employee Effect
+  createEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.createEmployee),
+      switchMap(action => {
+        // Log de debugging para ver los datos que se envían
+        console.log('🚀 Creating employee with data:', action.employee);
+
+        return this.employeeService.create(action.employee).pipe(
+          map(response => {
+            console.log('✅ Employee created successfully:', response);
+            this.notificationService.success('Empleado creado correctamente');
+            return EmployeeActions.createEmployeeSuccess({ employee: response.data });
+          }),
+          catchError(error => {
+            // Log detallado del error
+            console.error('❌ Error creating employee:', error);
+            console.error('Error details:', {
+              status: error.status,
+              statusText: error.statusText,
+              message: error.error?.message,
+              errors: error.error?.errors,
+              fullError: error.error
+            });
+
+            let errorMessage = 'Error al crear el empleado';
+
+            // Manejo específico para errores de validación
+            if (error.error?.message) {
+              errorMessage = error.error.message;
+            } else if (error.error?.errors) {
+              // Si el backend devuelve errores de validación específicos
+              const validationErrors = Array.isArray(error.error.errors)
+                ? error.error.errors.join(', ')
+                : JSON.stringify(error.error.errors);
+              errorMessage = `Error de validación: ${validationErrors}`;
+            } else if (error.status === 400) {
+              errorMessage = 'Datos inválidos. Verifique la información ingresada.';
+            } else if (error.status === 422) {
+              errorMessage = 'Error de validación. Verifique los datos del formulario.';
+            }
+
+            this.notificationService.error(errorMessage);
+            return of(EmployeeActions.createEmployeeFailure({ error: errorMessage }));
+          })
+        );
+      })
+    )
+  );
+
+  // Update Employee Effect
+  updateEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.updateEmployee),
+      switchMap(action =>
+        this.employeeService.update(action.id, action.changes).pipe(
+          map(response => {
+            this.notificationService.success('Empleado actualizado correctamente');
+            return EmployeeActions.updateEmployeeSuccess({ employee: response.data });
+          }),
+          catchError(error => {
+            const errorMessage = error.error?.message ?? 'Error al actualizar el empleado';
+            this.notificationService.error(errorMessage);
+            return of(EmployeeActions.updateEmployeeFailure({ error: errorMessage }));
+          })
+        )
+      )
+    )
+  );
+
+  // Load Employee by ID Effect
+  loadEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.loadEmployee),
+      switchMap(action =>
+        this.employeeService.getById(action.id).pipe(
+          map(employee => EmployeeActions.loadEmployeeSuccess({ employee })),
+          catchError(error => {
+            const errorMessage = error.error?.message ?? 'Error al cargar el empleado';
+            return of(EmployeeActions.loadEmployeeFailure({ error: errorMessage }));
+          })
+        )
+      )
+    )
+  );
+
+  // Auto-load employees when context is selected
+  loadEmployeesOnContextChange$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.selectContextSuccess),
+      map(() => EmployeeActions.loadEmployees({}))
+    )
+  );
 
   // Error Handling Effect
   loadEmployeesFailure$ = createEffect(

@@ -2,10 +2,12 @@
  * Estado de autenticación
  */
 
+import { WorkContext } from '../../model/work-context';
+
 export interface AuthState {
   user: any | null;
   token: string | null;
-  workContext: any | null;
+  workContext: WorkContext | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
