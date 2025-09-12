@@ -1,0 +1,72 @@
+{
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.format.semicolons": "insert",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "relative",
+
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "editor.rulers": [80, 120],
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 120,
+
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  "html.format.wrapLineLength": 120,
+  "html.format.indentInnerHtml": true,
+
+  "css.validate": true,
+  "scss.validate": true,
+
+  "angular.enable-strict-mode-prompt": false,
+  "angular.experimental-ivy": true,
+
+  "debug.console.fontSize": 14,
+  "debug.console.wordWrap": true,
+
+  "emmet.includeLanguages": {
+    "typescript": "html"
+  },
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/coverage": true
+  },
+
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/coverage/**": true
+  },
+
+  "typescript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+
+  "problems.decorations.enabled": true,
+  "problems.showCurrentInStatus": true,
+
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.fontSize": 14,
+
+  "workbench.colorCustomizations": {
+    "debugToolBar.background": "#1e1e1e",
+    "debugConsole.infoForeground": "#75beff",
+    "debugConsole.warningForeground": "#ffcc02",
+    "debugConsole.errorForeground": "#f44747"
+  }
+}

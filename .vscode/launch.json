@@ -1,0 +1,67 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "🚀 Launch Angular App",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "ng-serve",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "trace": "verbose",
+      "userDataDir": false,
+      "runtimeArgs": [
+        "--disable-web-security",
+        "--disable-features=VizDisplayCompositor"
+      ]
+    },
+    {
+      "name": "🔍 Attach to Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "trace": "verbose"
+    },
+    {
+      "name": "🧪 Debug Angular Tests",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "ng-test",
+      "url": "http://localhost:9876/debug.html",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "runtimeArgs": [
+        "--headless",
+        "--disable-gpu",
+        "--remote-debugging-port=9222"
+      ]
+    },
+    {
+      "name": "🔧 Debug Node (for scripts)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng",
+      "args": ["build", "--configuration=development"],
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "🎯 Launch & Debug",
+      "configurations": [
+        "🚀 Launch Angular App"
+      ],
+      "stopAll": true
+    }
+  ]
+}

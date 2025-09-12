@@ -1,0 +1,103 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ng-serve",
+      "type": "shell",
+      "command": "ng",
+      "args": ["serve", "--configuration=development"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": [
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": "$tsc",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": "(.*?)"
+            },
+            "endsPattern": {
+              "regexp": "Local:\\s+(https?://\\S+)"
+            }
+          }
+        }
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "ng-test",
+      "type": "shell",
+      "command": "ng",
+      "args": ["test", "--watch=false", "--browsers=ChromeHeadless"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "ng-build-dev",
+      "type": "shell",
+      "command": "ng",
+      "args": ["build", "--configuration=development"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "ng-lint",
+      "type": "shell",
+      "command": "ng",
+      "args": ["lint"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🧹 Clean & Rebuild",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "clean-dist",
+        "ng-build-dev"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "clean-dist",
+      "type": "shell",
+      "command": "rm",
+      "args": ["-rf", "dist/"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent"
+      }
+    }
+  ]
+}

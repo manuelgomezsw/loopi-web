@@ -4,9 +4,23 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:debug": "ng serve --configuration=development --open",
     "build": "ng build",
+    "build:dev": "ng build --configuration=development",
+    "build:analyze": "ng build --configuration=production --stats-json && npx webpack-bundle-analyzer dist/loopi-web/stats.json",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:debug": "ng test --watch=true --browsers=Chrome",
+    "test:coverage": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
+    "lint": "ng lint",
+    "debug:verify": "node scripts/test-debug.js",
+    "debug:clean": "rm -rf dist/ node_modules/.cache .angular/",
+    "debug:info": "ng version && node --version && npm --version",
+    "validate:setup": "node scripts/validate-setup.js",
+    "setup": "npm install && npm run validate:setup",
+    "dev": "npm run start:debug",
+    "clean:all": "rm -rf dist/ node_modules/ package-lock.json && npm install",
+    "docs:serve": "echo 'Documentación disponible en:' && echo '📖 README.md' && echo '🐛 DEBUG-SETUP.md' && echo '✅ DEBUGGING-COMPLETE.md' && echo '🛡️ SECURITY-IMPROVEMENTS.md'"
   },
   "prettier": {
     "overrides": [
@@ -28,6 +42,8 @@
     "@angular/material": "^20.1.6",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@types/crypto-js": "^4.2.2",
+    "crypto-js": "^4.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

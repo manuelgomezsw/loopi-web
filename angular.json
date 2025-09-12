@@ -64,7 +64,8 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -76,7 +77,9 @@
               "buildTarget": "loopi-web:build:production"
             },
             "development": {
-              "buildTarget": "loopi-web:build:development"
+              "buildTarget": "loopi-web:build:development",
+              "liveReload": true,
+              "hmr": false
             }
           },
           "defaultConfiguration": "development"

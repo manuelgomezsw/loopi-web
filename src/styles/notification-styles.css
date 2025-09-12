@@ -1,0 +1,52 @@
+/* Estilos para notificaciones del sistema */
+.notification-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.notification-success .mat-mdc-snack-bar-action {
+  color: #c8e6c9 !important;
+}
+
+.notification-error {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.notification-error .mat-mdc-snack-bar-action {
+  color: #ffcdd2 !important;
+}
+
+.notification-warning {
+  background-color: #ff9800 !important;
+  color: white !important;
+}
+
+.notification-warning .mat-mdc-snack-bar-action {
+  color: #ffe0b2 !important;
+}
+
+.notification-info {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+.notification-info .mat-mdc-snack-bar-action {
+  color: #bbdefb !important;
+}
+
+/* Estilos generales para snackbars */
+.mat-mdc-snack-bar-container {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.mat-mdc-snack-bar-label {
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+.mat-mdc-snack-bar-action {
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+}
