@@ -1,6 +1,7 @@
 {
   "name": "loopi-web",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -12,7 +13,13 @@
     "test": "ng test",
     "test:debug": "ng test --watch=true --browsers=Chrome",
     "test:coverage": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
-    "lint": "ng lint",
+    "lint": "eslint src/**/*.ts --fix",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "lint:html": "eslint src/**/*.html",
+    "format": "prettier --write src/**/*.{ts,html,css,scss,json}",
+    "format:check": "prettier --check src/**/*.{ts,html,css,scss,json}",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky",
     "debug:verify": "node scripts/test-debug.js",
     "debug:clean": "rm -rf dist/ node_modules/.cache .angular/",
     "debug:info": "ng version && node --version && npm --version",
@@ -22,14 +29,13 @@
     "clean:all": "rm -rf dist/ node_modules/ package-lock.json && npm install",
     "docs:serve": "echo 'Documentación disponible en:' && echo '📖 README.md' && echo '🐛 DEBUG-SETUP.md' && echo '✅ DEBUGGING-COMPLETE.md' && echo '🛡️ SECURITY-IMPROVEMENTS.md'"
   },
-  "prettier": {
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,css,scss,json,md}": [
+      "prettier --write"
     ]
   },
   "private": true,
@@ -42,6 +48,11 @@
     "@angular/material": "^20.1.6",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@ngrx/effects": "^20.0.1",
+    "@ngrx/entity": "^20.0.1",
+    "@ngrx/router-store": "^20.0.1",
+    "@ngrx/store": "^20.0.1",
+    "@ngrx/store-devtools": "^20.0.1",
     "@types/crypto-js": "^4.2.2",
     "crypto-js": "^4.2.0",
     "rxjs": "~7.8.0",
@@ -49,16 +60,29 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^20.2.0",
+    "@angular-eslint/eslint-plugin-template": "^20.2.0",
+    "@angular-eslint/template-parser": "^20.2.0",
     "@angular/build": "^20.1.5",
     "@angular/cli": "^20.1.5",
     "@angular/compiler-cli": "^20.1.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/jasmine": "~5.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
     "typescript": "~5.8.2"
   }
 }

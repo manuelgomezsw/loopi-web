@@ -15,11 +15,21 @@
         <input matInput type="password" formControlName="password" autocomplete="current-password" />
       </mat-form-field>
 
-      <button mat-flat-button class="login-button" [disabled]="form.invalid" (click)="login()">
-        <mat-icon>login</mat-icon>
-        Ingresar
+      <button mat-flat-button class="login-button" [disabled]="form.invalid || (isLoading$ | async)" (click)="login()">
+        <mat-spinner diameter="20" *ngIf="isLoading$ | async; else loginIcon"></mat-spinner>
+        <ng-template #loginIcon>
+          <mat-icon>login</mat-icon>
+        </ng-template>
+        <span *ngIf="!(isLoading$ | async)">Ingresar</span>
+        <span *ngIf="isLoading$ | async">Ingresando...</span>
       </button>
     </form>
+
+    <!-- Error message -->
+    <div class="error-message" *ngIf="error$ | async as error">
+      <mat-icon>error</mat-icon>
+      {{ error }}
+    </div>
 
   </mat-card>
 </div>

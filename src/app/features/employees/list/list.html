@@ -1,31 +1,85 @@
 <app-page-title entityName="Empleados"></app-page-title>
 
+<!-- Stats display -->
+<div *ngIf="stats$ | async as stats" class="stats-container">
+  <div class="stat-card">
+    <span class="stat-label">Total:</span>
+    <span class="stat-value">{{ stats.total }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Activos:</span>
+    <span class="stat-value">{{ stats.active }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Tiempo Completo:</span>
+    <span class="stat-value">{{ stats.fullTime }}</span>
+  </div>
+</div>
+
 <a class="create-link" routerLink="/employees/new">
   Nuevo empleado
 </a>
-<mat-table class="mat-mdc-table mat-mdc-table-responsive">
-  <ng-container matColumnDef="firstName">
-    <mat-header-cell *matHeaderCellDef>Nombres</mat-header-cell>
-    <mat-cell *matCellDef="let f">{{ f.name }}</mat-cell>
+
+<!-- Loading indicator -->
+<div *ngIf="loading$ | async" class="loading-container">
+  <mat-spinner></mat-spinner>
+  <p>Cargando empleados...</p>
+</div>
+
+<!-- Error message -->
+<div *ngIf="error$ | async as error" class="error-container">
+  <mat-icon color="warn">error</mat-icon>
+  <p>{{ error }}</p>
+</div>
+
+<!-- Employees table with optimized rendering -->
+<mat-table [dataSource]="(employees$ | async) || []" class="mat-mdc-table mat-mdc-table-responsive" *ngIf="!(loading$ | async)">
+
+  <ng-container matColumnDef="employeeNumber">
+    <mat-header-cell *matHeaderCellDef>Número</mat-header-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.employeeNumber || '—' }}</mat-cell>
   </ng-container>
-  <ng-container matColumnDef="lastName">
-    <mat-header-cell *matHeaderCellDef>Apellidos</mat-header-cell>
-    <mat-cell *matCellDef="let f">
-      <mat-icon color="primary">{{ f.active ? 'check_circle' : 'cancel' }}</mat-icon>
+
+  <ng-container matColumnDef="fullName">
+    <mat-header-cell *matHeaderCellDef>Nombre Completo</mat-header-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.fullName || (employee.firstName + ' ' + employee.lastName) }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.email || '—' }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="position">
+    <mat-header-cell *matHeaderCellDef>Posición</mat-header-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.position || '—' }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">
+      <mat-icon [color]="employee.status === 'ACTIVE' ? 'primary' : 'warn'">
+        {{ employee.status === 'ACTIVE' ? 'check_circle' : 'cancel' }}
+      </mat-icon>
+      {{ employee.status || '—' }}
     </mat-cell>
   </ng-container>
-  <ng-container matColumnDef="active">
-    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-    <mat-cell *matCellDef="let f">{{ f.location || '—' }}</mat-cell>
-  </ng-container>
+
   <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-    <mat-cell *matCellDef="let f">
-      <button mat-icon-button color="primary" [routerLink]="['/admin/franchises', f.id, 'edit']">
+    <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">
+      <button mat-icon-button color="primary" [routerLink]="['/employees', employee.id]" (click)="selectEmployee(employee.id)">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" [routerLink]="['/employees', employee.id, 'edit']" (click)="selectEmployee(employee.id)">
         <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteEmployee(employee.id)">
+        <mat-icon>delete</mat-icon>
       </button>
     </mat-cell>
   </ng-container>
+
   <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
   <mat-row *matRowDef="let row; columns: columnsToDisplay"></mat-row>
 </mat-table>

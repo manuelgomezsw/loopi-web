@@ -1,16 +1,22 @@
-import {inject} from '@angular/core';
-import {CanActivateFn, Router} from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map, take } from 'rxjs/operators';
+import { AppState } from '../../store/app.state';
+import { selectHasWorkContext } from '../../store/auth/auth.selectors';
+import { ROUTES } from '../constants/app.constants';
 
 export const WorkContextGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const workContext = JSON.parse(localStorage.getItem('work-context') || '{}');
+  const store = inject(Store<AppState>);
 
-  const hasFranchise = !!workContext.franchiseID;
-  const hasStore = !!workContext.storeID;
-
-  if (hasFranchise && hasStore) {
-    return true;
-  }
-
-  return router.parseUrl('/auth/select-context');
+  return store.select(selectHasWorkContext).pipe(
+    take(1),
+    map(hasWorkContext => {
+      if (!hasWorkContext) {
+        return router.parseUrl(ROUTES.AUTH.SELECT_CONTEXT);
+      }
+      return true;
+    })
+  );
 };
