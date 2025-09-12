@@ -13,13 +13,13 @@ export interface TokenData {
 export class TokenStorageService {
   private readonly TOKEN_KEY = 'loopi_auth_token';
   private readonly SECRET_KEY = 'loopi_app_secret_2024'; // En producción, esto debería venir del environment
-  
+
   /**
    * Almacena un token de forma segura con encriptación
    */
   setToken(token: string, expiresIn?: number): void {
-    const expiresAt = expiresIn 
-      ? Date.now() + (expiresIn * 1000) 
+    const expiresAt = expiresIn
+      ? Date.now() + (expiresIn * 1000)
       : Date.now() + (24 * 60 * 60 * 1000); // 24 horas por defecto
 
     const tokenData: TokenData = {
@@ -43,7 +43,7 @@ export class TokenStorageService {
       if (!decrypted) return null;
 
       const tokenData: TokenData = JSON.parse(decrypted);
-      
+
       // Verificar si el token ha expirado
       if (Date.now() > tokenData.expiresAt) {
         this.clearToken();
@@ -78,7 +78,7 @@ export class TokenStorageService {
 
       const tokenData: TokenData = JSON.parse(decrypted);
       const remainingTime = Math.max(0, Math.floor((tokenData.expiresAt - Date.now()) / 1000));
-      
+
       return remainingTime;
     } catch (error) {
       return null;
@@ -136,7 +136,7 @@ export class TokenStorageService {
 
       const newEncrypted = this.encrypt(JSON.stringify(tokenData));
       localStorage.setItem(this.TOKEN_KEY, newEncrypted);
-      
+
       return true;
     } catch (error) {
       console.error('Error al refrescar expiración:', error);

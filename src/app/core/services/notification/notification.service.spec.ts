@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { NotificationService, NotificationType } from './notification.service';
 import { setupServiceTesting } from '../../../testing/test-utils';
+import { NotificationService } from './notification.service';
 
 describe('NotificationService', () => {
   let service: NotificationService;
@@ -139,8 +139,8 @@ describe('NotificationService', () => {
 
     it('should merge custom options with defaults', () => {
       const message = 'Custom message';
-      const options = { 
-        duration: 3000, 
+      const options = {
+        duration: 3000,
         horizontalPosition: 'left' as const,
         panelClass: ['custom-class']
       };

@@ -1,17 +1,17 @@
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { AuthService, LoginResponse, ContextResponse } from './auth-service';
+import { environment } from '../../../../environments/environment';
+import { expectHttpCall, setupServiceTesting, TestDataFactory } from '../../../testing/test-utils';
 import { TokenStorageService } from '../token-storage/token-storage.service';
 import { WorkContextService } from '../work-context/work-context';
-import { setupServiceTesting, TestDataFactory, expectHttpCall } from '../../../testing/test-utils';
-import { environment } from '../../../../environments/environment';
+import { AuthService, ContextResponse } from './auth-service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpController: HttpTestingController;
   let tokenStorageService: jasmine.SpyObj<TokenStorageService>;
   let workContextService: jasmine.SpyObj<WorkContextService>;
-  
+
   const testUtils = setupServiceTesting();
 
   beforeEach(() => {
@@ -45,15 +45,15 @@ describe('AuthService', () => {
       service.login(credentials).subscribe(response => {
         expect(response).toEqual(loginResponse);
         expect(tokenStorageService.setToken).toHaveBeenCalledWith(
-          loginResponse.token, 
+          loginResponse.token,
           loginResponse.expiresIn
         );
       });
 
       expectHttpCall(
-        httpController, 
-        'POST', 
-        `${environment.apiUrl}/auth/login`, 
+        httpController,
+        'POST',
+        `${environment.apiUrl}/auth/login`,
         loginResponse
       );
     });
@@ -81,7 +81,7 @@ describe('AuthService', () => {
       service.selectContext(context).subscribe(response => {
         expect(response).toEqual(contextResponse);
         expect(tokenStorageService.setToken).toHaveBeenCalledWith(
-          contextResponse.token, 
+          contextResponse.token,
           contextResponse.expiresIn
         );
       });
@@ -172,7 +172,7 @@ describe('AuthService', () => {
       service.refreshToken().subscribe(response => {
         expect(response).toEqual(refreshResponse);
         expect(tokenStorageService.setToken).toHaveBeenCalledWith(
-          refreshResponse.token, 
+          refreshResponse.token,
           refreshResponse.expiresIn
         );
       });

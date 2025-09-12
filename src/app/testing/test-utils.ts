@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 /**
  * Configuración base para tests que necesitan HTTP
@@ -104,7 +104,7 @@ export class MockLocalStorage {
  */
 export function setupLocalStorageMock(): MockLocalStorage {
   const mockLocalStorage = new MockLocalStorage();
-  
+
   beforeEach(() => {
     Object.defineProperty(window, 'localStorage', {
       value: mockLocalStorage,
@@ -128,7 +128,7 @@ export class TestComponent {}
  * Utilidades para crear datos de prueba
  */
 export class TestDataFactory {
-  
+
   static createLoginResponse(overrides: Partial<any> = {}) {
     return {
       token: 'mock-jwt-token',
@@ -173,19 +173,19 @@ export class TestDataFactory {
  * Matcher personalizado para verificar llamadas HTTP
  */
 export function expectHttpCall(
-  httpController: HttpTestingController, 
-  method: string, 
-  url: string, 
+  httpController: HttpTestingController,
+  method: string,
+  url: string,
   responseData?: any,
   status: number = 200
 ) {
   const req = httpController.expectOne(url);
   expect(req.request.method).toBe(method);
-  
+
   if (responseData !== undefined) {
     req.flush(responseData, { status, statusText: 'OK' });
   }
-  
+
   return req;
 }
 
@@ -204,7 +204,7 @@ export function mockConsoleError(): jasmine.Spy {
 }
 
 /**
- * Mock para console.log en tests  
+ * Mock para console.log en tests
  */
 export function mockConsoleLog(): jasmine.Spy {
   return spyOn(console, 'log').and.stub();

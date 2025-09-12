@@ -24,8 +24,8 @@ export class NotificationService {
    * Muestra una notificación de éxito
    */
   success(message: string, options?: NotificationOptions): MatSnackBarRef<SimpleSnackBar> {
-    return this.show(message, { 
-      ...options, 
+    return this.show(message, {
+      ...options,
       type: 'success',
       panelClass: ['notification-success']
     });
@@ -35,8 +35,8 @@ export class NotificationService {
    * Muestra una notificación de error
    */
   error(message: string, options?: NotificationOptions): MatSnackBarRef<SimpleSnackBar> {
-    return this.show(message, { 
-      ...options, 
+    return this.show(message, {
+      ...options,
       type: 'error',
       duration: 7000, // Los errores se muestran más tiempo
       panelClass: ['notification-error']
@@ -47,8 +47,8 @@ export class NotificationService {
    * Muestra una notificación de advertencia
    */
   warning(message: string, options?: NotificationOptions): MatSnackBarRef<SimpleSnackBar> {
-    return this.show(message, { 
-      ...options, 
+    return this.show(message, {
+      ...options,
       type: 'warning',
       panelClass: ['notification-warning']
     });
@@ -58,8 +58,8 @@ export class NotificationService {
    * Muestra una notificación informativa
    */
   info(message: string, options?: NotificationOptions): MatSnackBarRef<SimpleSnackBar> {
-    return this.show(message, { 
-      ...options, 
+    return this.show(message, {
+      ...options,
       type: 'info',
       panelClass: ['notification-info']
     });
@@ -69,9 +69,9 @@ export class NotificationService {
    * Muestra una notificación genérica
    */
   show(message: string, options?: NotificationOptions): MatSnackBarRef<SimpleSnackBar> {
-    const config = { 
-      ...this.defaultConfig, 
-      ...options 
+    const config = {
+      ...this.defaultConfig,
+      ...options
     };
 
     const action = options?.showCloseButton ? 'Cerrar' : undefined;
