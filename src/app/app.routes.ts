@@ -1,8 +1,8 @@
-import {Routes} from '@angular/router';
-import {HomeComponent} from './features/home/home';
-import {MainLayoutComponent} from './shared/main-layout/main-layout';
-import {AuthGuard} from './core/guards/auth.guard';
-import {WorkContextGuard} from './core/guards/work-context.guard';
+import { Routes } from '@angular/router';
+import { HomeComponent } from './features/home/home';
+import { MainLayoutComponent } from './shared/main-layout/main-layout';
+import { AuthGuard } from './core/guards/auth.guard';
+import { WorkContextGuard } from './core/guards/work-context.guard';
 
 export const routes: Routes = [
   {
@@ -12,15 +12,12 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes)
+    loadChildren: () => import('./features/auth/auth.routes').then(m => m.authRoutes)
   },
   {
     path: '',
     component: MainLayoutComponent,
-    canActivateChild: [
-      AuthGuard,
-      WorkContextGuard
-    ],
+    canActivateChild: [AuthGuard, WorkContextGuard],
     children: [
       {
         path: 'home',
@@ -28,15 +25,15 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        loadChildren: () => import('./features/admin/admin.routes').then((m) => m.adminRoutes)
+        loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes)
       },
       {
         path: 'employees',
-        loadChildren: () => import('./features/employees/employee.routes').then((e) => e.employeeRoutes)
+        loadChildren: () => import('./features/employees/employee.routes').then(e => e.employeeRoutes)
       },
       {
         path: 'shifts',
-        loadChildren: () => import('./features/shifts/shift.routes').then((m) => m.shiftRoutes)
+        loadChildren: () => import('./features/shifts/shift.routes').then(m => m.shiftRoutes)
       }
     ]
   }

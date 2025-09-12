@@ -1,4 +1,5 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { WorkContext } from '../../../model/work-context';
 
 @Injectable({ providedIn: 'root' })
 export class WorkContextService {

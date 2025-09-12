@@ -16,7 +16,12 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     const tokenStorageSpy = jasmine.createSpyObj('TokenStorageService', [
-      'setToken', 'getToken', 'hasValidToken', 'clearToken', 'isTokenExpiringSoon', 'getTokenExpirationTime'
+      'setToken',
+      'getToken',
+      'hasValidToken',
+      'clearToken',
+      'isTokenExpiringSoon',
+      'getTokenExpirationTime'
     ]);
     const workContextSpy = jasmine.createSpyObj('WorkContextService', ['clear']);
 
@@ -44,25 +49,17 @@ describe('AuthService', () => {
 
       service.login(credentials).subscribe(response => {
         expect(response).toEqual(loginResponse);
-        expect(tokenStorageService.setToken).toHaveBeenCalledWith(
-          loginResponse.token,
-          loginResponse.expiresIn
-        );
+        expect(tokenStorageService.setToken).toHaveBeenCalledWith(loginResponse.token, loginResponse.expiresIn);
       });
 
-      expectHttpCall(
-        httpController,
-        'POST',
-        `${environment.apiUrl}/auth/login`,
-        loginResponse
-      );
+      expectHttpCall(httpController, 'POST', `${environment.apiUrl}/auth/login`, loginResponse);
     });
 
     it('should handle login error', () => {
       const credentials = TestDataFactory.createCredentials();
 
       service.login(credentials).subscribe({
-        error: (error) => {
+        error: error => {
           expect(error.status).toBe(401);
           expect(tokenStorageService.setToken).not.toHaveBeenCalled();
         }
@@ -80,18 +77,10 @@ describe('AuthService', () => {
 
       service.selectContext(context).subscribe(response => {
         expect(response).toEqual(contextResponse);
-        expect(tokenStorageService.setToken).toHaveBeenCalledWith(
-          contextResponse.token,
-          contextResponse.expiresIn
-        );
+        expect(tokenStorageService.setToken).toHaveBeenCalledWith(contextResponse.token, contextResponse.expiresIn);
       });
 
-      expectHttpCall(
-        httpController,
-        'POST',
-        `${environment.apiUrl}/auth/context`,
-        contextResponse
-      );
+      expectHttpCall(httpController, 'POST', `${environment.apiUrl}/auth/context`, contextResponse);
     });
   });
 
@@ -103,12 +92,7 @@ describe('AuthService', () => {
       expect(workContextService.clear).toHaveBeenCalled();
 
       // Verificar que se llama al endpoint de logout
-      expectHttpCall(
-        httpController,
-        'POST',
-        `${environment.apiUrl}/auth/logout`,
-        {}
-      );
+      expectHttpCall(httpController, 'POST', `${environment.apiUrl}/auth/logout`, {});
     });
 
     it('should handle logout backend error gracefully', () => {
@@ -171,18 +155,10 @@ describe('AuthService', () => {
 
       service.refreshToken().subscribe(response => {
         expect(response).toEqual(refreshResponse);
-        expect(tokenStorageService.setToken).toHaveBeenCalledWith(
-          refreshResponse.token,
-          refreshResponse.expiresIn
-        );
+        expect(tokenStorageService.setToken).toHaveBeenCalledWith(refreshResponse.token, refreshResponse.expiresIn);
       });
 
-      expectHttpCall(
-        httpController,
-        'POST',
-        `${environment.apiUrl}/auth/refresh`,
-        refreshResponse
-      );
+      expectHttpCall(httpController, 'POST', `${environment.apiUrl}/auth/refresh`, refreshResponse);
     });
   });
 

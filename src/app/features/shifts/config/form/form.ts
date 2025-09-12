@@ -1,21 +1,21 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButton} from '@angular/material/button';
-import {MatCard, MatCardContent, MatCardFooter} from '@angular/material/card';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {StatusSelectComponent} from '../../../../shared/status-select/status-select';
-import {MatOption, MatSelect} from '@angular/material/select';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTimepicker, MatTimepickerInput, MatTimepickerToggle} from '@angular/material/timepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
-import {ShiftService} from '../../../../core/services/shift/shift';
-import {Shift} from '../../../../model/shift';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { StatusSelectComponent } from '../../../../shared/status-select/status-select';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTimepicker, MatTimepickerInput, MatTimepickerToggle } from '@angular/material/timepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
+import { ShiftService } from '../../../../core/services/shift/shift';
+import { Shift } from '../../../../model/shift';
 
 @Component({
   selector: 'app-shift-config-form',
-  standalone:true,
+  standalone: true,
   imports: [
     PageTitleComponent,
     FormsModule,
@@ -90,9 +90,7 @@ export class ShiftConfigFormComponent implements OnInit {
       store_id: raw.store_id ?? 1
     };
 
-    const action = this.shiftId
-      ? this.shiftService.update(this.shiftId, shift)
-      : this.shiftService.create(shift);
+    const action = this.shiftId ? this.shiftService.update(this.shiftId, shift) : this.shiftService.create(shift);
 
     action.subscribe(() => this.router.navigate(['/shifts/config/list']));
   }

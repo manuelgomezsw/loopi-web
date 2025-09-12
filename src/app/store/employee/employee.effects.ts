@@ -2,7 +2,7 @@
  * Effects de Employee
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { exhaustMap, tap } from 'rxjs/operators';
@@ -13,12 +13,9 @@ import * as EmployeeActions from './employee.actions';
 
 @Injectable()
 export class EmployeeEffects {
-
-  constructor(
-    private actions$: Actions,
-    // private employeeService: EmployeeService,
-    private notificationService: NotificationService
-  ) {}
+  private actions$ = inject(Actions);
+  // private employeeService = inject(EmployeeService); // TODO: Uncomment when EmployeeService is available
+  private notificationService = inject(NotificationService);
 
   // Load Employees Effect (placeholder - requires EmployeeService implementation)
   loadEmployees$ = createEffect(() =>
@@ -67,17 +64,19 @@ export class EmployeeEffects {
           }
         ];
 
-        return of(EmployeeActions.loadEmployeesSuccess({
-          employees: mockEmployees,
-          meta: {
-            currentPage: 1,
-            totalPages: 1,
-            totalItems: 1,
-            itemsPerPage: 10,
-            hasNextPage: false,
-            hasPreviousPage: false
-          }
-        }));
+        return of(
+          EmployeeActions.loadEmployeesSuccess({
+            employees: mockEmployees,
+            meta: {
+              currentPage: 1,
+              totalPages: 1,
+              totalItems: 1,
+              itemsPerPage: 10,
+              hasNextPage: false,
+              hasPreviousPage: false
+            }
+          })
+        );
       })
     )
   );
@@ -86,13 +85,14 @@ export class EmployeeEffects {
   // TODO: Implement these effects when service is ready
 
   // Error Handling Effect
-  loadEmployeesFailure$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(EmployeeActions.loadEmployeesFailure),
-      tap(({ error }) => {
-        this.notificationService.error(error);
-      })
-    ),
+  loadEmployeesFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(EmployeeActions.loadEmployeesFailure),
+        tap(({ error }) => {
+          this.notificationService.error(error);
+        })
+      ),
     { dispatch: false }
   );
 }

@@ -9,8 +9,8 @@
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}",
       "sourceMaps": true,
-      "trace": "verbose",
-      "userDataDir": false,
+      "trace": true,
+      "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-profile",
       "runtimeArgs": [
         "--disable-web-security",
         "--disable-features=VizDisplayCompositor"
@@ -23,7 +23,7 @@
       "port": 9222,
       "webRoot": "${workspaceFolder}",
       "sourceMaps": true,
-      "trace": "verbose"
+      "trace": true
     },
     {
       "name": "🧪 Debug Angular Tests",

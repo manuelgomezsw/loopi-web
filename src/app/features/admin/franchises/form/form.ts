@@ -1,11 +1,11 @@
-import {Component} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
-import {MatCard, MatCardContent, MatCardFooter} from '@angular/material/card';
-import {RouterLink} from '@angular/router';
-import {StatusSelectComponent} from '../../../../shared/status-select/status-select';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
+import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
+import { StatusSelectComponent } from '../../../../shared/status-select/status-select';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 
 @Component({
   selector: 'app-form',
@@ -27,6 +27,4 @@ import {PageTitleComponent} from '../../../../shared/page-title-component/page-t
   templateUrl: './form.html',
   styleUrl: './form.css'
 })
-export class FranchiseFormComponent {
-
-}
+export class FranchiseFormComponent {}

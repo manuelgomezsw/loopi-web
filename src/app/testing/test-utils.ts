@@ -11,11 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 export function setupHttpTesting() {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatSnackBarModule,
-        NoopAnimationsModule
-      ]
+      imports: [HttpClientTestingModule, MatSnackBarModule, NoopAnimationsModule]
     });
   });
 
@@ -34,11 +30,7 @@ export function setupHttpTesting() {
 export function setupRouterTesting(routes: any[] = []) {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes(routes),
-        MatSnackBarModule,
-        NoopAnimationsModule
-      ]
+      imports: [RouterTestingModule.withRoutes(routes), MatSnackBarModule, NoopAnimationsModule]
     });
   });
 }
@@ -49,12 +41,7 @@ export function setupRouterTesting(routes: any[] = []) {
 export function setupServiceTesting() {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatSnackBarModule,
-        NoopAnimationsModule
-      ]
+      imports: [HttpClientTestingModule, RouterTestingModule, MatSnackBarModule, NoopAnimationsModule]
     });
   });
 
@@ -128,7 +115,6 @@ export class TestComponent {}
  * Utilidades para crear datos de prueba
  */
 export class TestDataFactory {
-
   static createLoginResponse(overrides: Partial<any> = {}) {
     return {
       token: 'mock-jwt-token',
@@ -145,7 +131,7 @@ export class TestDataFactory {
   static createTokenData(overrides: Partial<any> = {}) {
     return {
       token: 'mock-jwt-token',
-      expiresAt: Date.now() + (24 * 60 * 60 * 1000), // 24 horas
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 horas
       ...overrides
     };
   }

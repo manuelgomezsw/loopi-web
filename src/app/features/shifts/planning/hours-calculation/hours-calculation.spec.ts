@@ -9,8 +9,7 @@ describe('HoursCalculation', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HoursCalculation]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HoursCalculation);
     component = fixture.componentInstance;

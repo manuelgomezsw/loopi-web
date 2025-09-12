@@ -1,7 +1,8 @@
 /* Importar estilos de notificaciones */
-@import './styles/notification-styles.css';
+@import "./styles/notification-styles.css";
 
-html, body {
+html,
+body {
   height: 100%;
 }
 

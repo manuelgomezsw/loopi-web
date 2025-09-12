@@ -1,14 +1,12 @@
 <app-page-title entityName="Turnos asignados"></app-page-title>
 
-<a class="create-link" routerLink="assign">
-  Asignar turno
-</a>
+<a class="create-link" routerLink="assign"> Asignar turno </a>
 <mat-card>
   <mat-table class="mat-elevation-z1 mat-table-custom" [dataSource]="data">
     <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column">
       <mat-header-cell *matHeaderCellDef> {{ getColumnLabel(column) }} </mat-header-cell>
       <mat-cell *matCellDef="let row">
-        {{ column === 'employee' ? row.employee : row.shifts[columnsToDisplay.indexOf(column) - 1] }}
+        {{ column === "employee" ? row.employee : row.shifts[columnsToDisplay.indexOf(column) - 1] }}
       </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>

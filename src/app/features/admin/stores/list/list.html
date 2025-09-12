@@ -1,8 +1,6 @@
 <app-page-title entityName="Puntos de venta"></app-page-title>
 
-<a class="create-link" [routerLink]="['/admin/stores/new']">
-  Nuevo punto de venta
-</a>
+<a class="create-link" [routerLink]="['/admin/stores/new']"> Nuevo punto de venta </a>
 <mat-table class="mat-mdc-table mat-mdc-table-responsive">
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
@@ -11,18 +9,18 @@
   <ng-container matColumnDef="location">
     <mat-header-cell *matHeaderCellDef>Ubicación</mat-header-cell>
     <mat-cell *matCellDef="let f">
-      <mat-icon color="primary">{{ f.active ? 'check_circle' : 'cancel' }}</mat-icon>
+      <mat-icon color="primary">{{ f.active ? "check_circle" : "cancel" }}</mat-icon>
     </mat-cell>
   </ng-container>
   <ng-container matColumnDef="address">
     <mat-header-cell *matHeaderCellDef>Dirección</mat-header-cell>
     <mat-cell *matCellDef="let f">
-      <mat-icon color="primary">{{ f.active ? 'check_circle' : 'cancel' }}</mat-icon>
+      <mat-icon color="primary">{{ f.active ? "check_circle" : "cancel" }}</mat-icon>
     </mat-cell>
   </ng-container>
   <ng-container matColumnDef="active">
     <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-    <mat-cell *matCellDef="let f">{{ f.location || '—' }}</mat-cell>
+    <mat-cell *matCellDef="let f">{{ f.location || "—" }}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>

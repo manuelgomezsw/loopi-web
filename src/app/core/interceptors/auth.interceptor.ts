@@ -4,7 +4,7 @@ import { TokenStorageService } from '../services/token-storage/token-storage.ser
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenStorage = inject(TokenStorageService);
-  
+
   // Obtener token de forma segura
   const token = tokenStorage.getToken();
 
@@ -24,7 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
  * Verifica si la request es para autenticación
  */
 function isAuthRequest(req: HttpRequest<any>): boolean {
-  return req.url.includes('/auth/login') || 
-         req.url.includes('/auth/register') ||
-         req.url.includes('/auth/forgot-password');
+  return (
+    req.url.includes('/auth/login') || req.url.includes('/auth/register') || req.url.includes('/auth/forgot-password')
+  );
 }

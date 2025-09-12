@@ -9,8 +9,7 @@ describe('ShiftTable', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ShiftTable]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ShiftTable);
     component = fixture.componentInstance;

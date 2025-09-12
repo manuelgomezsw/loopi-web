@@ -1,9 +1,9 @@
-import {Injectable, inject} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
-import {environment} from '../../../../environments/environment';
-import {TokenStorageService} from '../token-storage/token-storage.service';
-import {WorkContextService} from '../work-context/work-context';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { TokenStorageService } from '../token-storage/token-storage.service';
+import { WorkContextService } from '../work-context/work-context';
 
 export interface LoginResponse {
   token: string;
@@ -20,55 +20,47 @@ export interface ContextResponse {
   expiresIn?: number;
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private tokenStorage = inject(TokenStorageService);
   private workContextService = inject(WorkContextService);
-  
+
   private readonly baseUrl = `${environment.apiUrl}/auth`;
 
   /**
    * Realiza el login del usuario
    */
   login(credentials: { email: string; password: string }): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials)
-      .pipe(
-        tap(response => {
-          // Almacenar token de forma segura
-          this.tokenStorage.setToken(response.token, response.expiresIn);
-        })
-      );
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials).pipe(
+      tap(response => {
+        // Almacenar token de forma segura
+        this.tokenStorage.setToken(response.token, response.expiresIn);
+      })
+    );
   }
 
   /**
    * Selecciona el contexto de trabajo (franquicia/tienda)
    */
   selectContext(context: { franchise_id: number; store_id: number }): Observable<ContextResponse> {
-    return this.http.post<ContextResponse>(`${this.baseUrl}/context`, context)
-      .pipe(
-        tap(response => {
-          // Actualizar token con el contexto seleccionado
-          this.tokenStorage.setToken(response.token, response.expiresIn);
-        })
-      );
+    return this.http.post<ContextResponse>(`${this.baseUrl}/context`, context).pipe(
+      tap(response => {
+        // Actualizar token con el contexto seleccionado
+        this.tokenStorage.setToken(response.token, response.expiresIn);
+      })
+    );
   }
 
   /**
    * Cierra la sesión del usuario
    */
   logout(): void {
-    // Limpiar token
     this.tokenStorage.clearToken();
-    
-    // Limpiar contexto de trabajo
     this.workContextService.clear();
 
-    // Opcional: notificar al backend sobre el logout
     this.http.post(`${this.baseUrl}/logout`, {}).subscribe({
-      error: () => {
-        // Ignorar errores en logout - la limpieza local ya se hizo
-      }
+      error: () => {}
     });
   }
 
@@ -104,12 +96,11 @@ export class AuthService {
    * Refresca el token actual (si el backend lo soporta)
    */
   refreshToken(): Observable<ContextResponse> {
-    return this.http.post<ContextResponse>(`${this.baseUrl}/refresh`, {})
-      .pipe(
-        tap(response => {
-          this.tokenStorage.setToken(response.token, response.expiresIn);
-        })
-      );
+    return this.http.post<ContextResponse>(`${this.baseUrl}/refresh`, {}).pipe(
+      tap(response => {
+        this.tokenStorage.setToken(response.token, response.expiresIn);
+      })
+    );
   }
 
   /**
@@ -117,12 +108,11 @@ export class AuthService {
    */
   checkAuthStatus(): boolean {
     const isValid = this.isLoggedIn();
-    
+
     if (!isValid) {
-      // Limpiar cualquier dato residual
       this.logout();
     }
-    
+
     return isValid;
   }
 }

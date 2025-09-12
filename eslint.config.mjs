@@ -1,11 +1,10 @@
 // @ts-check
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import angular from '@angular-eslint/eslint-plugin';
 import angularTemplate from '@angular-eslint/eslint-plugin-template';
 import angularParser from '@angular-eslint/template-parser';
-import prettier from 'eslint-plugin-prettier';
+import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
+import prettier from 'eslint-plugin-prettier';
 
 export default [
   // Base configuration
@@ -29,15 +28,14 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       parserOptions: {
-        project: './tsconfig.json',
-        createDefaultProgram: true,
+        projectService: true,
         ecmaFeatures: {
           decorators: true
         }
       }
     },
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
+      '@typescript-eslint': tseslint,
       '@angular-eslint': angular,
       'prettier': prettier
     },
@@ -66,6 +64,7 @@ export default [
       'no-console': ['warn', { 'allow': ['warn', 'error'] }],
       'no-debugger': 'error',
       'no-alert': 'error',
+      'no-restricted-globals': ['error', 'alert', 'confirm', 'prompt'],
       'no-var': 'error',
       'prefer-const': 'error',
       'prefer-template': 'error',

@@ -18,9 +18,7 @@ export class TokenStorageService {
    * Almacena un token de forma segura con encriptación
    */
   setToken(token: string, expiresIn?: number): void {
-    const expiresAt = expiresIn
-      ? Date.now() + (expiresIn * 1000)
-      : Date.now() + (24 * 60 * 60 * 1000); // 24 horas por defecto
+    const expiresAt = expiresIn ? Date.now() + expiresIn * 1000 : Date.now() + 24 * 60 * 60 * 1000; // 24 horas por defecto
 
     const tokenData: TokenData = {
       token,
@@ -132,7 +130,7 @@ export class TokenStorageService {
       if (!decrypted) return false;
 
       const tokenData: TokenData = JSON.parse(decrypted);
-      tokenData.expiresAt = Date.now() + (expiresIn * 1000);
+      tokenData.expiresAt = Date.now() + expiresIn * 1000;
 
       const newEncrypted = this.encrypt(JSON.stringify(tokenData));
       localStorage.setItem(this.TOKEN_KEY, newEncrypted);

@@ -1,23 +1,27 @@
-import {Component, inject} from '@angular/core';
-import {MatCard} from '@angular/material/card';
+import { NgIf } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { MatCard } from '@angular/material/card';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatCell,
   MatCellDef,
   MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
   MatTable
 } from '@angular/material/table';
-import {NgIf} from '@angular/common';
-import {MatDialog} from '@angular/material/dialog';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {RouterLink} from '@angular/router';
-import {MatTooltip} from '@angular/material/tooltip';
-import {MatIcon} from '@angular/material/icon';
-import {AbsenceListComponent} from '../../absences/list/list';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
-import {HourSummary} from '../../../../model/hour-summary';
+import { MatTooltip } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
+import { NotificationService } from '../../../../core/services/notification/notification.service';
+import { HourSummary } from '../../../../model/hour-summary';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
+import { AbsenceListComponent } from '../../absences/list/list';
 
 @Component({
   selector: 'app-hours-calculation',
@@ -38,7 +42,7 @@ import {HourSummary} from '../../../../model/hour-summary';
     NgIf,
     RouterLink,
     MatTooltip,
-    MatIcon,
+    MatIcon
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './hours-calculation.html',
@@ -46,11 +50,12 @@ import {HourSummary} from '../../../../model/hour-summary';
 })
 export class HoursCalculation {
   private dialog = inject(MatDialog);
+  private notificationService = inject(NotificationService);
 
   dataSource: HourSummary[] = [
-    {employee: 'Valentina', ordinary: 80, extra: 5, sunday: 4, hasAbsences: true},
-    {employee: 'Arnaldis', ordinary: 78, extra: 6, sunday: 3, hasAbsences: true},
-    {employee: 'Sirelda', ordinary: 78, extra: 6, sunday: 3, hasAbsences: true}
+    { employee: 'Valentina', ordinary: 80, extra: 5, sunday: 4, hasAbsences: true },
+    { employee: 'Arnaldis', ordinary: 78, extra: 6, sunday: 3, hasAbsences: true },
+    { employee: 'Sirelda', ordinary: 78, extra: 6, sunday: 3, hasAbsences: true }
   ];
 
   columnsToDisplay = ['employee', 'ordinary', 'extra', 'sunday', 'absences'];
@@ -64,12 +69,12 @@ export class HoursCalculation {
       height: isMobile ? '100vh' : 'auto',
       maxHeight: '90vh',
       panelClass: 'responsive-dialog',
-      data: {employeeName: employee}
+      data: { employeeName: employee }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Ausencia registrada:', result);
+        this.notificationService.success('Ausencia registrada correctamente');
       }
     });
   }

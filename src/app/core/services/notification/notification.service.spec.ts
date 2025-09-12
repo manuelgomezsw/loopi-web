@@ -16,9 +16,7 @@ describe('NotificationService', () => {
     snackBarSpy.open.and.returnValue(mockSnackBarRef);
 
     TestBed.configureTestingModule({
-      providers: [
-        { provide: MatSnackBar, useValue: snackBarSpy }
-      ]
+      providers: [{ provide: MatSnackBar, useValue: snackBarSpy }]
     });
 
     service = TestBed.inject(NotificationService);

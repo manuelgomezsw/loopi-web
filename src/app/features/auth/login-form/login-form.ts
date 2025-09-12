@@ -24,7 +24,7 @@ import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.sel
     MatCardModule,
     ReactiveFormsModule,
     MatIcon,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',

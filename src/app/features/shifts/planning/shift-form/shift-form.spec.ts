@@ -9,8 +9,7 @@ describe('ShiftForm', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ShiftForm]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ShiftForm);
     component = fixture.componentInstance;

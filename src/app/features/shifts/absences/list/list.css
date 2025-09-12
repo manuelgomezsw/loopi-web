@@ -6,7 +6,8 @@ mat-card {
   margin-top: 16px;
 }
 
-mat-header-cell, mat-cell {
+mat-header-cell,
+mat-cell {
   padding: 12px;
   font-size: 14px;
 }

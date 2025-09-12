@@ -1,16 +1,12 @@
-import {Component} from '@angular/core';
-import {MonthNavigation} from './month-navigation/month-navigation';
-import {ShiftTableComponent} from './shift-table/shift-table';
-import {HoursCalculation} from './hours-calculation/hours-calculation';
+import { Component } from '@angular/core';
+import { MonthNavigation } from './month-navigation/month-navigation';
+import { ShiftTableComponent } from './shift-table/shift-table';
+import { HoursCalculation } from './hours-calculation/hours-calculation';
 
 @Component({
   selector: 'app-shift-planning',
   standalone: true,
-  imports: [
-    MonthNavigation,
-    ShiftTableComponent,
-    HoursCalculation
-  ],
+  imports: [MonthNavigation, ShiftTableComponent, HoursCalculation],
   templateUrl: './planning.html',
   styleUrl: './planning.css'
 })

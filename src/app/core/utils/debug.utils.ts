@@ -77,7 +77,9 @@ export function TrackPerformance(threshold: number = 100) {
         }
 
         if (duration > threshold) {
-          console.warn(`[PERFORMANCE] ${className}.${propertyName} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`);
+          console.warn(
+            `[PERFORMANCE] ${className}.${propertyName} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`
+          );
         }
       };
 

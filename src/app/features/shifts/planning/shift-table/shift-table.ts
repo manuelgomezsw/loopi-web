@@ -1,17 +1,20 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatCard} from '@angular/material/card';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatCard } from '@angular/material/card';
 import {
   MatCell,
-  MatCellDef, MatColumnDef,
+  MatCellDef,
+  MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef,
-  MatRow, MatRowDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
   MatTable
 } from '@angular/material/table';
-import {NgForOf} from '@angular/common';
-import {RouterLink} from '@angular/router';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
+import { NgForOf } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 
 @Component({
   selector: 'app-shift-table',
@@ -30,7 +33,7 @@ import {PageTitleComponent} from '../../../../shared/page-title-component/page-t
     MatHeaderRowDef,
     MatRowDef,
     MatColumnDef,
-    RouterLink,
+    RouterLink
   ],
   templateUrl: './shift-table.html',
   styleUrl: './shift-table.css'

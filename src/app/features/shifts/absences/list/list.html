@@ -5,7 +5,7 @@
     <mat-table [dataSource]="absences" class="mat-elevation-z1 mat-table-custom">
       <ng-container matColumnDef="date">
         <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
-        <mat-cell *matCellDef="let a">{{ a.date | date:'dd/MM/yyyy' }}</mat-cell>
+        <mat-cell *matCellDef="let a">{{ a.date | date: "dd/MM/yyyy" }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="type">
         <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
@@ -13,19 +13,27 @@
       </ng-container>
       <ng-container matColumnDef="hours">
         <mat-header-cell *matHeaderCellDef>Horas</mat-header-cell>
-        <mat-cell *matCellDef="let a">{{ a.hours ?? '—' }}</mat-cell>
+        <mat-cell *matCellDef="let a">{{ a.hours ?? "—" }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="comment">
         <mat-header-cell *matHeaderCellDef>Comentario</mat-header-cell>
-        <mat-cell *matCellDef="let a">{{ a.comment || '—' }}</mat-cell>
+        <mat-cell *matCellDef="let a">{{ a.comment || "—" }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let f">
-          <button mat-icon-button color="primary" matTooltip="Editar" [routerLink]="['/admin/franchises', f.id, 'edit']">
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Editar"
+            [routerLink]="['/admin/franchises', f.id, 'edit']">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="primary" matTooltip="Eliminar" [routerLink]="['/admin/franchises', f.id, 'edit']">
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Eliminar"
+            [routerLink]="['/admin/franchises', f.id, 'edit']">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-cell>
@@ -34,9 +42,7 @@
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
     <mat-card-footer class="main-form-footer main-form-footer--right">
-      <button mat-button class="btn-cancel" routerLink="/shifts">
-        CERRAR
-      </button>
+      <button mat-button class="btn-cancel" routerLink="/shifts">CERRAR</button>
     </mat-card-footer>
   </mat-card>
 </div>

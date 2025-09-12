@@ -21,7 +21,11 @@
 </div>
 
 <div class="footer">
-  <button mat-flat-button class="loopi-button-primary" (click)="confirm()" [disabled]="!workContext.franchiseID || !workContext.storeID">
+  <button
+    mat-flat-button
+    class="loopi-button-primary"
+    (click)="confirm()"
+    [disabled]="!workContext.franchiseID || !workContext.storeID">
     Confirmar
   </button>
 </div>

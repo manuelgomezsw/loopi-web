@@ -1,19 +1,20 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButton} from '@angular/material/button';
-import {MatCard, MatCardContent, MatCardFooter} from '@angular/material/card';
-import {MatFormField, MatLabel} from '@angular/material/input';
-import {RouterLink} from '@angular/router';
-import {MatOption, MatSelect} from '@angular/material/select';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
-import {ShiftService} from '../../../../core/services/shift/shift';
-import {WorkContextService} from '../../../../core/services/work-context/work-context';
-import {EmployeeService} from '../../../../core/services/employee/employee';
-import {CalendarService} from '../../../../core/services/calendar/calendar';
-import {Shift} from '../../../../model/shift';
-import {Employee} from '../../../../model/employee';
-import {MonthSummary} from '../../../../model/month-summary';
-import {ProjectedHours} from '../../../../model/projected-hours';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
+import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { RouterLink } from '@angular/router';
+import { CalendarService } from '../../../../core/services/calendar/calendar';
+import { EmployeeService } from '../../../../core/services/employee/employee';
+import { NotificationService } from '../../../../core/services/notification/notification.service';
+import { ShiftService } from '../../../../core/services/shift/shift';
+import { WorkContextService } from '../../../../core/services/work-context/work-context';
+import { Employee } from '../../../../model/employee';
+import { MonthSummary } from '../../../../model/month-summary';
+import { ProjectedHours } from '../../../../model/projected-hours';
+import { Shift } from '../../../../model/shift';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 
 @Component({
   selector: 'app-shift-form',
@@ -30,7 +31,7 @@ import {ProjectedHours} from '../../../../model/projected-hours';
     MatSelect,
     ReactiveFormsModule,
     RouterLink,
-    MatFormField,
+    MatFormField
   ],
   templateUrl: './shift-form.html',
   styleUrl: './shift-form.css'
@@ -41,6 +42,7 @@ export class ShiftAssignFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private calendarService = inject(CalendarService);
   private contextService = inject(WorkContextService);
+  private notificationService = inject(NotificationService);
 
   storeId!: number;
   shifts: Shift[] = [];
@@ -78,7 +80,7 @@ export class ShiftAssignFormComponent implements OnInit {
   generateMonthOptions(): void {
     const now = new Date();
     const currentYear = now.getFullYear();
-    this.months = Array.from({length: 12}, (_, i) => {
+    this.months = Array.from({ length: 12 }, (_, i) => {
       const month = (i + 1).toString().padStart(2, '0');
       return `${currentYear}-${month}`;
     });
@@ -106,24 +108,27 @@ export class ShiftAssignFormComponent implements OnInit {
   }
 
   updateProjection(): void {
-    const {month, shift_id} = this.form.value;
+    const { month, shift_id } = this.form.value;
     if (!month || !shift_id) return;
 
     const [year, monthNum] = month.split('-');
 
-    this.shiftService.previewHours({
-      shift_id,
-      year: +year,
-      month: +monthNum
-    }).subscribe(result => {
-      this.projectedHours = result;
-    });
+    this.shiftService
+      .previewHours({
+        shift_id,
+        year: +year,
+        month: +monthNum
+      })
+      .subscribe(result => {
+        this.projectedHours = result;
+      });
   }
 
   save(): void {
     if (this.form.invalid) return;
 
     // aquí irá la lógica para guardar la asignación de turnos, aún no definida
-    console.log('Guardar', this.form.value);
+    this.notificationService.info('Formulario listo para guardar. Funcionalidad en desarrollo.');
+    // TODO: Implementar lógica de guardado real
   }
 }

@@ -9,8 +9,7 @@ describe('SelectContext', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SelectContext]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SelectContext);
     component = fixture.componentInstance;

@@ -9,8 +9,7 @@ describe('MonthNavigation', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MonthNavigation]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MonthNavigation);
     component = fixture.componentInstance;

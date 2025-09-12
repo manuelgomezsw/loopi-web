@@ -1,17 +1,12 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatIconButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import {DatePipe, TitleCasePipe} from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-month-navigation',
   standalone: true,
-  imports: [
-    MatIconButton,
-    MatIcon,
-    DatePipe,
-    TitleCasePipe
-  ],
+  imports: [MatIconButton, MatIcon, DatePipe, TitleCasePipe],
   templateUrl: './month-navigation.html',
   styleUrl: './month-navigation.css'
 })

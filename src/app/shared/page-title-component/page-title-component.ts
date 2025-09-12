@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {FormHeaderMode} from '../enums/form-header.component';
+import { Component, Input } from '@angular/core';
+import { FormHeaderMode } from '../enums/form-header.component';
 
 @Component({
   selector: 'app-page-title',

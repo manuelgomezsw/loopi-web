@@ -1,19 +1,21 @@
-import {Component} from '@angular/core';
-import {MatIconButton} from '@angular/material/button';
+import { Component } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import {
-  MatCell, MatCellDef,
+  MatCell,
+  MatCellDef,
   MatColumnDef,
-  MatHeaderCell, MatHeaderCellDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
   MatHeaderRow,
   MatHeaderRowDef,
   MatRow,
   MatRowDef,
   MatTable
 } from '@angular/material/table';
-import {MatIcon} from '@angular/material/icon';
-import {RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 
 @Component({
   selector: 'app-list',
@@ -33,7 +35,7 @@ import {PageTitleComponent} from '../../../../shared/page-title-component/page-t
     MatCellDef,
     MatHeaderCellDef,
     RouterLink,
-    FormsModule,
+    FormsModule
   ],
   templateUrl: './list.html',
   styleUrl: './list.css'

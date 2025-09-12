@@ -5,13 +5,16 @@
 [![Material Design](https://img.shields.io/badge/Material_Design-20.1.6-757575?style=flat-square&logo=material-design)](https://material.angular.io/)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=flat-square&logo=node.js)](https://nodejs.org/)
 
-Sistema de gestión de empleados y horarios construido con Angular, enfocado en franquicias y tiendas. Implementa autenticación segura, gestión de contextos de trabajo, planificación de turnos y ausencias.
+Sistema de gestión de empleados y horarios construido con Angular, enfocado en
+franquicias y tiendas. Implementa autenticación segura, gestión de contextos de
+trabajo, planificación de turnos y ausencias.
 
 ## 🚀 **Características Principales**
 
 ### ✨ **Funcionalidades de Negocio**
 
-- 🔐 **Autenticación Segura**: Login con tokens encriptados y expiración automática
+- 🔐 **Autenticación Segura**: Login con tokens encriptados y expiración
+  automática
 - 🏪 **Gestión Multi-Contexto**: Soporte para múltiples franquicias y tiendas
 - 👥 **Gestión de Empleados**: CRUD completo con roles y permisos
 - 📅 **Planificación de Turnos**: Sistema de horarios con validaciones
@@ -20,9 +23,12 @@ Sistema de gestión de empleados y horarios construido con Angular, enfocado en 
 
 ### 🛡️ **Características de Seguridad (Implementadas)**
 
-- 🔒 **TokenStorageService**: Encriptación AES de tokens con expiración automática
-- 🚨 **GlobalErrorHandler**: Manejo centralizado de errores con limpieza de sesión
-- 📢 **NotificationService**: Sistema de notificaciones seguras y contextualizadas
+- 🔒 **TokenStorageService**: Encriptación AES de tokens con expiración
+  automática
+- 🚨 **GlobalErrorHandler**: Manejo centralizado de errores con limpieza de
+  sesión
+- 📢 **NotificationService**: Sistema de notificaciones seguras y
+  contextualizadas
 - 🛂 **Guards Mejorados**: Verificación robusta de autenticación y contexto
 - 🔍 **HTTP Interceptors**: Logging seguro y gestión automática de headers
 
@@ -189,7 +195,8 @@ npm run build          # Build optimizado para producción
 
 ### **Configuración Automática**
 
-El proyecto incluye un sistema completo de debugging configurado automáticamente:
+El proyecto incluye un sistema completo de debugging configurado
+automáticamente:
 
 - ✅ **Source Maps**: Habilitados para debugging de código TypeScript original
 - ✅ **VSCode/Cursor**: Configuración completa en `.vscode/`
@@ -210,7 +217,7 @@ El proyecto incluye un sistema completo de debugging configurado automáticament
 ```javascript
 // Console global de debugging (disponible automáticamente)
 window.debug.logs(); // Ver todos los logs
-window.debug.logs().filter((l) => l.level === "error"); // Filtrar errores
+window.debug.logs().filter(l => l.level === 'error'); // Filtrar errores
 window.debug.export(); // Exportar logs como JSON
 window.debug.clear(); // Limpiar logs
 window.debug.performance(); // Info de performance del navegador
@@ -368,7 +375,10 @@ git push origin feature/nueva-funcionalidad
 
 - 📖 **[DEBUG-SETUP.md](./DEBUG-SETUP.md)** - Guía completa de debugging
 - 📋 **[DEBUGGING-COMPLETE.md](./DEBUGGING-COMPLETE.md)** - Resumen de debugging
-- 🛡️ **[SECURITY-IMPROVEMENTS.md](./SECURITY-IMPROVEMENTS.md)** - Mejoras de seguridad implementadas
+- 🛡️ **[SECURITY-IMPROVEMENTS.md](./SECURITY-IMPROVEMENTS.md)** - Mejoras de
+  seguridad implementadas
+- 📢 **[NOTIFICATION-GUIDELINES.md](./NOTIFICATION-GUIDELINES.md)** -
+  Lineamientos del sistema de notificaciones
 
 ## 🆘 **Solución de Problemas**
 
@@ -420,7 +430,8 @@ npm run debug:verify
 
 ## 📄 **Licencia**
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
+más detalles.
 
 ## 🤝 **Soporte**
 
@@ -458,4 +469,5 @@ Si tienes problemas o preguntas:
 
 ---
 
-**¡Feliz desarrollo!** 🚀 Si sigues esta guía, tendrás el proyecto corriendo localmente con todas las herramientas de debugging en menos de 5 minutos.
+**¡Feliz desarrollo!** 🚀 Si sigues esta guía, tendrás el proyecto corriendo
+localmente con todas las herramientas de debugging en menos de 5 minutos.

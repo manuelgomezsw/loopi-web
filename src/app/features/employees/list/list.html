@@ -16,9 +16,7 @@
   </div>
 </div>
 
-<a class="create-link" routerLink="/employees/new">
-  Nuevo empleado
-</a>
+<a class="create-link" routerLink="/employees/new"> Nuevo empleado </a>
 
 <!-- Loading indicator -->
 <div *ngIf="loading$ | async" class="loading-container">
@@ -33,45 +31,57 @@
 </div>
 
 <!-- Employees table with optimized rendering -->
-<mat-table [dataSource]="(employees$ | async) || []" class="mat-mdc-table mat-mdc-table-responsive" *ngIf="!(loading$ | async)">
-
+<mat-table
+  [dataSource]="(employees$ | async) || []"
+  class="mat-mdc-table mat-mdc-table-responsive"
+  *ngIf="!(loading$ | async)">
   <ng-container matColumnDef="employeeNumber">
     <mat-header-cell *matHeaderCellDef>Número</mat-header-cell>
-    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.employeeNumber || '—' }}</mat-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.employeeNumber || "—" }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="fullName">
     <mat-header-cell *matHeaderCellDef>Nombre Completo</mat-header-cell>
-    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.fullName || (employee.firstName + ' ' + employee.lastName) }}</mat-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{
+      employee.fullName || employee.firstName + " " + employee.lastName
+    }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="email">
     <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.email || '—' }}</mat-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.email || "—" }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef>Posición</mat-header-cell>
-    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.position || '—' }}</mat-cell>
+    <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">{{ employee.position || "—" }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="status">
     <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
     <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">
       <mat-icon [color]="employee.status === 'ACTIVE' ? 'primary' : 'warn'">
-        {{ employee.status === 'ACTIVE' ? 'check_circle' : 'cancel' }}
+        {{ employee.status === "ACTIVE" ? "check_circle" : "cancel" }}
       </mat-icon>
-      {{ employee.status || '—' }}
+      {{ employee.status || "—" }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
     <mat-cell *matCellDef="let employee; trackBy: trackByEmployeeId">
-      <button mat-icon-button color="primary" [routerLink]="['/employees', employee.id]" (click)="selectEmployee(employee.id)">
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/employees', employee.id]"
+        (click)="selectEmployee(employee.id)">
         <mat-icon>visibility</mat-icon>
       </button>
-      <button mat-icon-button color="primary" [routerLink]="['/employees', employee.id, 'edit']" (click)="selectEmployee(employee.id)">
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="['/employees', employee.id, 'edit']"
+        (click)="selectEmployee(employee.id)">
         <mat-icon>edit</mat-icon>
       </button>
       <button mat-icon-button color="warn" (click)="deleteEmployee(employee.id)">

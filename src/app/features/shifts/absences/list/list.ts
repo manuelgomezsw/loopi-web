@@ -1,12 +1,12 @@
-import {Component} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatCardModule} from '@angular/material/card';
-import {MatTableModule} from '@angular/material/table';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {RouterLink} from '@angular/router';
-import {MatIcon} from '@angular/material/icon';
-import {MatTooltip} from '@angular/material/tooltip';
-import {PageTitleComponent} from '../../../../shared/page-title-component/page-title-component';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 
 @Component({
   selector: 'app-absence-list',
@@ -19,7 +19,7 @@ import {PageTitleComponent} from '../../../../shared/page-title-component/page-t
     MatIcon,
     MatIconButton,
     MatTooltip,
-    PageTitleComponent,
+    PageTitleComponent
   ],
   templateUrl: './list.html',
   styleUrl: './list.css'

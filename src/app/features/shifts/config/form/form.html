@@ -7,7 +7,7 @@
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
-            <input matInput formControlName="name" type="text" name="shiftName"/>
+            <input matInput formControlName="name" type="text" name="shiftName" />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Periodo</mat-label>
@@ -21,15 +21,15 @@
         <div class="form-row form-row--3">
           <mat-form-field appearance="outline">
             <mat-label>Hora inicio</mat-label>
-            <input matInput [matTimepicker]="startTime" formControlName="start_time">
-            <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="startTime"/>
-            <mat-timepicker #startTime/>
+            <input matInput [matTimepicker]="startTime" formControlName="start_time" />
+            <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="startTime" />
+            <mat-timepicker #startTime />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Hora fin</mat-label>
-            <input matInput [matTimepicker]="endTime" formControlName="end_time">
-            <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="endTime"/>
-            <mat-timepicker #endTime/>
+            <input matInput [matTimepicker]="endTime" formControlName="end_time" />
+            <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="endTime" />
+            <mat-timepicker #endTime />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Minutos almuerzo</mat-label>
@@ -45,12 +45,8 @@
       </form>
     </mat-card-content>
     <mat-card-footer class="main-form-footer main-form-footer--left">
-      <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="form.invalid">
-        GUARDAR
-      </button>
-      <button mat-button class="btn-cancel" routerLink="/shifts/config/list">
-        CANCELAR
-      </button>
+      <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="form.invalid">GUARDAR</button>
+      <button mat-button class="btn-cancel" routerLink="/shifts/config/list">CANCELAR</button>
     </mat-card-footer>
   </mat-card>
 </div>

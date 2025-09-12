@@ -1,18 +1,12 @@
-import {Component, forwardRef} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/input';
-import {MatOption, MatSelect} from '@angular/material/select';
+import { Component, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-status-select',
   templateUrl: './status-select.html',
-  imports: [
-    MatFormField,
-    MatFormField,
-    MatSelect,
-    MatLabel,
-    MatOption
-  ],
+  imports: [MatFormField, MatFormField, MatSelect, MatLabel, MatOption],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

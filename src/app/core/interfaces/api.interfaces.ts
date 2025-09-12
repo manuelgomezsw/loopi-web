@@ -3,16 +3,16 @@
  */
 
 import {
-    AbsenceStatus,
-    AbsenceType,
-    EmployeeStatus,
-    EmployeeType,
-    LoadingState,
-    ShiftStatus,
-    ShiftType,
-    SyncStatus,
-    UserRole,
-    UserStatus
+  AbsenceStatus,
+  AbsenceType,
+  EmployeeStatus,
+  EmployeeType,
+  LoadingState,
+  ShiftStatus,
+  ShiftType,
+  SyncStatus,
+  UserRole,
+  UserStatus
 } from '../enums/app.enums';
 
 // Respuesta base de la API
@@ -68,11 +68,11 @@ export interface UserInfo {
 
 // Contexto de trabajo
 export interface WorkContextInfo {
-  franchiseID: number;  // Mantenemos la compatibilidad con la interfaz existente
-  franchiseId: number;  // Nueva propiedad para consistencia
+  franchiseID: number; // Mantenemos la compatibilidad con la interfaz existente
+  franchiseId: number; // Nueva propiedad para consistencia
   franchiseName: string;
-  storeID: number;      // Mantenemos la compatibilidad con la interfaz existente
-  storeId: number;      // Nueva propiedad para consistencia
+  storeID: number; // Mantenemos la compatibilidad con la interfaz existente
+  storeId: number; // Nueva propiedad para consistencia
   storeName: string;
   permissions: string[];
 }

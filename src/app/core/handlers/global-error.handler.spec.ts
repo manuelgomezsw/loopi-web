@@ -16,7 +16,11 @@ describe('GlobalErrorHandler', () => {
 
   beforeEach(() => {
     const notificationSpy = jasmine.createSpyObj('NotificationService', [
-      'error', 'warning', 'connectionError', 'formError', 'sessionExpired'
+      'error',
+      'warning',
+      'connectionError',
+      'formError',
+      'sessionExpired'
     ]);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const tokenStorageSpy = jasmine.createSpyObj('TokenStorageService', ['clearToken']);
@@ -93,9 +97,7 @@ describe('GlobalErrorHandler', () => {
 
         handler.handleError(forbiddenError);
 
-        expect(notificationService.error).toHaveBeenCalledWith(
-          'No tienes permisos para realizar esta acción'
-        );
+        expect(notificationService.error).toHaveBeenCalledWith('No tienes permisos para realizar esta acción');
       });
     });
 
@@ -147,9 +149,7 @@ describe('GlobalErrorHandler', () => {
 
         handler.handleError(rateLimitError);
 
-        expect(notificationService.warning).toHaveBeenCalledWith(
-          'Demasiadas peticiones. Intenta más tarde'
-        );
+        expect(notificationService.warning).toHaveBeenCalledWith('Demasiadas peticiones. Intenta más tarde');
       });
     });
 
@@ -160,9 +160,7 @@ describe('GlobalErrorHandler', () => {
 
           handler.handleError(serverError);
 
-          expect(notificationService.error).toHaveBeenCalledWith(
-            'Error del servidor. Intenta más tarde'
-          );
+          expect(notificationService.error).toHaveBeenCalledWith('Error del servidor. Intenta más tarde');
         });
       });
     });

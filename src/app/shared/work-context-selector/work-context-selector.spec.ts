@@ -9,8 +9,7 @@ describe('WorkContextSelector', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WorkContextSelector]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WorkContextSelector);
     component = fixture.componentInstance;

@@ -9,8 +9,7 @@ describe('StatusSelect', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StatusSelect]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StatusSelect);
     component = fixture.componentInstance;

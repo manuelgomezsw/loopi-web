@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {environment} from '../../../../environments/environment';
-import {Shift} from '../../../model/shift';
-import {ProjectedHours} from '../../../model/projected-hours';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { Shift } from '../../../model/shift';
+import { ProjectedHours } from '../../../model/projected-hours';
 
 @Injectable({ providedIn: 'root' })
 export class ShiftService {
@@ -31,7 +31,7 @@ export class ShiftService {
     return this.http.put(`${this.apiUrl}/${id}`, shift);
   }
 
-  previewHours(data: { shift_id: number; year: number; month: number }) : Observable<ProjectedHours> {
+  previewHours(data: { shift_id: number; year: number; month: number }): Observable<ProjectedHours> {
     return this.http.post<ProjectedHours>(`${this.apiUrl}/preview`, data);
   }
 }

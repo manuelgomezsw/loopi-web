@@ -3,17 +3,19 @@
 // components according to the Material 3 design spec.
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette
+      ),
+      typography: Roboto,
+      density: 0
+    )
+  );
 }
 
 body {
@@ -35,8 +37,10 @@ body {
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 :root {
-  @include mat.toolbar-overrides((
-    container-background-color: var(--mat-sys-primary-container),
-    container-text-color: var(--mat-sys-primary),
-  ));
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--mat-sys-primary-container),
+      container-text-color: var(--mat-sys-primary)
+    )
+  );
 }

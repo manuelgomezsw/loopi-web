@@ -13,7 +13,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Choose a date</mat-label>
-            <input matInput [matDatepicker]="picker">
+            <input matInput [matDatepicker]="picker" />
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -41,12 +41,8 @@
     </mat-card-content>
 
     <mat-card-footer class="main-form-footer main-form-footer--left">
-      <button mat-flat-button color="primary" (click)="save()">
-        GUARDAR
-      </button>
-      <button mat-button class="btn-cancel" routerLink="/shifts">
-        CANCELAR
-      </button>
+      <button mat-flat-button color="primary" (click)="save()">GUARDAR</button>
+      <button mat-button class="btn-cancel" routerLink="/shifts">CANCELAR</button>
     </mat-card-footer>
   </mat-card>
 </div>

@@ -25,7 +25,7 @@ export const debugInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     tap({
-      next: (event) => {
+      next: event => {
         if (event instanceof HttpResponse) {
           const duration = performance.now() - startTime;
 
@@ -51,7 +51,7 @@ export const debugInterceptor: HttpInterceptorFn = (req, next) => {
           }
         }
       },
-      error: (error) => {
+      error: error => {
         const duration = performance.now() - startTime;
 
         if (error instanceof HttpErrorResponse) {

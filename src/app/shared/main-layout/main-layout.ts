@@ -1,15 +1,16 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MatToolbar} from '@angular/material/toolbar';
-import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
-import {WorkContextSelectorComponent} from '../work-context-selector/work-context-selector';
-import {MatTooltip} from '@angular/material/tooltip';
-import {Franchise} from '../../model/franchise';
-import {WorkContextService} from '../../core/services/work-context/work-context';
-import {AuthService} from '../../core/services/auth/auth-service';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTooltip } from '@angular/material/tooltip';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/services/auth/auth-service';
+import { WorkContextService } from '../../core/services/work-context/work-context';
+import { Franchise } from '../../model/franchise';
+import { WorkContext } from '../../model/work-context';
+import { WorkContextSelectorComponent } from '../work-context-selector/work-context-selector';
 
 @Component({
   selector: 'app-main-layout',
@@ -23,7 +24,7 @@ import {AuthService} from '../../core/services/auth/auth-service';
     MatMenuItem,
     RouterLink,
     MatTooltip,
-    RouterOutlet,
+    RouterOutlet
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css'
@@ -55,21 +56,23 @@ export class MainLayoutComponent implements OnInit {
     // 🔁 Reemplazá esto con un servicio real si lo tenés
     this.franchises = [
       {
-        id: 1, name: 'Urbania',
-        location: "",
+        id: 1,
+        name: 'Urbania',
+        location: '',
         active: false
       },
       {
-        id: 2, name: 'Madelo',
-        location: "",
+        id: 2,
+        name: 'Madelo',
+        location: '',
         active: false
       }
     ];
 
     this.stores = [
-      {id: 101, name: 'Jardines Llanogrande', franchiseId: 1},
-      {id: 102, name: 'San Nicolás', franchiseId: 1},
-      {id: 201, name: 'Vayúh', franchiseId: 2}
+      { id: 101, name: 'Jardines Llanogrande', franchiseId: 1 },
+      { id: 102, name: 'San Nicolás', franchiseId: 1 },
+      { id: 201, name: 'Vayúh', franchiseId: 2 }
     ];
   }
 

@@ -3,99 +3,68 @@
  */
 
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { EmployeeState, selectAllEmployees, selectEmployeeEntities, selectEmployeeIds, selectEmployeeTotal } from './employee.state';
+import {
+  EmployeeState,
+  selectAllEmployees,
+  selectEmployeeEntities,
+  selectEmployeeIds,
+  selectEmployeeTotal
+} from './employee.state';
 
 // Feature selector
 export const selectEmployeeState = createFeatureSelector<EmployeeState>('employees');
 
 // Entity selectors
-export const selectAllEmployeesFromState = createSelector(
-  selectEmployeeState,
-  selectAllEmployees
-);
+export const selectAllEmployeesFromState = createSelector(selectEmployeeState, selectAllEmployees);
 
-export const selectEmployeeEntitiesFromState = createSelector(
-  selectEmployeeState,
-  selectEmployeeEntities
-);
+export const selectEmployeeEntitiesFromState = createSelector(selectEmployeeState, selectEmployeeEntities);
 
-export const selectEmployeeIdsFromState = createSelector(
-  selectEmployeeState,
-  selectEmployeeIds
-);
+export const selectEmployeeIdsFromState = createSelector(selectEmployeeState, selectEmployeeIds);
 
-export const selectEmployeeTotalFromState = createSelector(
-  selectEmployeeState,
-  selectEmployeeTotal
-);
+export const selectEmployeeTotalFromState = createSelector(selectEmployeeState, selectEmployeeTotal);
 
 // Basic selectors
-export const selectEmployeeLoading = createSelector(
-  selectEmployeeState,
-  (state: EmployeeState) => state.loading
-);
+export const selectEmployeeLoading = createSelector(selectEmployeeState, (state: EmployeeState) => state.loading);
 
-export const selectEmployeeError = createSelector(
-  selectEmployeeState,
-  (state: EmployeeState) => state.error
-);
+export const selectEmployeeError = createSelector(selectEmployeeState, (state: EmployeeState) => state.error);
 
-export const selectSelectedEmployeeId = createSelector(
-  selectEmployeeState,
-  (state: EmployeeState) => state.selectedId
-);
+export const selectSelectedEmployeeId = createSelector(selectEmployeeState, (state: EmployeeState) => state.selectedId);
 
-export const selectEmployeePagination = createSelector(
-  selectEmployeeState,
-  (state: EmployeeState) => state.pagination
-);
+export const selectEmployeePagination = createSelector(selectEmployeeState, (state: EmployeeState) => state.pagination);
 
-export const selectEmployeeFilters = createSelector(
-  selectEmployeeState,
-  (state: EmployeeState) => state.filters
-);
+export const selectEmployeeFilters = createSelector(selectEmployeeState, (state: EmployeeState) => state.filters);
 
-export const selectEmployeeSorting = createSelector(
-  selectEmployeeState,
-  (state: EmployeeState) => state.sorting
-);
+export const selectEmployeeSorting = createSelector(selectEmployeeState, (state: EmployeeState) => state.sorting);
 
 // Composed selectors
 export const selectSelectedEmployee = createSelector(
   selectEmployeeEntitiesFromState,
   selectSelectedEmployeeId,
-  (entities, selectedId) => selectedId ? entities[selectedId] : null
+  (entities, selectedId) => (selectedId ? entities[selectedId] : null)
 );
 
-export const selectEmployeeById = (id: number) => createSelector(
-  selectEmployeeEntitiesFromState,
-  (entities) => entities[id] || null
+export const selectEmployeeById = (id: number) =>
+  createSelector(selectEmployeeEntitiesFromState, entities => entities[id] || null);
+
+export const selectActiveEmployees = createSelector(selectAllEmployeesFromState, employees =>
+  employees.filter(employee => employee.status === 'ACTIVE')
 );
 
-export const selectActiveEmployees = createSelector(
-  selectAllEmployeesFromState,
-  (employees) => employees.filter(employee => employee.status === 'ACTIVE')
-);
+export const selectEmployeesByStatus = (status: string) =>
+  createSelector(selectAllEmployeesFromState, employees => employees.filter(employee => employee.status === status));
 
-export const selectEmployeesByStatus = (status: string) => createSelector(
-  selectAllEmployeesFromState,
-  (employees) => employees.filter(employee => employee.status === status)
-);
+export const selectEmployeesByStore = (storeId: number) =>
+  createSelector(selectAllEmployeesFromState, employees => employees.filter(employee => employee.storeId === storeId));
 
-export const selectEmployeesByStore = (storeId: number) => createSelector(
-  selectAllEmployeesFromState,
-  (employees) => employees.filter(employee => employee.storeId === storeId)
-);
+export const selectEmployeesByDepartment = (department: string) =>
+  createSelector(selectAllEmployeesFromState, employees =>
+    employees.filter(employee => employee.department === department)
+  );
 
-export const selectEmployeesByDepartment = (department: string) => createSelector(
-  selectAllEmployeesFromState,
-  (employees) => employees.filter(employee => employee.department === department)
-);
-
-export const selectEmployeesByPosition = (position: string) => createSelector(
-  selectAllEmployeesFromState,
-  (employees) => employees.filter(employee => employee.position === position)
-);
+export const selectEmployeesByPosition = (position: string) =>
+  createSelector(selectAllEmployeesFromState, employees =>
+    employees.filter(employee => employee.position === position)
+  );
 
 // Search and Filter selectors
 export const selectFilteredEmployees = createSelector(
@@ -114,9 +83,7 @@ export const selectFilteredEmployees = createSelector(
         const email = employee.email.toLowerCase();
         const employeeNumber = employee.employeeNumber.toLowerCase();
 
-        if (!fullName.includes(searchTerm) &&
-            !email.includes(searchTerm) &&
-            !employeeNumber.includes(searchTerm)) {
+        if (!fullName.includes(searchTerm) && !email.includes(searchTerm) && !employeeNumber.includes(searchTerm)) {
           return false;
         }
       }
@@ -170,30 +137,21 @@ export const selectSortedEmployees = createSelector(
 );
 
 // Statistics selectors
-export const selectEmployeeStats = createSelector(
-  selectAllEmployeesFromState,
-  (employees) => ({
-    total: employees.length,
-    active: employees.filter(e => e.status === 'ACTIVE').length,
-    inactive: employees.filter(e => e.status === 'INACTIVE').length,
-    onLeave: employees.filter(e => e.status === 'ON_LEAVE').length,
-    fullTime: employees.filter(e => e.type === 'FULL_TIME').length,
-    partTime: employees.filter(e => e.type === 'PART_TIME').length
-  })
-);
+export const selectEmployeeStats = createSelector(selectAllEmployeesFromState, employees => ({
+  total: employees.length,
+  active: employees.filter(e => e.status === 'ACTIVE').length,
+  inactive: employees.filter(e => e.status === 'INACTIVE').length,
+  onLeave: employees.filter(e => e.status === 'ON_LEAVE').length,
+  fullTime: employees.filter(e => e.type === 'FULL_TIME').length,
+  partTime: employees.filter(e => e.type === 'PART_TIME').length
+}));
 
-export const selectEmployeeDepartments = createSelector(
-  selectAllEmployeesFromState,
-  (employees) => {
-    const departments = new Set(employees.map(e => e.department));
-    return Array.from(departments).sort();
-  }
-);
+export const selectEmployeeDepartments = createSelector(selectAllEmployeesFromState, employees => {
+  const departments = new Set(employees.map(e => e.department));
+  return Array.from(departments).sort();
+});
 
-export const selectEmployeePositions = createSelector(
-  selectAllEmployeesFromState,
-  (employees) => {
-    const positions = new Set(employees.map(e => e.position));
-    return Array.from(positions).sort();
-  }
-);
+export const selectEmployeePositions = createSelector(selectAllEmployeesFromState, employees => {
+  const positions = new Set(employees.map(e => e.position));
+  return Array.from(positions).sort();
+});

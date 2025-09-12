@@ -10,27 +10,39 @@ export const uiReducer = createReducer(
   initialUIState,
 
   // Theme
-  on(UIActions.setTheme, (state, { theme }): UIState => ({
-    ...state,
-    theme
-  })),
+  on(
+    UIActions.setTheme,
+    (state, { theme }): UIState => ({
+      ...state,
+      theme
+    })
+  ),
 
   // Sidebar
-  on(UIActions.toggleSidebar, (state): UIState => ({
-    ...state,
-    sidebarOpen: !state.sidebarOpen
-  })),
+  on(
+    UIActions.toggleSidebar,
+    (state): UIState => ({
+      ...state,
+      sidebarOpen: !state.sidebarOpen
+    })
+  ),
 
-  on(UIActions.setSidebarState, (state, { open }): UIState => ({
-    ...state,
-    sidebarOpen: open
-  })),
+  on(
+    UIActions.setSidebarState,
+    (state, { open }): UIState => ({
+      ...state,
+      sidebarOpen: open
+    })
+  ),
 
   // Language
-  on(UIActions.setLanguage, (state, { language }): UIState => ({
-    ...state,
-    language
-  })),
+  on(
+    UIActions.setLanguage,
+    (state, { language }): UIState => ({
+      ...state,
+      language
+    })
+  ),
 
   // Notifications
   on(UIActions.addNotification, (state, { notification }): UIState => {
@@ -46,35 +58,47 @@ export const uiReducer = createReducer(
     };
   }),
 
-  on(UIActions.removeNotification, (state, { id }): UIState => ({
-    ...state,
-    notifications: state.notifications.filter(notification => notification.id !== id)
-  })),
+  on(
+    UIActions.removeNotification,
+    (state, { id }): UIState => ({
+      ...state,
+      notifications: state.notifications.filter(notification => notification.id !== id)
+    })
+  ),
 
-  on(UIActions.clearAllNotifications, (state): UIState => ({
-    ...state,
-    notifications: []
-  })),
+  on(
+    UIActions.clearAllNotifications,
+    (state): UIState => ({
+      ...state,
+      notifications: []
+    })
+  ),
 
   // Loading
-  on(UIActions.setGlobalLoading, (state, { loading }): UIState => ({
-    ...state,
-    loading: {
-      ...state.loading,
-      global: loading
-    }
-  })),
-
-  on(UIActions.setComponentLoading, (state, { component, loading }): UIState => ({
-    ...state,
-    loading: {
-      ...state.loading,
-      components: {
-        ...state.loading.components,
-        [component]: loading
+  on(
+    UIActions.setGlobalLoading,
+    (state, { loading }): UIState => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        global: loading
       }
-    }
-  })),
+    })
+  ),
+
+  on(
+    UIActions.setComponentLoading,
+    (state, { component, loading }): UIState => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        components: {
+          ...state.loading.components,
+          [component]: loading
+        }
+      }
+    })
+  ),
 
   on(UIActions.clearComponentLoading, (state, { component }): UIState => {
     const newComponents = { ...state.loading.components };
@@ -90,24 +114,30 @@ export const uiReducer = createReducer(
   }),
 
   // Errors
-  on(UIActions.setGlobalError, (state, { error }): UIState => ({
-    ...state,
-    errors: {
-      ...state.errors,
-      global: error
-    }
-  })),
-
-  on(UIActions.setComponentError, (state, { component, error }): UIState => ({
-    ...state,
-    errors: {
-      ...state.errors,
-      components: {
-        ...state.errors.components,
-        [component]: error
+  on(
+    UIActions.setGlobalError,
+    (state, { error }): UIState => ({
+      ...state,
+      errors: {
+        ...state.errors,
+        global: error
       }
-    }
-  })),
+    })
+  ),
+
+  on(
+    UIActions.setComponentError,
+    (state, { component, error }): UIState => ({
+      ...state,
+      errors: {
+        ...state.errors,
+        components: {
+          ...state.errors.components,
+          [component]: error
+        }
+      }
+    })
+  ),
 
   on(UIActions.clearComponentError, (state, { component }): UIState => {
     const newComponents = { ...state.errors.components };
@@ -122,11 +152,14 @@ export const uiReducer = createReducer(
     };
   }),
 
-  on(UIActions.clearAllErrors, (state): UIState => ({
-    ...state,
-    errors: {
-      global: null,
-      components: {}
-    }
-  }))
+  on(
+    UIActions.clearAllErrors,
+    (state): UIState => ({
+      ...state,
+      errors: {
+        global: null,
+        components: {}
+      }
+    })
+  )
 );

@@ -7,17 +7,17 @@
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
-            <input matInput type="text" name="name"/>
+            <input matInput type="text" name="name" />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Ubicación</mat-label>
-            <input matInput type="text" name="location"/>
+            <input matInput type="text" name="location" />
           </mat-form-field>
         </div>
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Dirección</mat-label>
-            <input matInput type="text" name="address"/>
+            <input matInput type="text" name="address" />
           </mat-form-field>
           <app-status-select></app-status-select>
         </div>
@@ -25,11 +25,9 @@
     </mat-card-content>
     <mat-card-footer class="main-form-footer main-form-footer--left">
       <button mat-flat-button type="button" class="loopi-button-flat">
-        {{ 'GUARDAR' }}
+        {{ "GUARDAR" }}
       </button>
-      <button mat-button class="btn-cancel" routerLink="/admin/stores">
-        CANCELAR
-      </button>
+      <button mat-button class="btn-cancel" routerLink="/admin/stores">CANCELAR</button>
     </mat-card-footer>
   </mat-card>
 </div>

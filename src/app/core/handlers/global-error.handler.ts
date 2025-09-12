@@ -41,22 +41,22 @@ export class GlobalErrorHandler implements ErrorHandler {
         // Error de red/conexión
         this.notification.connectionError();
         break;
-        
+
       case 401:
         // No autorizado - limpiar sesión y redirigir
         this.handleUnauthorized();
         break;
-        
+
       case 403:
         // Prohibido
         this.notification.error('No tienes permisos para realizar esta acción');
         break;
-        
+
       case 404:
         // No encontrado
         this.notification.error('Recurso no encontrado');
         break;
-        
+
       case 422:
         // Error de validación
         if (error.error?.errors) {
@@ -65,12 +65,12 @@ export class GlobalErrorHandler implements ErrorHandler {
           this.notification.error('Datos inválidos enviados');
         }
         break;
-        
+
       case 429:
         // Demasiadas peticiones
         this.notification.warning('Demasiadas peticiones. Intenta más tarde');
         break;
-        
+
       case 500:
       case 502:
       case 503:
@@ -78,7 +78,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         // Errores del servidor
         this.notification.error('Error del servidor. Intenta más tarde');
         break;
-        
+
       default:
         // Error genérico
         const message = error.error?.message || 'Ha ocurrido un error inesperado';
@@ -108,7 +108,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   private handleUnauthorized(): void {
     this.tokenStorage.clearToken();
     this.notification.sessionExpired();
-    
+
     // Redirigir al login después de un pequeño delay
     setTimeout(() => {
       this.router.navigate(['/auth/login']);
@@ -134,12 +134,12 @@ export class GlobalErrorHandler implements ErrorHandler {
     console.error('URL:', errorInfo.url);
     console.error('Timestamp:', new Date(errorInfo.timestamp).toISOString());
     console.error('User Agent:', errorInfo.userAgent);
-    
+
     if (error instanceof HttpErrorResponse) {
       console.error('HTTP Status:', error.status);
       console.error('HTTP Error:', error.error);
     }
-    
+
     console.groupEnd();
 
     // TODO: Enviar a servicio de logging externo en producción

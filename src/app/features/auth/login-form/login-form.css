@@ -1,5 +1,5 @@
 .login-button {
-  background-color: #3B82F6 !important;
+  background-color: #3b82f6 !important;
   color: white !important;
   width: 100%;
   display: flex;
@@ -12,11 +12,11 @@
 }
 
 .login-button:hover {
-  background-color: #2563EB !important;
+  background-color: #2563eb !important;
 }
 
 button.login-button:disabled {
-  background-color: #93C5FD !important; /* Azul muy claro */
+  background-color: #93c5fd !important; /* Azul muy claro */
   color: white !important;
   opacity: 0.6;
   cursor: not-allowed;
