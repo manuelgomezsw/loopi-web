@@ -1,6 +1,6 @@
 <app-page-title entityName="Turnos configurados"></app-page-title>
 @if (loading) {
-  <div>Cargando...</div>
+  <app-loading-progress message="Cargando configuraciones..."></app-loading-progress>
 } @else if (error) {
   <div class="error">{{ error }}</div>
 }

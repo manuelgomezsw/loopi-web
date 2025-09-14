@@ -45,10 +45,10 @@
         </div>
 
         <!-- Fecha de nacimiento -->
-        <div class="form-row form-row--1">
+        <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Fecha de nacimiento</mat-label>
-            <input matInput formControlName="birthdate" type="date" />
+            <input matInput type="date" formControlName="birthdate" [max]="maxBirthDate | date: 'yyyy-MM-dd'" />
             @if (hasFieldError("birthdate")) {
               <mat-error>{{ getFieldError("birthdate") }}</mat-error>
             }
@@ -91,14 +91,21 @@
           </mat-form-field>
         </div>
 
-        <!-- Estado -->
-        <div class="form-row form-row--1">
-          <mat-checkbox formControlName="is_active"> Empleado activo </mat-checkbox>
-        </div>
+        <!-- Estado - Solo visible en modo edición -->
+        @if (isEditMode) {
+          <div class="form-row form-row--1">
+            <mat-checkbox formControlName="is_active"> Empleado activo </mat-checkbox>
+          </div>
+        }
       </form>
     </mat-card-content>
 
     <mat-card-footer class="main-form-footer main-form-footer--left">
+      @if (isLoading$ | async) {
+        <app-loading-progress
+          [message]="isEditMode ? 'Actualizando empleado...' : 'Guardando empleado...'"></app-loading-progress>
+      }
+
       <button
         mat-flat-button
         type="submit"
@@ -114,13 +121,6 @@
       <button mat-button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="isLoading$ | async">
         CANCELAR
       </button>
-
-      <!-- Debug button - Solo para desarrollo -->
-      @if (!isEditMode) {
-        <button mat-button type="button" color="accent" (click)="debugFormData()" style="margin-left: 10px">
-          🔍 DEBUG
-        </button>
-      }
     </mat-card-footer>
   </mat-card>
 </div>

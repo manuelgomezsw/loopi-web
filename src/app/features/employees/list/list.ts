@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, TrackByFunction } f
 import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   MatCell,
   MatCellDef,
@@ -22,6 +21,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { EmployeeResponse } from '../../../core/interfaces/api.interfaces';
 import { NotificationService } from '../../../core/services/notification/notification.service';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/confirm-dialog/confirm-dialog';
+import { LoadingProgressComponent } from '../../../shared/loading-progress/loading-progress';
 import { PageTitleComponent } from '../../../shared/page-title-component/page-title-component';
 import { AppState } from '../../../store/app.state';
 import * as EmployeeActions from '../../../store/employee/employee.actions';
@@ -50,7 +51,7 @@ import {
     MatTable,
     RouterLink,
     MatHeaderCellDef,
-    MatProgressSpinner,
+    LoadingProgressComponent,
     MatTooltip
   ],
   templateUrl: './list.html',
@@ -68,7 +69,7 @@ export class EmployeeListComponent implements OnInit {
   error$: Observable<string | null> = this.store.select(selectEmployeeError);
   stats$: Observable<any> = this.store.select(selectEmployeeStats);
 
-  columnsToDisplay = ['fullName', 'position', 'isActive', 'actions'];
+  columnsToDisplay = ['fullName', 'position', 'actions'];
 
   // TrackBy function para optimizar el rendering
   trackByEmployeeId: TrackByFunction<EmployeeResponse> = (index: number, employee: EmployeeResponse) => employee.id;
@@ -82,17 +83,30 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onDeleteEmployee(employee: EmployeeResponse): void {
-    this.showDeleteConfirmation(() => {
+    this.showDeleteConfirmation(employee, () => {
       this.store.dispatch(EmployeeActions.deleteEmployee({ id: employee.id }));
-      this.notificationService.info(`Empleado ${employee.first_name} ${employee.last_name} eliminado`);
     });
   }
 
-  private showDeleteConfirmation(onConfirm: () => void): void {
-    // Usando confirm temporal hasta implementar dialog personalizado
-    if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
-      onConfirm();
-    }
-    // TODO: Reemplazar por MatDialog con componente personalizado de confirmación
+  private showDeleteConfirmation(employee: EmployeeResponse, onConfirm: () => void): void {
+    const dialogData: ConfirmDialogData = {
+      title: 'Eliminar empleado',
+      message: `¿Estás seguro de que quieres eliminar al empleado ${employee.first_name} ${employee.last_name}? Esta acción no se puede deshacer.`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      icon: 'delete',
+      iconColor: 'warn'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        onConfirm();
+      }
+    });
   }
 }

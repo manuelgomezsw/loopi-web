@@ -12,7 +12,7 @@
   <!-- Punto de venta -->
   <mat-form-field appearance="outline">
     <mat-label>Punto de venta</mat-label>
-    <mat-select [(ngModel)]="workContext.storeID" name="store">
+    <mat-select [(ngModel)]="workContext.storeID" name="store" [disabled]="loadingStores">
       @for (s of stores; track s.id) {
         <mat-option [value]="s.id">{{ s.name }}</mat-option>
       }
@@ -20,12 +20,26 @@
   </mat-form-field>
 </div>
 
+<!-- Loading para tiendas después de seleccionar franquicia -->
+@if (loadingStores) {
+  <app-loading-progress message="Cargando puntos de venta..."></app-loading-progress>
+}
+
+<!-- Loading durante confirmación y redirección -->
+@if (contextLoading$ | async) {
+  <app-loading-progress message="Configurando contexto de trabajo..."></app-loading-progress>
+}
+
 <div class="footer">
   <button
     mat-flat-button
     class="loopi-button-primary"
     (click)="confirm()"
-    [disabled]="!workContext.franchiseID || !workContext.storeID">
-    Confirmar
+    [disabled]="!workContext.franchiseID || !workContext.storeID || loadingStores || (contextLoading$ | async)">
+    @if (contextLoading$ | async) {
+      Configurando...
+    } @else {
+      Confirmar
+    }
   </button>
 </div>

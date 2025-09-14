@@ -1,4 +1,6 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatCell,
   MatCellDef,
@@ -12,17 +14,17 @@ import {
   MatTable
 } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
-import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 import { ShiftService } from '../../../../core/services/shift/shift';
 import { Shift } from '../../../../model/shift';
-import { TitleCasePipe } from '@angular/common';
+import { LoadingProgressComponent } from '../../../../shared/loading-progress/loading-progress';
+import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 import { TimeFormatPipe } from '../../../../shared/time-format-pipe';
 
 @Component({
   selector: 'app-shift-list',
   imports: [
     PageTitleComponent,
+    LoadingProgressComponent,
     MatCell,
     MatCellDef,
     MatColumnDef,

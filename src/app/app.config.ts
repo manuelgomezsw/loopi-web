@@ -2,10 +2,12 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
   ErrorHandler,
+  LOCALE_ID,
   isDevMode,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection
 } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
@@ -35,6 +37,10 @@ export const appConfig: ApplicationConfig = {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
     },
+
+    // Material DatePicker configuration
+    provideNativeDateAdapter(),
+    { provide: LOCALE_ID, useValue: 'es-ES' },
 
     // NgRx Store
     provideStore({

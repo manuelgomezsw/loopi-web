@@ -1,10 +1,11 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatError, MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -17,6 +18,7 @@ import {
   EmployeeUpdateRequest
 } from '../../../core/interfaces/api.interfaces';
 import { WorkContextService } from '../../../core/services/work-context/work-context';
+import { LoadingProgressComponent } from '../../../shared/loading-progress/loading-progress';
 import { PageTitleComponent } from '../../../shared/page-title-component/page-title-component';
 import { AppState } from '../../../store/app.state';
 import * as EmployeeActions from '../../../store/employee/employee.actions';
@@ -28,15 +30,17 @@ import { selectEmployeeById, selectEmployeeLoading } from '../../../store/employ
   imports: [
     CommonModule,
     AsyncPipe,
+    DatePipe,
     PageTitleComponent,
+    LoadingProgressComponent,
     ReactiveFormsModule,
     MatButton,
     MatCard,
     MatCardContent,
     MatCardFooter,
     MatFormField,
-    MatInput,
     MatLabel,
+    MatInput,
     MatError,
     MatOption,
     MatSelect,
@@ -64,6 +68,10 @@ export class EmployeeFormComponent implements OnInit, OnDestroy {
     { value: 'PA', label: 'Pasaporte' },
     { value: 'PTP', label: 'Permisos especiales' }
   ];
+
+  // DatePicker configuration
+  maxBirthDate = new Date(); // No permitir fechas futuras
+  defaultBirthDate = new Date(1990, 0, 1); // Fecha por defecto: 1 de enero de 1990
 
   // Formulario reactivo - Coincide con el backend loopi-api
   employeeForm = this.fb.group({
@@ -130,15 +138,11 @@ export class EmployeeFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.employeeForm.invalid) {
       this.markFormGroupTouched();
-      console.warn('📝 Form is invalid:', this.employeeForm.errors);
       return;
     }
 
     const formValue = this.employeeForm.value;
     const workContext = this.workContextService.get();
-
-    console.log('📝 Form values:', formValue);
-    console.log('📝 Work context:', workContext);
 
     if (!workContext) {
       console.error('❌ No work context available');
@@ -182,15 +186,6 @@ export class EmployeeFormComponent implements OnInit, OnDestroy {
         store_id: workContext.storeID
       };
 
-      // Debug específico para el problema del phone
-      console.log('📞 Phone value details:', {
-        value: formValue.phone,
-        length: formValue.phone?.length,
-        type: typeof formValue.phone,
-        isEmpty: !formValue.phone || formValue.phone.trim() === '',
-        trimmed: formValue.phone?.trim()
-      });
-
       this.store.dispatch(EmployeeActions.createEmployee({ employee: createData }));
     }
 
@@ -206,25 +201,6 @@ export class EmployeeFormComponent implements OnInit, OnDestroy {
     Object.keys(this.employeeForm.controls).forEach(key => {
       const control = this.employeeForm.get(key);
       control?.markAsTouched();
-    });
-  }
-
-  // Debug helper para investigar el problema
-  debugFormData(): void {
-    const formValue = this.employeeForm.value;
-    console.log('🔍 DEBUGGING FORM DATA:');
-    console.table(formValue);
-    console.log('🔍 Form valid:', this.employeeForm.valid);
-    console.log('🔍 Form errors:', this.employeeForm.errors);
-    console.log('🔍 Individual field states:');
-    Object.keys(this.employeeForm.controls).forEach(key => {
-      const control = this.employeeForm.get(key);
-      console.log(`  ${key}:`, {
-        value: control?.value,
-        valid: control?.valid,
-        errors: control?.errors,
-        touched: control?.touched
-      });
     });
   }
 

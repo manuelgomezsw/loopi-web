@@ -80,12 +80,11 @@ export const employeeReducer = createReducer(
 
   on(
     EmployeeActions.createEmployeeSuccess,
-    (state, { employee }): EmployeeState =>
-      employeeAdapter.addOne(employee, {
-        ...state,
-        loading: false,
-        error: null
-      })
+    (state): EmployeeState => ({
+      ...state,
+      loading: false,
+      error: null
+    })
   ),
 
   on(

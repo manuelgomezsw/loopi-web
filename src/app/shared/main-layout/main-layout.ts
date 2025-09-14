@@ -9,6 +9,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth-service';
 import { WorkContextService } from '../../core/services/work-context/work-context';
 import { Franchise } from '../../model/franchise';
+import { Store } from '../../model/store';
 import { WorkContext } from '../../model/work-context';
 import { WorkContextSelectorComponent } from '../work-context-selector/work-context-selector';
 

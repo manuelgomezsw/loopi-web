@@ -36,9 +36,6 @@ export class EmployeeService {
    * Crear nuevo empleado
    */
   create(employee: EmployeeCreateRequest): Observable<ApiResponse<EmployeeResponse>> {
-    console.log('🌐 Sending employee data to backend:', employee);
-    console.log('🌐 Endpoint:', `${this.baseUrl}${API_ENDPOINTS.EMPLOYEES.BASE}`);
-
     return this.http.post<ApiResponse<EmployeeResponse>>(`${this.baseUrl}${API_ENDPOINTS.EMPLOYEES.BASE}`, employee);
   }
 

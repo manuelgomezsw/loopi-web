@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../../store/app.state';
@@ -24,7 +24,7 @@ import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.sel
     MatCardModule,
     ReactiveFormsModule,
     MatIcon,
-    MatProgressSpinnerModule
+    MatProgressBar
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',

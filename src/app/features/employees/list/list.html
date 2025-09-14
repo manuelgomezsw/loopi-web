@@ -19,9 +19,8 @@
 <a class="create-link" routerLink="/employees/new"> Nuevo empleado </a>
 
 <!-- Loading indicator -->
-<div *ngIf="loading$ | async" class="loading-container">
-  <mat-spinner></mat-spinner>
-  <p>Cargando empleados...</p>
+<div *ngIf="loading$ | async">
+  <app-loading-progress message="Cargando empleados..."></app-loading-progress>
 </div>
 
 <!-- Error message -->
@@ -44,16 +43,6 @@
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef>Posición</mat-header-cell>
     <mat-cell *matCellDef="let employee">{{ employee.position || "—" }}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="isActive">
-    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-    <mat-cell *matCellDef="let employee">
-      <mat-icon [color]="employee.is_active ? 'primary' : 'warn'">
-        {{ employee.is_active ? "check_circle" : "cancel" }}
-      </mat-icon>
-      {{ employee.is_active ? "Activo" : "Inactivo" }}
-    </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="actions">

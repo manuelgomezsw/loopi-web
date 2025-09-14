@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
+import { EmployeeResponse } from '../../core/interfaces/api.interfaces';
 import { EmployeeService } from '../../core/services/employee/employee';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { AppState } from '../app.state';
@@ -69,14 +70,15 @@ export class EmployeeEffects {
     this.actions$.pipe(
       ofType(EmployeeActions.createEmployee),
       switchMap(action => {
-        // Log de debugging para ver los datos que se envían
-        console.log('🚀 Creating employee with data:', action.employee);
-
         return this.employeeService.create(action.employee).pipe(
           map(response => {
-            console.log('✅ Employee created successfully:', response);
+            // El backend solo devuelve {"message": "Employee created"}
+            console.warn('✅ Employee created successfully:', response);
             this.notificationService.success('Empleado creado correctamente');
-            return EmployeeActions.createEmployeeSuccess({ employee: response.data });
+
+            // No intentamos agregar el empleado al estado, solo marcamos como exitoso
+            // El efecto reloadEmployeesAfterCreate$ se encargará de recargar la lista
+            return EmployeeActions.createEmployeeSuccess({ employee: {} as EmployeeResponse });
           }),
           catchError(error => {
             // Log detallado del error
@@ -134,6 +136,38 @@ export class EmployeeEffects {
     )
   );
 
+  // Delete Employee Effect
+  deleteEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.deleteEmployee),
+      switchMap(action =>
+        this.employeeService.delete(action.id).pipe(
+          map(() => {
+            // Backend responde con status 204 y body vacío
+            console.warn('✅ Employee deleted successfully');
+            this.notificationService.success('Empleado eliminado correctamente');
+            return EmployeeActions.deleteEmployeeSuccess({ id: action.id });
+          }),
+          catchError(error => {
+            // Backend responde con 4xx-5xx y { "error": "mensaje" }
+            console.error('❌ Error deleting employee:', error);
+            const errorMessage = error.error?.error ?? 'Error al eliminar el empleado';
+            this.notificationService.error(errorMessage);
+            return of(EmployeeActions.deleteEmployeeFailure({ error: errorMessage }));
+          })
+        )
+      )
+    )
+  );
+
+  // Reload employees after successful deletion
+  reloadEmployeesAfterDelete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.deleteEmployeeSuccess),
+      map(() => EmployeeActions.loadEmployees({}))
+    )
+  );
+
   // Load Employee by ID Effect
   loadEmployee$ = createEffect(() =>
     this.actions$.pipe(
@@ -154,6 +188,14 @@ export class EmployeeEffects {
   loadEmployeesOnContextChange$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.selectContextSuccess),
+      map(() => EmployeeActions.loadEmployees({}))
+    )
+  );
+
+  // Reload employees after successful creation
+  reloadEmployeesAfterCreate$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.createEmployeeSuccess),
       map(() => EmployeeActions.loadEmployees({}))
     )
   );
