@@ -7,10 +7,10 @@
         <!-- Mes y turno -->
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
-            <mat-label>Mes</mat-label>
-            <mat-select formControlName="month">
-              @for (m of months; track m) {
-                <mat-option [value]="m">{{ m }}</mat-option>
+            <mat-label>Empleado</mat-label>
+            <mat-select formControlName="employee_id">
+              @for (e of employees; track e.id) {
+                <mat-option [value]="e.id">{{ e.first_name }} {{ e.last_name }} — {{ e.position }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -23,15 +23,14 @@
             </mat-select>
           </mat-form-field>
         </div>
-
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
-            <mat-label>Empleado</mat-label>
-            <mat-select formControlName="employee_id">
-              @for (e of employees; track e.id) {
-                <mat-option [value]="e.id">{{ e.first_name }} {{ e.last_name }} — {{ e.position }}</mat-option>
-              }
-            </mat-select>
+            <mat-label>Fecha de inicio</mat-label>
+            <input matInput type="date" formControlName="start_date" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de fin</mat-label>
+            <input matInput type="date" formControlName="end_date" />
           </mat-form-field>
         </div>
         <div class="form-summary-grid">

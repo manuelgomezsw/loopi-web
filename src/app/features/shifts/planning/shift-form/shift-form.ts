@@ -2,7 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
-import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { EmployeeResponse } from '../../../../core/interfaces/api.interfaces';
@@ -26,6 +27,7 @@ import { PageTitleComponent } from '../../../../shared/page-title-component/page
     MatCardContent,
     MatCardFooter,
     MatFormField,
+    MatInput,
     MatLabel,
     MatOption,
     MatSelect,
@@ -52,7 +54,9 @@ export class ShiftAssignFormComponent implements OnInit {
   form = this.fb.group({
     month: ['', Validators.required],
     shift_id: [null, Validators.required],
-    employee_id: [null, Validators.required]
+    employee_id: [null, Validators.required],
+    start_date: ['', Validators.required],
+    end_date: ['', Validators.required]
   });
 
   ngOnInit(): void {
