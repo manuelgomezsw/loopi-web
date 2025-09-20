@@ -7,15 +7,12 @@ import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { EmployeeResponse } from '../../../../core/interfaces/api.interfaces';
-import { CalendarService } from '../../../../core/services/calendar/calendar';
 import { EmployeeService } from '../../../../core/services/employee/employee';
 import { NotificationService } from '../../../../core/services/notification/notification.service';
 import { ShiftService } from '../../../../core/services/shift/shift';
 import { WorkContextService } from '../../../../core/services/work-context/work-context';
-import { MonthSummary } from '../../../../model/month-summary';
 import { Shift } from '../../../../model/shift';
 import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
-// import { HoursCalculationComponent } from '../hours-calculation/hours-calculation';
 
 @Component({
   selector: 'app-shift-form',
@@ -41,18 +38,14 @@ export class ShiftAssignFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private shiftService = inject(ShiftService);
   private employeeService = inject(EmployeeService);
-  private calendarService = inject(CalendarService);
   private contextService = inject(WorkContextService);
   private notificationService = inject(NotificationService);
 
   storeId!: number;
   shifts: Shift[] = [];
   employees: EmployeeResponse[] = [];
-  monthSummary: MonthSummary | null = null;
-  months: string[] = [];
 
   form = this.fb.group({
-    month: ['', Validators.required],
     shift_id: [null, Validators.required],
     employee_id: [null, Validators.required],
     start_date: ['', Validators.required],
@@ -61,21 +54,7 @@ export class ShiftAssignFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.storeId = this.contextService.getStoreId();
-    this.generateMonthOptions();
     this.loadShiftsAndEmployees();
-
-    this.form.get('month')?.valueChanges.subscribe(() => {
-      this.loadMonthSummary();
-    });
-  }
-
-  generateMonthOptions(): void {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    this.months = Array.from({ length: 12 }, (_, i) => {
-      const month = (i + 1).toString().padStart(2, '0');
-      return `${currentYear}-${month}`;
-    });
   }
 
   loadShiftsAndEmployees(): void {
@@ -88,22 +67,25 @@ export class ShiftAssignFormComponent implements OnInit {
     });
   }
 
-  loadMonthSummary(): void {
-    const value = this.form.value.month;
-    if (!value) return;
-
-    const [year, month] = value.split('-'); // ej: '2025-08'
-
-    this.calendarService.getMonthSummary(+year, +month).subscribe(summary => {
-      this.monthSummary = summary;
-    });
-  }
-
   save(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.notificationService.error('Por favor completa todos los campos requeridos');
+      return;
+    }
 
-    // aquí irá la lógica para guardar la asignación de turnos, aún no definida
-    this.notificationService.info('Formulario listo para guardar. Funcionalidad en desarrollo.');
-    // TODO: Implementar lógica de guardado real
+    const formData = this.form.value;
+    const assignmentData = {
+      employee_id: formData.employee_id,
+      shift_id: formData.shift_id,
+      start_date: formData.start_date,
+      end_date: formData.end_date,
+      store_id: this.storeId
+    };
+
+    console.warn('Datos de asignación preparados:', assignmentData);
+    this.notificationService.info('Formulario listo para POST al backend. Datos preparados.');
+
+    // TODO: Implementar llamada POST al backend
+    // this.shiftAssignmentService.create(assignmentData).subscribe(...)
   }
 }

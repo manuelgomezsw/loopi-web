@@ -3,7 +3,7 @@
 <div class="main-form">
   <mat-card class="main-form-card" appearance="outlined">
     <mat-card-content>
-      <form class="main-form-input">
+      <form class="main-form-input" [formGroup]="form">
         <!-- Mes y turno -->
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
@@ -32,20 +32,6 @@
             <mat-label>Fecha de fin</mat-label>
             <input matInput type="date" formControlName="end_date" />
           </mat-form-field>
-        </div>
-        <div class="form-summary-grid">
-          <div class="summary-item">
-            <div class="summary-title">Días ordinarios</div>
-            <div class="summary-value">{{ monthSummary?.ordinary_days }}</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-title">Días dominicales</div>
-            <div class="summary-value">{{ monthSummary?.sundays }}</div>
-          </div>
-          <div class="summary-item festivo">
-            <div class="summary-title">Días festivos</div>
-            <div class="summary-value">{{ monthSummary?.holidays }}</div>
-          </div>
         </div>
       </form>
     </mat-card-content>
