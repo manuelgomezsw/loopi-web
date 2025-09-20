@@ -1,16 +1,20 @@
 .create-link {
   display: inline-block;
   margin-bottom: 16px;
-  padding: 8px 16px;
-  background-color: #1976d2;
-  color: white;
+  color: #1976d2;
   text-decoration: none;
-  border-radius: 4px;
   font-weight: 500;
+  font-size: 16px;
 }
 
 .create-link:hover {
-  background-color: #1565c0;
+  color: #1565c0;
+  text-decoration: underline;
+}
+
+/* Asegurar que el título esté en azul para consistencia */
+app-page-title .page-header h1 {
+  color: #1976d2 !important;
 }
 
 .mat-table-custom {
