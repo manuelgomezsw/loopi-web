@@ -3,18 +3,54 @@
 <a class="create-link" routerLink="assign"> Asignar turno </a>
 <mat-card>
   <mat-table class="mat-elevation-z1 mat-table-custom" [dataSource]="data">
-    <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column">
-      <mat-header-cell *matHeaderCellDef> {{ getColumnLabel(column) }} </mat-header-cell>
-      <mat-cell *matCellDef="let row">
-        {{ column === "employee" ? row.employee : row.shifts[columnsToDisplay.indexOf(column) - 1] }}
+    <!-- Columna Empleado -->
+    <ng-container matColumnDef="employee">
+      <mat-header-cell *matHeaderCellDef>{{ getColumnLabel("employee") }}</mat-header-cell>
+      <mat-cell *matCellDef="let assignment">
+        {{ assignment.employee.full_name }}
       </mat-cell>
     </ng-container>
+
+    <!-- Columna Turno -->
+    <ng-container matColumnDef="shift">
+      <mat-header-cell *matHeaderCellDef>{{ getColumnLabel("shift") }}</mat-header-cell>
+      <mat-cell *matCellDef="let assignment">
+        {{ assignment.shift.name }}
+        <br />
+        <small class="shift-hours">{{ assignment.shift.start_time }} - {{ assignment.shift.end_time }}</small>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna Fecha Inicio -->
+    <ng-container matColumnDef="start_date">
+      <mat-header-cell *matHeaderCellDef>{{ getColumnLabel("start_date") }}</mat-header-cell>
+      <mat-cell *matCellDef="let assignment">
+        {{ assignment.start_date | date: "dd/MM/yyyy" }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna Fecha Fin -->
+    <ng-container matColumnDef="end_date">
+      <mat-header-cell *matHeaderCellDef>{{ getColumnLabel("end_date") }}</mat-header-cell>
+      <mat-cell *matCellDef="let assignment">
+        {{ assignment.end_date | date: "dd/MM/yyyy" }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>{{ getColumnLabel("actions") }}</mat-header-cell>
+      <mat-cell *matCellDef="let assignment">
+        <button mat-icon-button color="primary" (click)="onEditAssignment(assignment)" matTooltip="Editar asignación">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDeleteAssignment(assignment)" matTooltip="Eliminar asignación">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
-    <mat-row
-      *matRowDef="let row; columns: columnsToDisplay"
-      [class.hovered]="hoveredEmployee === row.employee"
-      (mouseenter)="hoverChange.emit(row.employee)"
-      (mouseleave)="hoverChange.emit(null)">
-    </mat-row>
+    <mat-row *matRowDef="let row; columns: columnsToDisplay"></mat-row>
   </mat-table>
 </mat-card>

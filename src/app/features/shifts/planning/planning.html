@@ -1,6 +1,12 @@
-<app-month-navigation [hoveredEmployee]="hoveredEmployee" (hoverChange)="setHovered($event)"> </app-month-navigation>
+<app-month-navigation (monthChange)="onMonthChange($event.month, $event.year)"></app-month-navigation>
 
-<app-shift-table [rotation]="'biweekly'" [data]="shiftData"></app-shift-table>
+<app-shift-table
+  [data]="shiftData"
+  [selectedMonth]="selectedMonth"
+  [selectedYear]="selectedYear"
+  (editAssignment)="onEditAssignment($event)"
+  (deleteAssignment)="onDeleteAssignment($event)">
+</app-shift-table>
 
 <br /><br />
 

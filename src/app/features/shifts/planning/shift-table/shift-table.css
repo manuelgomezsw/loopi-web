@@ -1,0 +1,52 @@
+.create-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.create-link:hover {
+  background-color: #1565c0;
+}
+
+.mat-table-custom {
+  width: 100%;
+}
+
+.shift-hours {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+}
+
+.mat-mdc-cell {
+  padding: 12px 8px;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Acciones */
+.mat-mdc-cell button {
+  margin-right: 8px;
+}
+
+.mat-mdc-cell button:last-child {
+  margin-right: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mat-table-custom {
+    font-size: 14px;
+  }
+
+  .mat-mdc-cell {
+    padding: 8px 4px;
+  }
+}

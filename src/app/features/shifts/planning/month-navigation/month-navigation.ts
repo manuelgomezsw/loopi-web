@@ -1,7 +1,7 @@
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-month-navigation',
@@ -13,13 +13,24 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
 export class MonthNavigation {
   @Input() hoveredEmployee: string | null = null;
   @Output() hoverChange = new EventEmitter<string | null>();
+  @Output() monthChange = new EventEmitter<{ month: number; year: number }>();
+
   currentMonth = new Date();
 
   previousMonth() {
     this.currentMonth = new Date(this.currentMonth.setMonth(this.currentMonth.getMonth() - 1));
+    this.emitMonthChange();
   }
 
   nextMonth() {
     this.currentMonth = new Date(this.currentMonth.setMonth(this.currentMonth.getMonth() + 1));
+    this.emitMonthChange();
+  }
+
+  private emitMonthChange() {
+    this.monthChange.emit({
+      month: this.currentMonth.getMonth() + 1,
+      year: this.currentMonth.getFullYear()
+    });
   }
 }
