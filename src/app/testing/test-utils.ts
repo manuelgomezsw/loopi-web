@@ -163,7 +163,7 @@ export function expectHttpCall(
   method: string,
   url: string,
   responseData?: any,
-  status: number = 200
+  status = 200
 ) {
   const req = httpController.expectOne(url);
   expect(req.request.method).toBe(method);
@@ -178,7 +178,7 @@ export function expectHttpCall(
 /**
  * Esperar un tiempo específico en tests asíncronos
  */
-export function wait(ms: number = 0): Promise<void> {
+export function wait(ms = 0): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 

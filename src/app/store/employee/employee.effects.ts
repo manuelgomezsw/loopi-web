@@ -2,6 +2,7 @@
  * Effects de Employee
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -11,6 +12,7 @@ import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { EmployeeResponse } from '../../core/interfaces/api.interfaces';
 import { EmployeeService } from '../../core/services/employee/employee';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { extractBackendErrorMessage } from '../../core/utils/error-handler.utils';
 import { AppState } from '../app.state';
 import * as AuthActions from '../auth/auth.actions';
 import { selectCurrentStore } from '../auth/auth.selectors';
@@ -56,8 +58,8 @@ export class EmployeeEffects {
               meta
             });
           }),
-          catchError(error => {
-            const errorMessage = error.error?.message ?? `Error al cargar empleados de la tienda ${currentStore.name}`;
+          catchError((error: HttpErrorResponse) => {
+            const errorMessage = extractBackendErrorMessage(error);
             return of(EmployeeActions.loadEmployeesFailure({ error: errorMessage }));
           })
         );
@@ -91,23 +93,7 @@ export class EmployeeEffects {
               fullError: error.error
             });
 
-            let errorMessage = 'Error al crear el empleado';
-
-            // Manejo específico para errores de validación
-            if (error.error?.message) {
-              errorMessage = error.error.message;
-            } else if (error.error?.errors) {
-              // Si el backend devuelve errores de validación específicos
-              const validationErrors = Array.isArray(error.error.errors)
-                ? error.error.errors.join(', ')
-                : JSON.stringify(error.error.errors);
-              errorMessage = `Error de validación: ${validationErrors}`;
-            } else if (error.status === 400) {
-              errorMessage = 'Datos inválidos. Verifique la información ingresada.';
-            } else if (error.status === 422) {
-              errorMessage = 'Error de validación. Verifique los datos del formulario.';
-            }
-
+            const errorMessage = extractBackendErrorMessage(error);
             this.notificationService.error(errorMessage);
             return of(EmployeeActions.createEmployeeFailure({ error: errorMessage }));
           })
@@ -126,8 +112,8 @@ export class EmployeeEffects {
             this.notificationService.success('Empleado actualizado correctamente');
             return EmployeeActions.updateEmployeeSuccess({ employee: response.data });
           }),
-          catchError(error => {
-            const errorMessage = error.error?.message ?? 'Error al actualizar el empleado';
+          catchError((error: HttpErrorResponse) => {
+            const errorMessage = extractBackendErrorMessage(error);
             this.notificationService.error(errorMessage);
             return of(EmployeeActions.updateEmployeeFailure({ error: errorMessage }));
           })
@@ -148,10 +134,10 @@ export class EmployeeEffects {
             this.notificationService.success('Empleado eliminado correctamente');
             return EmployeeActions.deleteEmployeeSuccess({ id: action.id });
           }),
-          catchError(error => {
+          catchError((error: HttpErrorResponse) => {
             // Backend responde con 4xx-5xx y { "error": "mensaje" }
             console.error('❌ Error deleting employee:', error);
-            const errorMessage = error.error?.error ?? 'Error al eliminar el empleado';
+            const errorMessage = extractBackendErrorMessage(error);
             this.notificationService.error(errorMessage);
             return of(EmployeeActions.deleteEmployeeFailure({ error: errorMessage }));
           })
@@ -175,8 +161,8 @@ export class EmployeeEffects {
       switchMap(action =>
         this.employeeService.getById(action.id).pipe(
           map(employee => EmployeeActions.loadEmployeeSuccess({ employee })),
-          catchError(error => {
-            const errorMessage = error.error?.message ?? 'Error al cargar el empleado';
+          catchError((error: HttpErrorResponse) => {
+            const errorMessage = extractBackendErrorMessage(error);
             return of(EmployeeActions.loadEmployeeFailure({ error: errorMessage }));
           })
         )

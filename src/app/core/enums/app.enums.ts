@@ -210,13 +210,3 @@ export enum ChartType {
   AREA = 'AREA',
   SCATTER = 'SCATTER'
 }
-
-// Períodos de tiempo para reportes
-export enum TimePeriod {
-  DAY = 'DAY',
-  WEEK = 'WEEK',
-  MONTH = 'MONTH',
-  QUARTER = 'QUARTER',
-  YEAR = 'YEAR',
-  CUSTOM = 'CUSTOM'
-}

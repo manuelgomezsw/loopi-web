@@ -51,7 +51,7 @@ export function LogMethod(category?: string) {
 /**
  * Decorator para tracking de performance
  */
-export function TrackPerformance(threshold: number = 100) {
+export function TrackPerformance(threshold = 100) {
   return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
     if (!environment.enablePerformanceLogging) return descriptor;
 
@@ -184,7 +184,7 @@ export class StateDebugger {
   /**
    * Obtiene las diferencias entre dos objetos
    */
-  private static getObjectDifferences(obj1: any, obj2: any, path: string = ''): any[] {
+  private static getObjectDifferences(obj1: any, obj2: any, path = ''): any[] {
     const differences: any[] = [];
 
     // Verificar propiedades en obj2

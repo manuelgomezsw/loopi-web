@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import {
   MatCell,
@@ -38,7 +38,7 @@ import { PageTitleComponent } from '../../../../shared/page-title-component/page
   templateUrl: './shift-table.html',
   styleUrl: './shift-table.css'
 })
-export class ShiftTableComponent {
+export class ShiftTableComponent implements OnInit {
   @Input() rotation: 'weekly' | 'biweekly' | 'monthly' = 'weekly';
   @Input() data: EmployeeShift[] = [];
   @Input() hoveredEmployee: string | null = null;

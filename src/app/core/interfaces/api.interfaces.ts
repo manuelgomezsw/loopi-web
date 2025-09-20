@@ -248,19 +248,6 @@ export interface DocumentInfo {
   uploadedAt: string;
 }
 
-// Resumen de horas
-export interface HoursSummaryResponse {
-  period: string;
-  employee?: EmployeeResponse;
-  totalScheduledHours: number;
-  totalWorkedHours: number;
-  overtimeHours: number;
-  absenceHours: number;
-  availableHours: number;
-  utilization: number;
-  details: HoursDetail[];
-}
-
 // Detalle de horas
 export interface HoursDetail {
   date: string;

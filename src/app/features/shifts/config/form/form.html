@@ -1,52 +1,52 @@
-<app-page-title entityName="Configurar Turno"></app-page-title>
+<app-page-title [entityName]="isEditMode ? 'Editar Turno' : 'Crear Turno'"></app-page-title>
 
-<div class="main-form">
-  <mat-card class="main-form-card" appearance="outlined">
-    <mat-card-content>
-      <form class="main-form-input" [formGroup]="form">
-        <div class="form-row form-row--2">
-          <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
-            <input matInput formControlName="name" type="text" name="shiftName" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Periodo</mat-label>
-            <mat-select formControlName="period">
-              <mat-option [value]="'semanal'">Semanal</mat-option>
-              <mat-option [value]="'quincenal'">Quincenal</mat-option>
-              <mat-option [value]="'mensual'">Mensual</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="form-row form-row--3">
-          <mat-form-field appearance="outline">
-            <mat-label>Hora inicio</mat-label>
-            <input matInput [matTimepicker]="startTime" formControlName="start_time" />
-            <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="startTime" />
-            <mat-timepicker #startTime />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Hora fin</mat-label>
-            <input matInput [matTimepicker]="endTime" formControlName="end_time" />
-            <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="endTime" />
-            <mat-timepicker #endTime />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Minutos almuerzo</mat-label>
-            <mat-select formControlName="lunch_minutes">
-              <mat-option [value]="30">30 min</mat-option>
-              <mat-option [value]="60">60 min</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="form-row form-row--3">
-          <app-status-select formControlName="is_active"></app-status-select>
-        </div>
-      </form>
-    </mat-card-content>
-    <mat-card-footer class="main-form-footer main-form-footer--left">
-      <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="form.invalid">GUARDAR</button>
-      <button mat-button class="btn-cancel" routerLink="/shifts/config/list">CANCELAR</button>
-    </mat-card-footer>
-  </mat-card>
-</div>
+@if (isLoading) {
+  <app-loading-progress message="Cargando información del turno..."></app-loading-progress>
+} @else {
+  <div class="main-form">
+    <mat-card class="main-form-card" appearance="outlined">
+      <mat-card-content>
+        <form class="main-form-input" [formGroup]="form">
+          <div class="form-row form-row--1">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="name" type="text" name="shiftName" />
+            </mat-form-field>
+          </div>
+          <div class="form-row form-row--3">
+            <mat-form-field appearance="outline">
+              <mat-label>Hora inicio</mat-label>
+              <input matInput [matTimepicker]="startTime" formControlName="start_time" />
+              <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="startTime" />
+              <mat-timepicker #startTime />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Hora fin</mat-label>
+              <input matInput [matTimepicker]="endTime" formControlName="end_time" />
+              <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="endTime" />
+              <mat-timepicker #endTime />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Minutos almuerzo</mat-label>
+              <mat-select formControlName="lunch_minutes">
+                <mat-option [value]="30">30 min</mat-option>
+                <mat-option [value]="60">60 min</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          @if (isEditMode) {
+            <div class="form-row form-row--3">
+              <app-status-select formControlName="is_active"></app-status-select>
+            </div>
+          }
+        </form>
+      </mat-card-content>
+      <mat-card-footer class="main-form-footer main-form-footer--left">
+        <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="form.invalid">
+          {{ isEditMode ? "ACTUALIZAR" : "CREAR" }}
+        </button>
+        <button mat-button class="btn-cancel" routerLink="/shifts/config/list">CANCELAR</button>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+}

@@ -1,8 +1,9 @@
-import { ErrorHandler, Injectable, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorHandler, Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationService } from '../services/notification/notification.service';
 import { TokenStorageService } from '../services/token-storage/token-storage.service';
+import { extractBackendErrorMessage, hasBackendErrorMessage } from '../utils/error-handler.utils';
 
 export interface ErrorInfo {
   message: string;
@@ -80,8 +81,10 @@ export class GlobalErrorHandler implements ErrorHandler {
         break;
 
       default:
-        // Error genérico
-        const message = error.error?.message || 'Ha ocurrido un error inesperado';
+        // Usar la utility para extraer mensaje específico del backend
+        const message = hasBackendErrorMessage(error)
+          ? extractBackendErrorMessage(error)
+          : 'Ha ocurrido un error inesperado';
         this.notification.error(message);
     }
   }
@@ -120,7 +123,7 @@ export class GlobalErrorHandler implements ErrorHandler {
    */
   private logError(error: any): void {
     const errorInfo: ErrorInfo = {
-      message: error.message || 'Error desconocido',
+      message: error.message ?? 'Error desconocido',
       stack: error.stack,
       url: window.location.href,
       timestamp: Date.now(),

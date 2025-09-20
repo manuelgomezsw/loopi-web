@@ -27,7 +27,7 @@
         <div class="form-row form-row--2">
           <mat-form-field appearance="outline">
             <mat-label>Empleado</mat-label>
-            <mat-select>
+            <mat-select formControlName="employee_id">
               @for (e of employees; track e.id) {
                 <mat-option [value]="e.id">{{ e.first_name }} {{ e.last_name }} — {{ e.position }}</mat-option>
               }
@@ -46,21 +46,6 @@
           <div class="summary-item festivo">
             <div class="summary-title">Días festivos</div>
             <div class="summary-value">{{ monthSummary?.holidays }}</div>
-          </div>
-          <div class="summary-item extra">
-            <div class="summary-title">Extras ordinarias</div>
-            <div class="summary-value">Diurnas: {{ projectedHours?.ordinary?.diurnal_extra }}</div>
-            <div class="summary-value">Nocturnas: {{ projectedHours?.ordinary?.nocturnal_extra }}</div>
-          </div>
-          <div class="summary-item extra">
-            <div class="summary-title">Extras dominicales</div>
-            <div class="summary-value">Diurnas: {{ projectedHours?.sunday?.diurnal_extra }}</div>
-            <div class="summary-value">Nocturnas: {{ projectedHours?.sunday?.nocturnal_extra }}</div>
-          </div>
-          <div class="summary-item extra festivo">
-            <div class="summary-title">Extras festivas</div>
-            <div class="summary-value">Diurnas: {{ projectedHours?.holiday?.diurnal_extra }}</div>
-            <div class="summary-value">Nocturnas: {{ projectedHours?.holiday?.nocturnal_extra }}</div>
           </div>
         </div>
       </form>

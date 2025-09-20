@@ -16,7 +16,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
   ]
 })
 export class StatusSelectComponent implements ControlValueAccessor {
-  value: boolean = true;
+  value = true;
 
   // 🔁 Métodos del ControlValueAccessor
   onChange = (value: boolean) => {};

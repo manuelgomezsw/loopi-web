@@ -10,7 +10,7 @@ import { FormHeaderMode } from '../enums/form-header.component';
 })
 export class PageTitleComponent {
   @Input() mode: FormHeaderMode = FormHeaderMode.None;
-  @Input() entityName: string = '';
+  @Input() entityName = '';
 
   formHeaderEnum = FormHeaderMode;
 }

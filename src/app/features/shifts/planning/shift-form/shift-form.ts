@@ -12,7 +12,6 @@ import { NotificationService } from '../../../../core/services/notification/noti
 import { ShiftService } from '../../../../core/services/shift/shift';
 import { WorkContextService } from '../../../../core/services/work-context/work-context';
 import { MonthSummary } from '../../../../model/month-summary';
-import { ProjectedHours } from '../../../../model/projected-hours';
 import { Shift } from '../../../../model/shift';
 import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
 // import { HoursCalculationComponent } from '../hours-calculation/hours-calculation';
@@ -48,18 +47,12 @@ export class ShiftAssignFormComponent implements OnInit {
   shifts: Shift[] = [];
   employees: EmployeeResponse[] = [];
   monthSummary: MonthSummary | null = null;
-  projectedHours: ProjectedHours | null = null;
   months: string[] = [];
 
   form = this.fb.group({
-    name: ['', Validators.required],
-    period: ['', Validators.required],
-    start_time: ['', Validators.required],
-    end_time: ['', Validators.required],
-    lunch_minutes: [60, Validators.required],
-    is_active: [true, Validators.required],
     month: ['', Validators.required],
-    shift_id: [null, Validators.required]
+    shift_id: [null, Validators.required],
+    employee_id: [null, Validators.required]
   });
 
   ngOnInit(): void {
@@ -69,11 +62,6 @@ export class ShiftAssignFormComponent implements OnInit {
 
     this.form.get('month')?.valueChanges.subscribe(() => {
       this.loadMonthSummary();
-      this.updateProjection();
-    });
-
-    this.form.get('shift_id')?.valueChanges.subscribe(() => {
-      this.updateProjection();
     });
   }
 
@@ -105,23 +93,6 @@ export class ShiftAssignFormComponent implements OnInit {
     this.calendarService.getMonthSummary(+year, +month).subscribe(summary => {
       this.monthSummary = summary;
     });
-  }
-
-  updateProjection(): void {
-    const { month, shift_id } = this.form.value;
-    if (!month || !shift_id) return;
-
-    const [year, monthNum] = month.split('-');
-
-    this.shiftService
-      .previewHours({
-        shift_id,
-        year: +year,
-        month: +monthNum
-      })
-      .subscribe(result => {
-        this.projectedHours = result;
-      });
   }
 
   save(): void {
