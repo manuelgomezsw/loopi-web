@@ -39,7 +39,7 @@
       <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="form.invalid || isLoading">
         {{ isLoading ? "ASIGNANDO..." : "ASIGNAR" }}
       </button>
-      <button mat-button class="btn-cancel" routerLink="/shifts/planning" [disabled]="isLoading">CANCELAR</button>
+      <button mat-button class="btn-cancel" routerLink="/shifts" [disabled]="isLoading">CANCELAR</button>
     </mat-card-footer>
   </mat-card>
 </div>

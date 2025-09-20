@@ -112,7 +112,7 @@ export class ShiftAssignFormComponent implements OnInit {
 
         if (result) {
           this.notificationService.success('Turno asignado exitosamente');
-          this.router.navigate(['/shifts/planning']);
+          this.router.navigate(['/shifts']);
         }
       });
   }
