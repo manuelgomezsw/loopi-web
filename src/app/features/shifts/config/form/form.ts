@@ -17,7 +17,6 @@ import { extractBackendErrorMessage } from '../../../../core/utils/error-handler
 import { Shift } from '../../../../model/shift';
 import { LoadingProgressComponent } from '../../../../shared/loading-progress/loading-progress';
 import { PageTitleComponent } from '../../../../shared/page-title-component/page-title-component';
-import { StatusSelectComponent } from '../../../../shared/status-select/status-select';
 
 @Component({
   selector: 'app-shift-config-form',
@@ -37,8 +36,6 @@ import { StatusSelectComponent } from '../../../../shared/status-select/status-s
     MatSelect,
     ReactiveFormsModule,
     RouterLink,
-    MatFormField,
-    StatusSelectComponent,
     MatIconModule,
     MatTimepickerInput,
     MatTimepickerToggle,
@@ -65,7 +62,6 @@ export class ShiftConfigFormComponent implements OnInit {
     start_time: ['', Validators.required],
     end_time: ['', Validators.required],
     lunch_minutes: [60, Validators.required],
-    is_active: [true, Validators.required],
     store_id: [0, Validators.required] // Se establecerá desde el contexto
   });
 
@@ -115,7 +111,6 @@ export class ShiftConfigFormComponent implements OnInit {
             start_time: shift.start_time,
             end_time: shift.end_time,
             lunch_minutes: shift.lunch_minutes,
-            is_active: shift.is_active,
             store_id: shift.store_id
           });
 
@@ -145,7 +140,6 @@ export class ShiftConfigFormComponent implements OnInit {
       start_time: formatTime(raw.start_time ?? new Date()),
       end_time: formatTime(raw.end_time ?? new Date()),
       lunch_minutes: raw.lunch_minutes ?? 0,
-      is_active: raw.is_active ?? true,
       store_id: raw.store_id ?? 1
     };
 
