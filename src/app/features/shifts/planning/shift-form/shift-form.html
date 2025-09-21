@@ -1,4 +1,4 @@
-<app-page-title entityName="Asignar turno"></app-page-title>
+<app-page-title [entityName]="isEditMode ? 'Editar asignación' : 'Asignar turno'"></app-page-title>
 
 <div class="main-form">
   <mat-card class="main-form-card" appearance="outlined">
@@ -37,7 +37,7 @@
     </mat-card-content>
     <mat-card-footer class="main-form-footer main-form-footer--left">
       <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="form.invalid || isLoading">
-        {{ isLoading ? "ASIGNANDO..." : "ASIGNAR" }}
+        {{ isLoading ? (isEditMode ? "ACTUALIZANDO..." : "ASIGNANDO...") : isEditMode ? "ACTUALIZAR" : "ASIGNAR" }}
       </button>
       <button mat-button class="btn-cancel" routerLink="/shifts" [disabled]="isLoading">CANCELAR</button>
     </mat-card-footer>

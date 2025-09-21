@@ -50,4 +50,8 @@ export class AssignedShiftsService {
   getByStoreAndMonth(storeId: number, year: number, month: number): Observable<AssignedShift[]> {
     return this.http.get<AssignedShift[]>(`${this.apiUrl}/store/${storeId}/month?year=${year}&month=${month}`);
   }
+
+  updateAssignment(id: number, assignmentData: AssignedShiftRequest): Observable<AssignedShiftResponse> {
+    return this.http.put<AssignedShiftResponse>(`${this.apiUrl}/${id}`, assignmentData);
+  }
 }

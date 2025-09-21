@@ -16,7 +16,7 @@ import {
   MatTable
 } from '@angular/material/table';
 import { MatTooltip } from '@angular/material/tooltip';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AssignedShiftsService } from '../../../../core/services/assigned-shifts/assigned-shifts';
 import { WorkContextService } from '../../../../core/services/work-context/work-context';
 import { AssignedShift } from '../../../../model/assigned-shift';
@@ -58,6 +58,7 @@ export class ShiftTableComponent implements OnInit, OnChanges {
 
   private assignedShiftsService = inject(AssignedShiftsService);
   private workContextService = inject(WorkContextService);
+  private router = inject(Router);
 
   columnsToDisplay: string[] = ['employee', 'shift', 'start_date', 'end_date', 'actions'];
   isLoading = false;
@@ -113,11 +114,24 @@ export class ShiftTableComponent implements OnInit, OnChanges {
         start_time: assigned.shift.start_time,
         end_time: assigned.shift.end_time
       },
-      start_date: assigned.start_date,
-      end_date: assigned.end_date,
+      start_date: this.convertToLocalDateString(assigned.start_date),
+      end_date: this.convertToLocalDateString(assigned.end_date),
       month: this.selectedMonth,
       year: this.selectedYear
     }));
+  }
+
+  private convertToLocalDateString(isoDateString: string): string {
+    // Crear fecha desde el string ISO
+    const date = new Date(isoDateString);
+
+    // Obtener los componentes de fecha en UTC para evitar problemas de zona horaria
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+
+    // Retornar en formato ISO local (YYYY-MM-DD) para que el pipe date funcione correctamente
+    return `${year}-${month}-${day}`;
   }
 
   getColumnLabel(col: string): string {
@@ -132,7 +146,8 @@ export class ShiftTableComponent implements OnInit, OnChanges {
   }
 
   onEditAssignment(assignment: EmployeeShift): void {
-    this.editAssignment.emit(assignment);
+    // Navegar al formulario de edición con el ID de la asignación
+    this.router.navigate(['/shifts/assign', assignment.id, 'edit']);
   }
 
   onDeleteAssignment(assignment: EmployeeShift): void {
