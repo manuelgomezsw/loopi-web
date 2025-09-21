@@ -1,13 +1,19 @@
-<app-month-navigation (monthChange)="onMonthChange($event.month, $event.year)"></app-month-navigation>
+<!-- Botón flotante para asignar turno -->
+<a [routerLink]="['/shifts/assign']" class="fab-button" title="Asignar turno">
+  <mat-icon>add</mat-icon>
+</a>
 
-<app-shift-table
-  [data]="shiftData"
+<!-- Vista de calendario con navegación integrada -->
+<app-calendar-view
   [selectedMonth]="selectedMonth"
   [selectedYear]="selectedYear"
-  (editAssignment)="onEditAssignment($event)"
-  (deleteAssignment)="onDeleteAssignment($event)">
-</app-shift-table>
+  [assignedShifts]="assignedShifts"
+  (dayClick)="onCalendarDayClick($event)"
+  (shiftClick)="onCalendarShiftClick($event)"
+  (dayHover)="onCalendarDayHover($event)"
+  (shiftHover)="onCalendarShiftHover($event)"
+  (monthChange)="onMonthChange($event.month, $event.year)">
+</app-calendar-view>
 
-<br /><br />
-
-<app-hours-calculation></app-hours-calculation>
+<!-- Indicador de carga -->
+<div *ngIf="isLoading" class="loading-indicator">Cargando turnos...</div>

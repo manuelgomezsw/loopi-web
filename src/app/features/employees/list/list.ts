@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, TrackByFunction } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import {
   MatCell,
   MatCellDef,
@@ -18,7 +18,8 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { EmployeeResponse } from '../../../core/interfaces/api.interfaces';
 import { NotificationService } from '../../../core/services/notification/notification.service';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/confirm-dialog/confirm-dialog';
@@ -29,7 +30,6 @@ import * as EmployeeActions from '../../../store/employee/employee.actions';
 import {
   selectEmployeeError,
   selectEmployeeLoading,
-  selectEmployeeStats,
   selectSortedEmployees
 } from '../../../store/employee/employee.selectors';
 
@@ -45,6 +45,7 @@ import {
     MatHeaderRow,
     MatHeaderRowDef,
     MatIcon,
+    MatIconModule,
     MatIconButton,
     MatRow,
     MatRowDef,
@@ -58,16 +59,16 @@ import {
   styleUrl: './list.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent implements OnInit, OnDestroy {
   private store = inject(Store<AppState>);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
+  private destroy$ = new Subject<void>();
 
   // Observables del store para OnPush optimization
   employees$: Observable<EmployeeResponse[]> = this.store.select(selectSortedEmployees);
   loading$: Observable<boolean> = this.store.select(selectEmployeeLoading);
-  error$: Observable<string | null> = this.store.select(selectEmployeeError);
-  stats$: Observable<any> = this.store.select(selectEmployeeStats);
+  private error$: Observable<string | null> = this.store.select(selectEmployeeError);
 
   columnsToDisplay = ['fullName', 'position', 'actions'];
 
@@ -76,6 +77,21 @@ export class EmployeeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(EmployeeActions.loadEmployees({ filters: {} }));
+
+    // Suscribirse a errores y mostrarlos como SnackBar
+    this.error$
+      .pipe(
+        filter(error => !!error),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(error => {
+        this.notificationService.error(error!);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   selectEmployee(employeeId: number): void {

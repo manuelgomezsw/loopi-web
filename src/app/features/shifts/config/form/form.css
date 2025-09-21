@@ -1,0 +1,20 @@
+/* Estilos específicos para el select múltiple de días */
+.mat-mdc-select-multiple .mat-mdc-select-value {
+  max-width: 100%;
+}
+
+.mat-mdc-select-multiple .mat-mdc-select-value-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mejorar la visualización de las opciones seleccionadas */
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba(25, 118, 210, 0.12);
+}
+
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: #1976d2;
+  font-weight: 500;
+}

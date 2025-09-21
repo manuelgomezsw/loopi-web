@@ -4,7 +4,7 @@
 
 import { createReducer, on } from '@ngrx/store';
 import * as UIActions from './ui.actions';
-import { initialUIState, NotificationItem, UIState } from './ui.state';
+import { UIState, initialUIState } from './ui.state';
 
 export const uiReducer = createReducer(
   initialUIState,
@@ -41,36 +41,6 @@ export const uiReducer = createReducer(
     (state, { language }): UIState => ({
       ...state,
       language
-    })
-  ),
-
-  // Notifications
-  on(UIActions.addNotification, (state, { notification }): UIState => {
-    const newNotification: NotificationItem = {
-      ...notification,
-      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-      timestamp: Date.now()
-    };
-
-    return {
-      ...state,
-      notifications: [...state.notifications, newNotification]
-    };
-  }),
-
-  on(
-    UIActions.removeNotification,
-    (state, { id }): UIState => ({
-      ...state,
-      notifications: state.notifications.filter(notification => notification.id !== id)
-    })
-  ),
-
-  on(
-    UIActions.clearAllNotifications,
-    (state): UIState => ({
-      ...state,
-      notifications: []
     })
   ),
 

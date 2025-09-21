@@ -88,7 +88,6 @@ export const initialAppState: AppState = {
     theme: 'light',
     sidebarOpen: true,
     language: 'es',
-    notifications: [],
     loading: {
       global: false,
       components: {}

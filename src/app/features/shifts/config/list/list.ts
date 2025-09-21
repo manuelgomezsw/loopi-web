@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import {
   MatCell,
   MatCellDef,
@@ -40,6 +40,7 @@ import { TimeFormatPipe } from '../../../../shared/time-format-pipe';
     MatHeaderRow,
     MatHeaderRowDef,
     MatIcon,
+    MatIconModule,
     MatRow,
     MatRowDef,
     MatTable,
@@ -62,6 +63,17 @@ export class ShiftConfigListComponent implements OnInit {
   shifts: Shift[] = [];
   loading = false;
   error = '';
+
+  // Mapeo de días completos a abreviaciones
+  private dayAbbreviations: Record<string, string> = {
+    lunes: 'Lun',
+    martes: 'Mar',
+    miercoles: 'Mié',
+    jueves: 'Jue',
+    viernes: 'Vie',
+    sabado: 'Sáb',
+    domingo: 'Dom'
+  };
 
   ngOnInit(): void {
     this.fetchShifts();
@@ -140,5 +152,16 @@ export class ShiftConfigListComponent implements OnInit {
           this.fetchShifts(); // Recargar la lista
         }
       });
+  }
+
+  getWorkingDaysDisplay(workingDays?: string[]): string {
+    if (!workingDays || workingDays.length === 0) {
+      return 'No definido';
+    }
+
+    // Convertir días completos a abreviaciones
+    const abbreviatedDays = workingDays.map(day => this.dayAbbreviations[day] || day).join(', ');
+
+    return abbreviatedDays;
   }
 }

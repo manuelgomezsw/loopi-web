@@ -18,6 +18,7 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router, RouterLink } from '@angular/router';
 import { AssignedShiftsService } from '../../../../core/services/assigned-shifts/assigned-shifts';
+import { NotificationService } from '../../../../core/services/notification/notification.service';
 import { WorkContextService } from '../../../../core/services/work-context/work-context';
 import { AssignedShift } from '../../../../model/assigned-shift';
 import { EmployeeShift } from '../../../../model/employee-shift';
@@ -58,6 +59,7 @@ export class ShiftTableComponent implements OnInit, OnChanges {
 
   private assignedShiftsService = inject(AssignedShiftsService);
   private workContextService = inject(WorkContextService);
+  private notificationService = inject(NotificationService);
   private router = inject(Router);
 
   columnsToDisplay: string[] = ['employee', 'shift', 'start_date', 'end_date', 'actions'];
@@ -92,6 +94,7 @@ export class ShiftTableComponent implements OnInit, OnChanges {
       },
       error: error => {
         console.error('Error al cargar turnos asignados:', error);
+        this.notificationService.error('Error al cargar los turnos asignados');
         // En caso de error, limpiar datos para mostrar mensaje de "sin datos"
         this.data = [];
         this.isLoading = false;

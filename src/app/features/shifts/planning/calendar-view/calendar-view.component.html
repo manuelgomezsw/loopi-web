@@ -1,0 +1,66 @@
+<div class="calendar-container">
+  <!-- Header integrado con navegación y filtros -->
+  <div class="calendar-header-controls">
+    <div class="month-navigation">
+      <button mat-icon-button (click)="previousMonth()" class="nav-button">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <h2 class="month-title">{{ monthName }}</h2>
+      <button mat-icon-button (click)="nextMonth()" class="nav-button">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <div class="calendar-filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por empleado</mat-label>
+        <mat-select [(value)]="selectedEmployeeId" (selectionChange)="onEmployeeFilterChange($event.value)">
+          <mat-option [value]="null">Todos los empleados</mat-option>
+          <mat-option *ngFor="let employee of availableEmployees" [value]="employee.id">
+            {{ employee.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="calendar-grid">
+    <!-- Encabezados de días de la semana -->
+    <div class="day-header" *ngFor="let dayName of ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']">
+      {{ dayName }}
+    </div>
+
+    <!-- Días del calendario -->
+    <div
+      class="day"
+      *ngFor="let day of calendarDays"
+      [class.day--today]="day.isToday && highlightToday"
+      [class.day--current-month]="day.isCurrentMonth"
+      [class.day--interactive]="allowInteraction"
+      (click)="onDayClick(day, $event)"
+      (mouseenter)="onDayHover(day, $event)">
+      <!-- Número del día -->
+      <div class="day-number">
+        {{ day.dayNumber }}
+      </div>
+
+      <!-- Turnos del día -->
+      <div class="shifts-container">
+        <div
+          class="shift"
+          *ngFor="let shift of day.shifts"
+          [style.background-color]="shift.color"
+          [title]="shift.employeeName + ' - ' + shift.shiftName + ' (' + shift.startTime + ' - ' + shift.endTime + ')'"
+          (click)="onShiftClick(shift, day, $event)"
+          (mouseenter)="onShiftHover(shift, day, $event)">
+          <div class="shift-employee">{{ shift.employeeName }}</div>
+          <div class="shift-name">{{ shift.shiftName }}</div>
+          <div class="shift-time">{{ shift.startTime }} - {{ shift.endTime }}</div>
+        </div>
+      </div>
+
+      <!-- Mensaje cuando no hay turnos -->
+      <div class="no-shifts" *ngIf="day.shifts.length === 0 && day.isCurrentMonth">Sin turnos</div>
+    </div>
+  </div>
+</div>

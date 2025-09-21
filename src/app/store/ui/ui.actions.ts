@@ -3,7 +3,6 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { NotificationItem } from './ui.state';
 
 // Theme Actions
 export const setTheme = createAction('[UI] Set Theme', props<{ theme: 'light' | 'dark' | 'auto' }>());
@@ -15,16 +14,6 @@ export const setSidebarState = createAction('[UI] Set Sidebar State', props<{ op
 
 // Language Actions
 export const setLanguage = createAction('[UI] Set Language', props<{ language: 'es' | 'en' }>());
-
-// Notification Actions
-export const addNotification = createAction(
-  '[UI] Add Notification',
-  props<{ notification: Omit<NotificationItem, 'id' | 'timestamp'> }>()
-);
-
-export const removeNotification = createAction('[UI] Remove Notification', props<{ id: string }>());
-
-export const clearAllNotifications = createAction('[UI] Clear All Notifications');
 
 // Loading Actions
 export const setGlobalLoading = createAction('[UI] Set Global Loading', props<{ loading: boolean }>());

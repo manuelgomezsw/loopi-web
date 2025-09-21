@@ -17,15 +17,6 @@ export const selectSidebarOpen = createSelector(selectUIState, (state: UIState) 
 // Language selectors
 export const selectLanguage = createSelector(selectUIState, (state: UIState) => state.language);
 
-// Notification selectors
-export const selectNotifications = createSelector(selectUIState, (state: UIState) => state.notifications);
-
-export const selectNotificationCount = createSelector(selectNotifications, notifications => notifications.length);
-
-export const selectUnreadNotifications = createSelector(selectNotifications, notifications =>
-  notifications.filter(n => !n.actions || n.actions.length === 0)
-);
-
 // Loading selectors
 export const selectGlobalLoading = createSelector(selectUIState, (state: UIState) => state.loading.global);
 

@@ -1,13 +1,66 @@
-.mat-table-custom {
-  width: 100%;
+/* Estilos del botón flotante */
+:host {
+  position: relative;
+  overflow: visible;
 }
 
-.centered {
+.fab-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  background-color: #673ab7;
+  color: white;
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4);
+  transition: all 0.3s ease;
+  z-index: 9999;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+}
+
+.fab-button:hover {
+  background-color: #5e35b1;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(103, 58, 183, 0.5);
+  text-decoration: none;
+  color: white;
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+.fab-button mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 768px) {
+  .fab-button {
+    bottom: 1rem;
+    right: 1rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  .fab-button mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Indicador de carga */
+.loading-indicator {
   text-align: center;
-}
-
-mat-header-cell,
-mat-cell {
-  padding: 8px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 2rem;
+  color: #6b7280;
+  font-style: italic;
 }

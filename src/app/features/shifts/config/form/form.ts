@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -5,7 +6,7 @@ import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardFooter } from '@angular/material/card';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatError, MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatTimepicker, MatTimepickerInput, MatTimepickerToggle } from '@angular/material/timepicker';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -22,6 +23,7 @@ import { PageTitleComponent } from '../../../../shared/page-title-component/page
   selector: 'app-shift-config-form',
   standalone: true,
   imports: [
+    CommonModule,
     PageTitleComponent,
     LoadingProgressComponent,
     FormsModule,
@@ -29,6 +31,7 @@ import { PageTitleComponent } from '../../../../shared/page-title-component/page
     MatCard,
     MatCardContent,
     MatCardFooter,
+    MatError,
     MatFormField,
     MatInput,
     MatLabel,
@@ -59,11 +62,23 @@ export class ShiftConfigFormComponent implements OnInit {
 
   form = this.fb.group({
     name: ['', Validators.required],
-    start_time: ['', Validators.required],
-    end_time: ['', Validators.required],
+    start_time: ['', [Validators.required, this.timeRangeValidator.bind(this)]],
+    end_time: ['', [Validators.required, this.timeRangeValidator.bind(this)]],
     lunch_minutes: [60, Validators.required],
-    store_id: [0, Validators.required] // Se establecerá desde el contexto
+    store_id: [0, Validators.required], // Se establecerá desde el contexto
+    working_days: [[] as string[], Validators.required] // Días laborales requeridos
   });
+
+  // Opciones de días de la semana
+  weekDays = [
+    { value: 'lunes', label: 'Lunes' },
+    { value: 'martes', label: 'Martes' },
+    { value: 'miercoles', label: 'Miércoles' },
+    { value: 'jueves', label: 'Jueves' },
+    { value: 'viernes', label: 'Viernes' },
+    { value: 'sabado', label: 'Sábado' },
+    { value: 'domingo', label: 'Domingo' }
+  ];
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -111,7 +126,8 @@ export class ShiftConfigFormComponent implements OnInit {
             start_time: shift.start_time,
             end_time: shift.end_time,
             lunch_minutes: shift.lunch_minutes,
-            store_id: shift.store_id
+            store_id: shift.store_id,
+            working_days: shift.working_days ?? []
           });
 
           console.warn('Turno cargado para edición:', shift);
@@ -128,7 +144,7 @@ export class ShiftConfigFormComponent implements OnInit {
     const raw = this.form.value;
     const formatTime = (date: Date | string): string => {
       if (typeof date === 'string') return date;
-      return date.toLocaleTimeString('es-CO', {
+      return date.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
@@ -140,7 +156,8 @@ export class ShiftConfigFormComponent implements OnInit {
       start_time: formatTime(raw.start_time ?? new Date()),
       end_time: formatTime(raw.end_time ?? new Date()),
       lunch_minutes: raw.lunch_minutes ?? 0,
-      store_id: raw.store_id ?? 1
+      store_id: raw.store_id ?? 1,
+      working_days: raw.working_days ?? []
     };
 
     const action = this.isEditMode
@@ -162,5 +179,32 @@ export class ShiftConfigFormComponent implements OnInit {
           this.router.navigate(['/shifts/config/list']);
         }
       });
+  }
+
+  // Validador personalizado para el rango de horas (6:00 AM - 9:00 PM)
+  timeRangeValidator(control: { value: string | Date | null }) {
+    if (!control.value) return null;
+
+    let timeValue: Date;
+
+    // Si es un string, convertir a Date
+    if (typeof control.value === 'string') {
+      const [hours, minutes] = control.value.split(':').map(Number);
+      timeValue = new Date();
+      timeValue.setHours(hours, minutes, 0, 0);
+    } else if (control.value instanceof Date) {
+      timeValue = control.value;
+    } else {
+      return null;
+    }
+
+    const hour = timeValue.getHours();
+
+    // Validar que esté entre 6:00 AM (6) y 9:00 PM (21)
+    if (hour < 6 || hour > 21) {
+      return { timeRange: { message: 'La hora debe estar entre 6:00 AM y 9:00 PM' } };
+    }
+
+    return null;
   }
 }

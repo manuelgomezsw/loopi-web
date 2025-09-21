@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,7 +8,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { NotificationService } from '../../../core/services/notification/notification.service';
 import { AppState } from '../../../store/app.state';
 import * as AuthActions from '../../../store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.selectors';
@@ -30,13 +32,15 @@ import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.sel
   styleUrl: './login-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private store = inject(Store<AppState>);
+  private notificationService = inject(NotificationService);
+  private destroy$ = new Subject<void>();
 
   // Observables del store
   isLoading$: Observable<boolean> = this.store.select(selectAuthLoading);
-  error$: Observable<string | null> = this.store.select(selectAuthError);
+  private error$: Observable<string | null> = this.store.select(selectAuthError);
 
   hidePassword = true;
 
@@ -44,6 +48,23 @@ export class LoginFormComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
+
+  ngOnInit(): void {
+    // Suscribirse a errores y mostrarlos como SnackBar
+    this.error$
+      .pipe(
+        filter(error => !!error),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(error => {
+        this.notificationService.error(error!);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   login(): void {
     if (this.form.invalid) {

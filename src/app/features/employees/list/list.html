@@ -1,32 +1,13 @@
 <app-page-title entityName="Empleados"></app-page-title>
 
-<!-- Stats display -->
-<div *ngIf="stats$ | async as stats" class="stats-container">
-  <div class="stat-card">
-    <span class="stat-label">Total:</span>
-    <span class="stat-value">{{ stats.total }}</span>
-  </div>
-  <div class="stat-card">
-    <span class="stat-label">Activos:</span>
-    <span class="stat-value">{{ stats.active }}</span>
-  </div>
-  <div class="stat-card">
-    <span class="stat-label">Inactivos:</span>
-    <span class="stat-value">{{ stats.inactive }}</span>
-  </div>
-</div>
-
-<a class="create-link" routerLink="/employees/new"> Nuevo empleado </a>
+<!-- Botón flotante para crear empleado -->
+<a [routerLink]="['/employees/new']" class="fab-button" title="Crear empleado">
+  <mat-icon>add</mat-icon>
+</a>
 
 <!-- Loading indicator -->
 <div *ngIf="loading$ | async">
   <app-loading-progress message="Cargando empleados..."></app-loading-progress>
-</div>
-
-<!-- Error message -->
-<div *ngIf="error$ | async as error" class="error-container">
-  <mat-icon color="warn">error</mat-icon>
-  <p>{{ error }}</p>
 </div>
 
 <!-- Employees table with optimized rendering -->

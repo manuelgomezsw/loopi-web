@@ -1,39 +1,85 @@
-import { Component } from '@angular/core';
-import { MonthNavigation } from './month-navigation/month-navigation';
-import { ShiftTableComponent } from './shift-table/shift-table';
-import { HoursCalculation } from './hours-calculation/hours-calculation';
-import { EmployeeShift } from '../../../model/employee-shift';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { AssignedShiftsService } from '../../../core/services/assigned-shifts/assigned-shifts';
+import { NotificationService } from '../../../core/services/notification/notification.service';
+import { WorkContextService } from '../../../core/services/work-context/work-context';
+import { AssignedShift } from '../../../model/assigned-shift';
+import { CalendarViewComponent } from './calendar-view/calendar-view.component';
+import { CalendarEvent } from './calendar-view/interfaces/calendar-day.interface';
 
 @Component({
   selector: 'app-shift-planning',
   standalone: true,
-  imports: [MonthNavigation, ShiftTableComponent, HoursCalculation],
+  imports: [CommonModule, RouterLink, MatIconModule, CalendarViewComponent],
   templateUrl: './planning.html',
   styleUrl: './planning.css'
 })
-export class ShiftPlanningComponent {
-  // Los datos ahora se manejan directamente en shift-table con mock data
-  shiftData: EmployeeShift[] = [];
+export class ShiftPlanningComponent implements OnInit {
+  private assignedShiftsService = inject(AssignedShiftsService);
+  private workContextService = inject(WorkContextService);
+  private notificationService = inject(NotificationService);
+
+  // Datos del calendario
+  assignedShifts: AssignedShift[] = [];
 
   selectedMonth: number = new Date().getMonth() + 1;
   selectedYear: number = new Date().getFullYear();
 
-  onEditAssignment(assignment: EmployeeShift): void {
-    console.warn('Editar asignación:', assignment);
-    // TODO: Implementar navegación al formulario de edición
-    // this.router.navigate(['/shifts/planning/assign', assignment.id]);
-  }
+  isLoading = false;
 
-  onDeleteAssignment(assignment: EmployeeShift): void {
-    console.warn('Eliminar asignación:', assignment);
-    // TODO: Implementar confirmación y eliminación
-    // Mostrar dialog de confirmación y eliminar la asignación
+  ngOnInit(): void {
+    this.loadAssignedShifts();
   }
 
   onMonthChange(month: number, year: number): void {
     this.selectedMonth = month;
     this.selectedYear = year;
-    console.warn('Mes cambiado:', { month, year });
-    // TODO: Cargar datos del mes seleccionado
+    this.loadAssignedShifts();
+  }
+
+  private loadAssignedShifts(): void {
+    const storeId = this.workContextService.getStoreId();
+
+    if (!storeId) {
+      console.warn('No se encontró store_id en el contexto de trabajo');
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.assignedShiftsService.getByStoreAndMonth(storeId, this.selectedYear, this.selectedMonth).subscribe({
+      next: (assignedShifts: AssignedShift[]) => {
+        this.assignedShifts = assignedShifts;
+        this.isLoading = false;
+      },
+      error: error => {
+        console.error('Error al cargar turnos asignados:', error);
+        this.notificationService.error('Error al cargar los turnos asignados');
+        this.assignedShifts = [];
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Eventos del calendario
+  onCalendarDayClick(_event: CalendarEvent): void {
+    // Funcionalidad de click en día disponible para futuras implementaciones
+  }
+
+  onCalendarShiftClick(event: CalendarEvent): void {
+    if (event.shift) {
+      console.warn('Turno clickeado:', event.shift);
+      // TODO: Implementar acción al hacer click en turno (ej: editar)
+    }
+  }
+
+  onCalendarDayHover(_event: CalendarEvent): void {
+    // Funcionalidad de hover en día disponible para futuras implementaciones
+  }
+
+  onCalendarShiftHover(_event: CalendarEvent): void {
+    // Funcionalidad de hover en turno disponible para futuras implementaciones
   }
 }

@@ -17,6 +17,7 @@ export interface AssignedShift {
     name: string;
     start_time: string;
     end_time: string;
+    working_days: string[];
   };
 }
 

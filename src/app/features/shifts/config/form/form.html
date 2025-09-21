@@ -7,25 +7,41 @@
     <mat-card class="main-form-card" appearance="outlined">
       <mat-card-content>
         <form class="main-form-input" [formGroup]="form">
-          <div class="form-row form-row--1">
+          <div class="form-row form-row--2">
             <mat-form-field appearance="outline">
               <mat-label>Nombre</mat-label>
               <input matInput formControlName="name" type="text" name="shiftName" />
             </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Días laborales</mat-label>
+              <mat-select formControlName="working_days" multiple>
+                <mat-option *ngFor="let day of weekDays" [value]="day.value">
+                  {{ day.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
-          <div class="form-row form-row--3">
+          <div class="form-row form-row--2">
             <mat-form-field appearance="outline">
               <mat-label>Hora inicio</mat-label>
               <input matInput [matTimepicker]="startTime" formControlName="start_time" />
               <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="startTime" />
-              <mat-timepicker #startTime />
+              <mat-timepicker #startTime format="12" />
+              @if (form.get("start_time")?.hasError("timeRange")) {
+                <mat-error>{{ form.get("start_time")?.errors?.["timeRange"]?.message }}</mat-error>
+              }
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Hora fin</mat-label>
               <input matInput [matTimepicker]="endTime" formControlName="end_time" />
               <mat-timepicker-toggle touchUi="true" matSuffix interval="30min" [for]="endTime" />
-              <mat-timepicker #endTime />
+              <mat-timepicker #endTime format="12" />
+              @if (form.get("end_time")?.hasError("timeRange")) {
+                <mat-error>{{ form.get("end_time")?.errors?.["timeRange"]?.message }}</mat-error>
+              }
             </mat-form-field>
+          </div>
+          <div class="form-row form-row--2">
             <mat-form-field appearance="outline">
               <mat-label>Minutos almuerzo</mat-label>
               <mat-select formControlName="lunch_minutes">

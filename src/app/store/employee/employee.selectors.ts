@@ -122,13 +122,6 @@ export const selectSortedEmployees = createSelector(
   }
 );
 
-// Statistics selectors
-export const selectEmployeeStats = createSelector(selectAllEmployeesFromState, employees => ({
-  total: employees.length,
-  active: employees.filter(e => e.is_active === true).length,
-  inactive: employees.filter(e => e.is_active === false).length
-}));
-
 // Eliminar selector de departamentos ya que no existe en el nuevo modelo
 
 export const selectEmployeePositions = createSelector(selectAllEmployeesFromState, employees => {
