@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { AssignedShift } from '../../../model/assigned-shift';
 
 export interface AssignedShiftRequest {
   user_id: number;
@@ -44,5 +45,9 @@ export class AssignedShiftsService {
 
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  getByStoreAndMonth(storeId: number, year: number, month: number): Observable<AssignedShift[]> {
+    return this.http.get<AssignedShift[]>(`${this.apiUrl}/store/${storeId}/month?year=${year}&month=${month}`);
   }
 }

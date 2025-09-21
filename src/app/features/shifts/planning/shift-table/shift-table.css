@@ -30,11 +30,6 @@ app-page-title .page-header h1 {
   padding: 12px 8px;
 }
 
-.mat-mdc-header-cell {
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.87);
-}
-
 /* Acciones */
 .mat-mdc-cell button {
   margin-right: 8px;
@@ -42,6 +37,20 @@ app-page-title .page-header h1 {
 
 .mat-mdc-cell button:last-child {
   margin-right: 0;
+}
+
+/* Estados de carga y sin datos */
+.loading-container,
+.no-data-container {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.loading-container p,
+.no-data-container p {
+  margin: 0;
+  font-size: 16px;
 }
 
 /* Responsive */
