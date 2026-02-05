@@ -8,6 +8,9 @@ import {
   InventoryItemsResponse,
   SaveDetailRequest,
   SaveDetailResponse,
+  SaveSalesRequest,
+  DiscrepanciesResponse,
+  DiscrepancyItem,
   InventorySummary,
   CompleteInventoryResponse,
   CreateInventoryRequest,
@@ -24,10 +27,18 @@ export class InventoryService {
   private currentInventory = signal<Inventory | null>(null);
   private currentItems = signal<InventoryItem[]>([]);
   private currentIndex = signal<number>(0);
+  private requiresSalesFlag = signal<boolean>(false);
+
+  // Discrepancy items for Phase 2
+  private _discrepancyItems = signal<DiscrepancyItem[]>([]);
+  private _discrepancyIndex = signal<number>(0);
 
   readonly inventory = this.currentInventory.asReadonly();
   readonly items = this.currentItems.asReadonly();
   readonly currentItemIndex = this.currentIndex.asReadonly();
+  readonly requiresSales = this.requiresSalesFlag.asReadonly();
+  readonly discrepancyItems = this._discrepancyItems.asReadonly();
+  readonly discrepancyIndex = this._discrepancyIndex.asReadonly();
 
   getSuggestedSchedule(): Observable<SuggestedSchedule> {
     return this.http.get<SuggestedSchedule>(`${environment.apiUrl}/inventories/suggested-schedule`);
@@ -49,6 +60,7 @@ export class InventoryService {
       .pipe(
         tap(response => {
           this.currentItems.set(response.items);
+          this.requiresSalesFlag.set(response.requires_sales);
           // Find first incomplete item
           const firstIncomplete = response.items.findIndex(item => !item.is_complete);
           this.currentIndex.set(firstIncomplete >= 0 ? firstIncomplete : 0);
@@ -70,11 +82,42 @@ export class InventoryService {
           updated[index] = {
             ...updated[index],
             real_value: detail.real_value,
-            stock_received: detail.stock_received,
-            units_sold: detail.units_sold,
             is_complete: true
           };
           this.currentItems.set(updated);
+        }
+      })
+    );
+  }
+
+  getDiscrepancies(inventoryId: number): Observable<DiscrepanciesResponse> {
+    return this.http.get<DiscrepanciesResponse>(`${environment.apiUrl}/inventories/${inventoryId}/discrepancies`)
+      .pipe(
+        tap(response => {
+          this._discrepancyItems.set(response.items);
+          this._discrepancyIndex.set(0);
+          this.requiresSalesFlag.set(response.requires_sales);
+        })
+      );
+  }
+
+  saveSales(inventoryId: number, sales: SaveSalesRequest): Observable<SaveDetailResponse> {
+    return this.http.post<SaveDetailResponse>(
+      `${environment.apiUrl}/inventories/${inventoryId}/sales`,
+      sales
+    ).pipe(
+      tap(() => {
+        // Update discrepancy items state
+        const items = this._discrepancyItems();
+        const index = items.findIndex(i => i.item_id === sales.item_id);
+        if (index >= 0) {
+          const updated = [...items];
+          updated[index] = {
+            ...updated[index],
+            stock_received: sales.stock_received,
+            units_sold: sales.units_sold
+          };
+          this._discrepancyItems.set(updated);
         }
       })
     );
@@ -93,7 +136,7 @@ export class InventoryService {
     );
   }
 
-  // Navigation helpers
+  // Navigation helpers for Phase 1 (physical count)
   nextItem(): void {
     const current = this.currentIndex();
     const items = this.currentItems();
@@ -137,9 +180,60 @@ export class InventoryService {
     };
   }
 
+  // Navigation helpers for Phase 2 (sales/purchases)
+  nextDiscrepancyItem(): void {
+    const current = this._discrepancyIndex();
+    const items = this._discrepancyItems();
+    if (current < items.length - 1) {
+      this._discrepancyIndex.set(current + 1);
+    }
+  }
+
+  previousDiscrepancyItem(): void {
+    const current = this._discrepancyIndex();
+    if (current > 0) {
+      this._discrepancyIndex.set(current - 1);
+    }
+  }
+
+  setDiscrepancyIndex(index: number): void {
+    this._discrepancyIndex.set(index);
+  }
+
+  getCurrentDiscrepancyItem(): DiscrepancyItem | null {
+    const items = this._discrepancyItems();
+    const index = this._discrepancyIndex();
+    return items[index] ?? null;
+  }
+
+  isFirstDiscrepancyItem(): boolean {
+    return this._discrepancyIndex() === 0;
+  }
+
+  isLastDiscrepancyItem(): boolean {
+    return this._discrepancyIndex() === this._discrepancyItems().length - 1;
+  }
+
+  getDiscrepancyProgress(): { current: number; total: number; percentage: number } {
+    const items = this._discrepancyItems();
+    const completed = items.filter(i => i.stock_received !== undefined || i.units_sold !== undefined).length;
+    return {
+      current: this._discrepancyIndex() + 1,
+      total: items.length,
+      percentage: items.length > 0 ? ((this._discrepancyIndex() + 1) / items.length) * 100 : 0
+    };
+  }
+
+  hasDiscrepancies(): boolean {
+    return this._discrepancyItems().length > 0;
+  }
+
   reset(): void {
     this.currentInventory.set(null);
     this.currentItems.set([]);
     this.currentIndex.set(0);
+    this._discrepancyItems.set([]);
+    this._discrepancyIndex.set(0);
+    this.requiresSalesFlag.set(false);
   }
 }

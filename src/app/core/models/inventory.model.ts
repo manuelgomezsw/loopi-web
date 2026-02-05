@@ -1,10 +1,12 @@
-export type Schedule = 'opening' | 'noon' | 'closing' | 'weekly' | 'monthly';
+export type InventoryType = 'daily' | 'weekly' | 'monthly';
+export type Schedule = 'opening' | 'noon' | 'closing';
 export type InventoryStatus = 'in_progress' | 'completed';
 
 export interface Inventory {
   id: number;
   inventory_date: string;
-  schedule: Schedule;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
   status: InventoryStatus;
   responsible_id: number;
   started_at: string;
@@ -12,7 +14,8 @@ export interface Inventory {
 }
 
 export interface SuggestedSchedule {
-  schedule: Schedule;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
   date: string;
 }
 
@@ -23,14 +26,15 @@ export interface InventoryItem {
   real_value?: number;
   stock_received?: number;
   units_sold?: number;
-  requires_sales: boolean;
   is_complete: boolean;
 }
 
 export interface InventoryItemsResponse {
   inventory_id: number;
-  schedule: Schedule;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
   date: string;
+  requires_sales: boolean;
   total_items: number;
   completed_items: number;
   items: InventoryItem[];
@@ -39,13 +43,38 @@ export interface InventoryItemsResponse {
 export interface SaveDetailRequest {
   item_id: number;
   real_value: number;
-  stock_received?: number;
-  units_sold?: number;
 }
 
 export interface SaveDetailResponse {
   saved: boolean;
   suggested_value?: number;
+}
+
+export interface SaveSalesRequest {
+  item_id: number;
+  stock_received?: number;
+  units_sold?: number;
+}
+
+export interface DiscrepancyItem {
+  item_id: number;
+  name: string;
+  suggested_value: number;
+  real_value: number;
+  difference: number;
+  stock_received?: number;
+  units_sold?: number;
+}
+
+export interface DiscrepanciesResponse {
+  inventory_id: number;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
+  date: string;
+  requires_sales: boolean;
+  total_items: number;
+  has_discrepancies: boolean;
+  items: DiscrepancyItem[];
 }
 
 export interface InventorySummaryItem {
@@ -55,11 +84,14 @@ export interface InventorySummaryItem {
   real_value: number;
   difference: number;
   has_discrepancy: boolean;
+  stock_received?: number;
+  units_sold?: number;
 }
 
 export interface InventorySummary {
   inventory_id: number;
-  schedule: Schedule;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
   date: string;
   total_items: number;
   items_with_issues: number;
@@ -74,6 +106,7 @@ export interface CompleteInventoryResponse {
 }
 
 export interface CreateInventoryRequest {
-  schedule: Schedule;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
   date: string;
 }

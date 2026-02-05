@@ -23,10 +23,8 @@ export class ItemEntryComponent implements OnInit, AfterViewInit {
   saving = signal(false);
   error = signal('');
 
-  // Form values
+  // Form value - only physical count in Phase 1
   realValue = signal<number | null>(null);
-  stockReceived = signal<number>(0);
-  unitsSold = signal<number>(0);
 
   // Computed from service
   items = this.inventoryService.items;
@@ -42,15 +40,12 @@ export class ItemEntryComponent implements OnInit, AfterViewInit {
   isFirst = computed(() => this.inventoryService.isFirstItem());
   isLast = computed(() => this.inventoryService.isLastItem());
 
-  requiresSales = signal(false);
-
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.inventoryId.set(id);
 
     this.inventoryService.getInventoryItems(id).subscribe({
-      next: (response) => {
-        this.requiresSales.set(response.schedule !== 'opening');
+      next: () => {
         this.loading.set(false);
         this.loadCurrentItemValues();
         this.focusRealValueInput();
@@ -63,7 +58,6 @@ export class ItemEntryComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Initial focus after view is ready
     setTimeout(() => this.focusRealValueInput(), 100);
   }
 
@@ -71,8 +65,6 @@ export class ItemEntryComponent implements OnInit, AfterViewInit {
     const item = this.currentItem();
     if (item) {
       this.realValue.set(item.real_value ?? null);
-      this.stockReceived.set(item.stock_received ?? 0);
-      this.unitsSold.set(item.units_sold ?? 0);
     }
   }
 
@@ -102,16 +94,14 @@ export class ItemEntryComponent implements OnInit, AfterViewInit {
 
     this.inventoryService.saveDetail(this.inventoryId(), {
       item_id: item.item_id,
-      real_value: this.realValue()!,
-      stock_received: this.requiresSales() ? this.stockReceived() : undefined,
-      units_sold: this.requiresSales() ? this.unitsSold() : undefined
+      real_value: this.realValue()!
     }).subscribe({
       next: () => {
         this.saving.set(false);
 
         if (this.isLast()) {
-          // Go to summary
-          this.router.navigate(['/inventory', this.inventoryId(), 'summary']);
+          // Phase 1 complete - go to discrepancy review
+          this.router.navigate(['/inventory', this.inventoryId(), 'review']);
         } else {
           // Go to next item
           this.inventoryService.nextItem();
@@ -135,25 +125,24 @@ export class ItemEntryComponent implements OnInit, AfterViewInit {
   }
 
   goToSummary(): void {
-    this.router.navigate(['/inventory', this.inventoryId(), 'summary']);
+    this.router.navigate(['/inventory', this.inventoryId(), 'review']);
   }
 
   goBack(): void {
     this.router.navigate(['/']);
   }
 
-  incrementValue(field: 'realValue' | 'stockReceived' | 'unitsSold'): void {
-    const current = this[field]() ?? 0;
-    this[field].set(current + 1);
+  incrementValue(): void {
+    const current = this.realValue() ?? 0;
+    this.realValue.set(current + 1);
   }
 
-  decrementValue(field: 'realValue' | 'stockReceived' | 'unitsSold'): void {
-    const current = this[field]() ?? 0;
+  decrementValue(): void {
+    const current = this.realValue() ?? 0;
     if (current > 0) {
-      this[field].set(current - 1);
-    } else if (field === 'realValue') {
-      // Allow 0 for realValue
-      this[field].set(0);
+      this.realValue.set(current - 1);
+    } else {
+      this.realValue.set(0);
     }
   }
 

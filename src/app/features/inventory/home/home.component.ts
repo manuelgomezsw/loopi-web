@@ -44,15 +44,26 @@ export class HomeComponent implements OnInit {
     this.authService.logout();
   }
 
-  formatSchedule(schedule: string): string {
-    const scheduleMap: Record<string, string> = {
-      'opening': 'Apertura',
-      'noon': 'Mediodía',
-      'closing': 'Cierre',
+  formatInventoryType(inventory: Inventory): string {
+    const typeMap: Record<string, string> = {
+      'daily': 'Diario',
       'weekly': 'Semanal',
       'monthly': 'Mensual'
     };
-    return scheduleMap[schedule] || schedule;
+    const scheduleMap: Record<string, string> = {
+      'opening': 'Apertura',
+      'noon': 'Mediodía',
+      'closing': 'Cierre'
+    };
+
+    const typeName = typeMap[inventory.inventory_type] || inventory.inventory_type;
+
+    if (inventory.inventory_type === 'daily' && inventory.schedule) {
+      const scheduleName = scheduleMap[inventory.schedule] || inventory.schedule;
+      return `${typeName} - ${scheduleName}`;
+    }
+
+    return typeName;
   }
 
   formatDate(dateStr: string): string {

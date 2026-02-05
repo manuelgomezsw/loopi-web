@@ -1,8 +1,8 @@
-<div class="min-h-screen bg-gray-50">
+<div class="h-dvh flex flex-col bg-gray-50 overflow-hidden">
   <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="px-4 py-4 flex items-center gap-3">
-      <button (click)="goBack()" class="p-2 -ml-2 text-gray-600 hover:text-gray-900">
+  <header class="flex-shrink-0 bg-white shadow-sm safe-area-top">
+    <div class="px-4 py-3 flex items-center gap-3">
+      <button (click)="goBack()" class="p-2 -ml-2 text-gray-600 hover:text-gray-900 touch-manipulation">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -11,61 +11,89 @@
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="px-4 py-6">
-    @if (loading()) {
-      <div class="flex items-center justify-center py-12">
-        <svg class="animate-spin h-8 w-8 text-coffee-500" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-      </div>
-    } @else {
-      <!-- Date Display -->
-      @if (suggestedSchedule()) {
-        <div class="text-center mb-6">
-          <p class="text-sm text-gray-500">Fecha</p>
-          <p class="text-lg font-medium text-gray-900 capitalize">
-            {{ formatDate(suggestedSchedule()!.date) }}
-          </p>
+  <!-- Main Content - Scrollable -->
+  <main class="flex-1 overflow-y-auto overscroll-contain">
+    <div class="px-4 py-4">
+      @if (loading()) {
+        <div class="flex items-center justify-center py-12">
+          <svg class="animate-spin h-8 w-8 text-coffee-500" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
         </div>
-      }
-
-      <!-- Schedule Options -->
-      <div class="space-y-3 mb-6">
-        <p class="text-sm font-medium text-gray-700">Selecciona el horario</p>
-
-        @for (schedule of schedules; track schedule.value) {
-          <button
-            (click)="selectSchedule(schedule.value)"
-            class="w-full card flex items-center gap-4 transition-all duration-200"
-            [class.ring-2]="selectedSchedule() === schedule.value"
-            [class.ring-coffee-500]="selectedSchedule() === schedule.value"
-            [class.bg-coffee-50]="selectedSchedule() === schedule.value"
-          >
-            <span class="text-2xl">{{ schedule.icon }}</span>
-            <span class="font-medium text-gray-900">{{ schedule.label }}</span>
-            @if (suggestedSchedule()?.schedule === schedule.value) {
-              <span class="ml-auto text-xs bg-coffee-100 text-coffee-700 px-2 py-1 rounded-full">
-                Sugerido
-              </span>
-            }
-          </button>
+      } @else {
+        <!-- Date Display -->
+        @if (suggestedSchedule()) {
+          <div class="text-center mb-5">
+            <p class="text-sm text-gray-500">Fecha</p>
+            <p class="text-lg font-medium text-gray-900 capitalize">
+              {{ formatDate(suggestedSchedule()!.date) }}
+            </p>
+          </div>
         }
-      </div>
 
-      <!-- Error Message -->
-      @if (error()) {
-        <div class="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4">
-          {{ error() }}
+        <!-- Inventory Type Selection -->
+        <div class="mb-5">
+          <p class="text-sm font-medium text-gray-700 mb-3">Tipo de inventario</p>
+          <div class="grid grid-cols-3 gap-2">
+            @for (type of inventoryTypes; track type.value) {
+              <button
+                (click)="selectType(type.value)"
+                class="card text-center py-3 px-2 transition-all duration-200 touch-manipulation"
+                [class.ring-2]="selectedType() === type.value"
+                [class.ring-coffee-500]="selectedType() === type.value"
+                [class.bg-coffee-50]="selectedType() === type.value"
+              >
+                <span class="block font-semibold text-gray-900 text-sm">{{ type.label }}</span>
+                <span class="block text-xs text-gray-500 mt-1">{{ type.description }}</span>
+              </button>
+            }
+          </div>
         </div>
-      }
 
-      <!-- Continue Button -->
+        <!-- Schedule Options (only for daily) -->
+        @if (isDaily()) {
+          <div class="mb-5">
+            <p class="text-sm font-medium text-gray-700 mb-3">Horario</p>
+            <div class="space-y-2">
+              @for (schedule of schedules; track schedule.value) {
+                <button
+                  (click)="selectSchedule(schedule.value)"
+                  class="w-full card flex items-center gap-3 py-3 transition-all duration-200 touch-manipulation"
+                  [class.ring-2]="selectedSchedule() === schedule.value"
+                  [class.ring-coffee-500]="selectedSchedule() === schedule.value"
+                  [class.bg-coffee-50]="selectedSchedule() === schedule.value"
+                >
+                  <span class="text-xl">{{ schedule.icon }}</span>
+                  <span class="font-medium text-gray-900">{{ schedule.label }}</span>
+                  @if (suggestedSchedule()?.schedule === schedule.value) {
+                    <span class="ml-auto text-xs bg-coffee-100 text-coffee-700 px-2 py-1 rounded-full">
+                      Sugerido
+                    </span>
+                  }
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Error Message -->
+        @if (error()) {
+          <div class="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4">
+            {{ error() }}
+          </div>
+        }
+      }
+    </div>
+  </main>
+
+  <!-- Footer - Fixed at bottom -->
+  <footer class="flex-shrink-0 bg-white border-t safe-area-bottom">
+    <div class="px-4 py-3">
       <button
         (click)="continue()"
-        class="w-full btn-primary flex items-center justify-center gap-2"
-        [disabled]="creating()"
+        class="w-full btn-primary flex items-center justify-center gap-2 touch-manipulation min-h-[48px]"
+        [disabled]="creating() || loading()"
       >
         @if (creating()) {
           <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -74,9 +102,9 @@
           </svg>
           <span>Creando...</span>
         } @else {
-          <span>Continuar</span>
+          <span>Iniciar inventario</span>
         }
       </button>
-    }
-  </main>
+    </div>
+  </footer>
 </div>

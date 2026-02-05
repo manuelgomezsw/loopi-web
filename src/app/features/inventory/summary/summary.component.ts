@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventoryService } from '../../../core/services/inventory.service';
-import { InventorySummary } from '../../../core/models';
+import { InventorySummary, InventoryType, Schedule } from '../../../core/models';
 
 @Component({
   selector: 'app-summary',
@@ -68,14 +68,25 @@ export class SummaryComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  formatSchedule(schedule: string): string {
-    const scheduleMap: Record<string, string> = {
-      'opening': 'Apertura',
-      'noon': 'Mediodía',
-      'closing': 'Cierre',
+  formatInventoryType(inventoryType: InventoryType, schedule?: Schedule): string {
+    const typeMap: Record<string, string> = {
+      'daily': 'Diario',
       'weekly': 'Semanal',
       'monthly': 'Mensual'
     };
-    return scheduleMap[schedule] || schedule;
+    const scheduleMap: Record<string, string> = {
+      'opening': 'Apertura',
+      'noon': 'Mediodía',
+      'closing': 'Cierre'
+    };
+
+    const typeName = typeMap[inventoryType] || inventoryType;
+
+    if (inventoryType === 'daily' && schedule) {
+      const scheduleName = scheduleMap[schedule] || schedule;
+      return `${typeName} - ${scheduleName}`;
+    }
+
+    return typeName;
   }
 }

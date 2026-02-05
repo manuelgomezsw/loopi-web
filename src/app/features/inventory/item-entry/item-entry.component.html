@@ -7,12 +7,15 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <h1 class="font-semibold text-lg text-gray-900">Inventario</h1>
+      <div>
+        <h1 class="font-semibold text-lg text-gray-900">Conteo Físico</h1>
+        <p class="text-xs text-gray-500">Fase 1 de 2</p>
+      </div>
       <button
         (click)="goToSummary()"
         class="ml-auto text-sm text-coffee-600 font-medium touch-manipulation"
       >
-        Ver resumen
+        Revisar
       </button>
     </div>
 
@@ -32,8 +35,8 @@
   </header>
 
   <!-- Main Content - Scrollable -->
-  <main class="flex-1 overflow-y-auto overscroll-contain">
-    <div class="px-4 py-4">
+  <main class="flex-1 overflow-y-auto overscroll-contain flex items-center justify-center">
+    <div class="px-4 py-4 w-full">
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
           <svg class="animate-spin h-8 w-8 text-coffee-500" viewBox="0 0 24 24">
@@ -42,94 +45,29 @@
           </svg>
         </div>
       } @else if (currentItem()) {
-        <div class="space-y-4">
+        <div class="space-y-6">
           <!-- Item Name -->
           <div class="text-center">
-            <h2 class="text-xl font-bold text-gray-900">
+            <h2 class="text-2xl font-bold text-gray-900">
               {{ currentItem()!.name }}
             </h2>
             @if (currentItem()!.suggested_value !== undefined && currentItem()!.suggested_value !== null) {
-              <p class="text-sm text-gray-500 mt-1">
-                Sugerido: <span class="font-semibold text-coffee-600">{{ currentItem()!.suggested_value }}</span>
+              <p class="text-sm text-gray-500 mt-2">
+                Esperado: <span class="font-semibold text-coffee-600 text-lg">{{ currentItem()!.suggested_value }}</span>
               </p>
             }
           </div>
 
-          <!-- Purchases (only for noon/closing) -->
-          @if (requiresSales()) {
-            <div class="card">
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Compras / Ingreso
-              </label>
-              <div class="flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  (click)="decrementValue('stockReceived')"
-                  class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-600 active:bg-gray-300 touch-manipulation"
-                >
-                  −
-                </button>
-                <input
-                  type="number"
-                  [ngModel]="stockReceived()"
-                  (ngModelChange)="stockReceived.set($event)"
-                  class="w-20 text-center text-2xl font-bold border-0 focus:ring-0 p-0 bg-transparent"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  min="0"
-                />
-                <button
-                  type="button"
-                  (click)="incrementValue('stockReceived')"
-                  class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-600 active:bg-gray-300 touch-manipulation"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Ventas
-              </label>
-              <div class="flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  (click)="decrementValue('unitsSold')"
-                  class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-600 active:bg-gray-300 touch-manipulation"
-                >
-                  −
-                </button>
-                <input
-                  type="number"
-                  [ngModel]="unitsSold()"
-                  (ngModelChange)="unitsSold.set($event)"
-                  class="w-20 text-center text-2xl font-bold border-0 focus:ring-0 p-0 bg-transparent"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  min="0"
-                />
-                <button
-                  type="button"
-                  (click)="incrementValue('unitsSold')"
-                  class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-600 active:bg-gray-300 touch-manipulation"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          }
-
-          <!-- Real Value (always shown) -->
-          <div class="card ring-2 ring-coffee-500">
-            <label class="block text-sm font-medium text-coffee-700 mb-2">
-              Conteo Real
+          <!-- Real Value Input - Prominent -->
+          <div class="card ring-2 ring-coffee-500 py-6">
+            <label class="block text-sm font-medium text-coffee-700 mb-3 text-center">
+              ¿Cuántos hay?
             </label>
-            <div class="flex items-center justify-center gap-3">
+            <div class="flex items-center justify-center gap-4">
               <button
                 type="button"
-                (click)="decrementValue('realValue')"
-                class="w-12 h-12 rounded-full bg-coffee-100 flex items-center justify-center text-xl font-bold text-coffee-700 active:bg-coffee-300 touch-manipulation"
+                (click)="decrementValue()"
+                class="w-14 h-14 rounded-full bg-coffee-100 flex items-center justify-center text-2xl font-bold text-coffee-700 active:bg-coffee-300 touch-manipulation"
               >
                 −
               </button>
@@ -139,7 +77,7 @@
                 [ngModel]="realValue()"
                 (ngModelChange)="realValue.set($event)"
                 (input)="onRealValueChange($any($event.target).value)"
-                class="w-24 text-center text-3xl font-bold border-0 focus:ring-0 p-0 text-coffee-800 bg-transparent"
+                class="w-28 text-center text-4xl font-bold border-0 focus:ring-0 p-0 text-coffee-800 bg-transparent"
                 inputmode="numeric"
                 pattern="[0-9]*"
                 min="0"
@@ -147,8 +85,8 @@
               />
               <button
                 type="button"
-                (click)="incrementValue('realValue')"
-                class="w-12 h-12 rounded-full bg-coffee-100 flex items-center justify-center text-xl font-bold text-coffee-700 active:bg-coffee-300 touch-manipulation"
+                (click)="incrementValue()"
+                class="w-14 h-14 rounded-full bg-coffee-100 flex items-center justify-center text-2xl font-bold text-coffee-700 active:bg-coffee-300 touch-manipulation"
               >
                 +
               </button>
@@ -187,7 +125,7 @@
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
         } @else if (isLast()) {
-          <span>Revisar ✓</span>
+          <span>Revisar →</span>
         } @else {
           <span>Siguiente →</span>
         }

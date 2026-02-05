@@ -25,6 +25,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/inventory/item-entry/item-entry.component').then(m => m.ItemEntryComponent)
       },
       {
+        path: ':id/review',
+        loadComponent: () => import('./features/inventory/discrepancy-review/discrepancy-review.component').then(m => m.DiscrepancyReviewComponent)
+      },
+      {
+        path: ':id/sales',
+        loadComponent: () => import('./features/inventory/sales-entry/sales-entry.component').then(m => m.SalesEntryComponent)
+      },
+      {
         path: ':id/summary',
         loadComponent: () => import('./features/inventory/summary/summary.component').then(m => m.SummaryComponent)
       },

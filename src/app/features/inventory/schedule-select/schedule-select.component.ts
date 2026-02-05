@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { InventoryService } from '../../../core/services/inventory.service';
-import { Schedule, SuggestedSchedule } from '../../../core/models';
+import { Schedule, InventoryType, SuggestedSchedule } from '../../../core/models';
 
 @Component({
   selector: 'app-schedule-select',
@@ -15,10 +15,17 @@ export class ScheduleSelectComponent implements OnInit {
   private router = inject(Router);
 
   suggestedSchedule = signal<SuggestedSchedule | null>(null);
+  selectedType = signal<InventoryType>('daily');
   selectedSchedule = signal<Schedule>('opening');
   loading = signal(true);
   creating = signal(false);
   error = signal('');
+
+  inventoryTypes: { value: InventoryType; label: string; description: string }[] = [
+    { value: 'daily', label: 'Diario', description: 'Productos de alta rotación' },
+    { value: 'weekly', label: 'Semanal', description: 'Todos los insumos' },
+    { value: 'monthly', label: 'Mensual', description: 'Inventario completo' }
+  ];
 
   schedules: { value: Schedule; label: string; icon: string }[] = [
     { value: 'opening', label: 'Apertura', icon: '🌅' },
@@ -30,7 +37,10 @@ export class ScheduleSelectComponent implements OnInit {
     this.inventoryService.getSuggestedSchedule().subscribe({
       next: (suggested) => {
         this.suggestedSchedule.set(suggested);
-        this.selectedSchedule.set(suggested.schedule);
+        this.selectedType.set(suggested.inventory_type);
+        if (suggested.schedule) {
+          this.selectedSchedule.set(suggested.schedule);
+        }
         this.loading.set(false);
       },
       error: () => {
@@ -39,8 +49,18 @@ export class ScheduleSelectComponent implements OnInit {
     });
   }
 
+  selectType(type: InventoryType): void {
+    this.selectedType.set(type);
+    this.error.set('');
+  }
+
   selectSchedule(schedule: Schedule): void {
     this.selectedSchedule.set(schedule);
+    this.error.set('');
+  }
+
+  isDaily(): boolean {
+    return this.selectedType() === 'daily';
   }
 
   continue(): void {
@@ -51,7 +71,8 @@ export class ScheduleSelectComponent implements OnInit {
     this.error.set('');
 
     this.inventoryService.createInventory({
-      schedule: this.selectedSchedule(),
+      inventory_type: this.selectedType(),
+      schedule: this.isDaily() ? this.selectedSchedule() : undefined,
       date: suggested.date
     }).subscribe({
       next: (inventory) => {
@@ -60,7 +81,7 @@ export class ScheduleSelectComponent implements OnInit {
       error: (err) => {
         this.creating.set(false);
         if (err.status === 409) {
-          this.error.set('Ya existe un inventario para este horario');
+          this.error.set('Ya existe un inventario de este tipo para hoy');
         } else {
           this.error.set('Error al crear el inventario');
         }
