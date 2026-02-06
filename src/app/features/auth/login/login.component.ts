@@ -32,8 +32,13 @@ export class LoginComponent {
       username: this.username(),
       password: this.password()
     }).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
+      next: (response) => {
+        // Redirect based on role
+        if (response.employee.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/inventory']);
+        }
       },
       error: (err) => {
         this.loading.set(false);

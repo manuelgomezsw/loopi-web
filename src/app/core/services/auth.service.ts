@@ -18,6 +18,7 @@ export class AuthService {
 
   readonly employee = this.currentEmployee.asReadonly();
   readonly isLoggedIn = computed(() => !!this.currentEmployee());
+  readonly isAdmin = computed(() => this.currentEmployee()?.role === 'admin');
   readonly employeeName = computed(() => this.currentEmployee()?.name ?? '');
 
   constructor() {

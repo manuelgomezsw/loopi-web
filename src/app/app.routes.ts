@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, publicGuard } from './core/guards/auth.guard';
+import { authGuard, publicGuard, adminGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -7,15 +7,23 @@ export const routes: Routes = [
     canActivate: [publicGuard],
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
   },
+  
+  // Admin routes
   {
-    path: '',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/inventory/home/home.component').then(m => m.HomeComponent)
+    path: 'admin',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes)
   },
+
+  // Employee routes
   {
     path: 'inventory',
     canActivate: [authGuard],
     children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/inventory/home/home.component').then(m => m.HomeComponent)
+      },
       {
         path: 'schedule',
         loadComponent: () => import('./features/inventory/schedule-select/schedule-select.component').then(m => m.ScheduleSelectComponent)
@@ -42,6 +50,14 @@ export const routes: Routes = [
       }
     ]
   },
+
+  // Default redirect based on role (handled in publicGuard)
+  {
+    path: '',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/shared/role-redirect.component').then(m => m.RoleRedirectComponent)
+  },
+  
   {
     path: '**',
     redirectTo: ''
