@@ -16,6 +16,10 @@ export const adminRoutes: Routes = [
         loadComponent: () => import('./inventories/inventory-list.component').then(m => m.InventoryListComponent)
       },
       {
+        path: 'inventories/:inventoryID',
+        loadComponent: () => import('./inventories/inventory-detail.component').then(m => m.InventoryDetailComponent)
+      },
+      {
         path: 'items',
         loadComponent: () => import('./items/item-list.component').then(m => m.ItemListComponent)
       },
