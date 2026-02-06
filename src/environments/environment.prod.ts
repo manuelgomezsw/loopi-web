@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '/api' // Will be proxied in production
+  apiUrl: 'https://quotes-api-100.ue.r.appspot.com/api'
 };
