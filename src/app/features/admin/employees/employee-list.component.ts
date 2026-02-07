@@ -98,7 +98,7 @@ import {
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contacto</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                  <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -134,8 +134,9 @@ import {
                     <td class="px-6 py-4 whitespace-nowrap">
                       <button
                         (click)="toggleStatus(emp)"
-                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
+                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer"
                         [class]="emp.active ? 'bg-emerald-600' : 'bg-gray-300'"
+                        [title]="emp.active ? 'Clic para desactivar' : 'Clic para activar'"
                       >
                         <span
                           class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
@@ -143,19 +144,27 @@ import {
                         ></span>
                       </button>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                      <button
-                        (click)="openEditModal(emp)"
-                        class="text-emerald-600 hover:text-emerald-900"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        (click)="resetPassword(emp)"
-                        class="text-orange-600 hover:text-orange-900"
-                      >
-                        Reset Pass
-                      </button>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                      <div class="flex justify-center gap-3">
+                        <button
+                          (click)="openEditModal(emp)"
+                          class="text-emerald-600 hover:text-emerald-900"
+                          title="Editar empleado"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                          </svg>
+                        </button>
+                        <button
+                          (click)="resetPassword(emp)"
+                          class="text-orange-600 hover:text-orange-900"
+                          title="Restablecer contraseña"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 }
@@ -249,7 +258,7 @@ import {
                       <option value="">Seleccionar</option>
                       <option value="CC">CC</option>
                       <option value="CE">CE</option>
-                      <option value="TI">TI</option>
+                      <option value="NUIP">NUIP</option>
                       <option value="PP">Pasaporte</option>
                     </select>
                   </div>
