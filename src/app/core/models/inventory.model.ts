@@ -22,6 +22,7 @@ export interface SuggestedSchedule {
 export interface InventoryItem {
   item_id: number;
   name: string;
+  category_name?: string;
   suggested_value?: number;
   real_value?: number;
   stock_received?: number;
