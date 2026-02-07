@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { AdminService } from '../../../core/services/admin.service';
 import {
   Item,
@@ -8,7 +9,9 @@ import {
   ItemType,
   InventoryFrequency,
   CreateItemRequest,
-  UpdateItemRequest
+  UpdateItemRequest,
+  Category,
+  Supplier
 } from '../../../core/models/admin.model';
 
 @Component({
@@ -108,10 +111,12 @@ import {
               <thead class="bg-gray-50">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frecuencia</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Costo</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                  <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -119,6 +124,9 @@ import {
                   <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="text-sm font-medium text-gray-900">{{ item.name }}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="text-sm text-gray-600">{{ item.category?.name || '-' }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span
@@ -131,11 +139,15 @@ import {
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="text-sm text-gray-600">{{ getFrequencyLabel(item.inventory_frequency) }}</span>
                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                      <span class="text-sm text-gray-600">{{ formatCost(item.cost) }}</span>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <button
                         (click)="toggleStatus(item)"
-                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
+                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer"
                         [class]="item.active ? 'bg-emerald-600' : 'bg-gray-300'"
+                        [title]="item.active ? 'Clic para desactivar' : 'Clic para activar'"
                       >
                         <span
                           class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
@@ -143,12 +155,15 @@ import {
                         ></span>
                       </button>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
                       <button
                         (click)="openEditModal(item)"
                         class="text-emerald-600 hover:text-emerald-900"
+                        title="Editar item"
                       >
-                        Editar
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
                       </button>
                     </td>
                   </tr>
@@ -194,7 +209,7 @@ import {
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
                   <input
                     type="text"
                     [(ngModel)]="formName"
@@ -203,27 +218,65 @@ import {
                   />
                 </div>
                 
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
+                    <select
+                      [(ngModel)]="formType"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="product">Producto</option>
+                      <option value="supply">Insumo</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Frecuencia *</label>
+                    <select
+                      [(ngModel)]="formFrequency"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="daily">Diaria</option>
+                      <option value="weekly">Semanal</option>
+                      <option value="monthly">Mensual</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
                   <select
-                    [(ngModel)]="formType"
+                    [(ngModel)]="formCategoryId"
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
                   >
-                    <option value="product">Producto</option>
-                    <option value="supply">Insumo</option>
+                    @for (cat of categories(); track cat.id) {
+                      <option [ngValue]="cat.id">{{ cat.name }}</option>
+                    }
                   </select>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Frecuencia de Inventario</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Proveedor</label>
                   <select
-                    [(ngModel)]="formFrequency"
+                    [(ngModel)]="formSupplierId"
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
                   >
-                    <option value="daily">Diaria</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensual</option>
+                    <option [ngValue]="null">Sin proveedor</option>
+                    @for (sup of suppliers(); track sup.id) {
+                      <option [ngValue]="sup.id">{{ sup.business_name }}</option>
+                    }
                   </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Costo (COP)</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="formCost"
+                    min="0"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    placeholder="0"
+                  />
                 </div>
 
                 @if (editingItem()) {
@@ -274,6 +327,8 @@ export class ItemListComponent implements OnInit {
   showModal = signal(false);
   editingItem = signal<Item | null>(null);
   saving = signal(false);
+  categories = signal<Category[]>([]);
+  suppliers = signal<Supplier[]>([]);
 
   // Filters
   searchQuery = '';
@@ -288,11 +343,27 @@ export class ItemListComponent implements OnInit {
   formType: ItemType = 'supply';
   formFrequency: InventoryFrequency = 'monthly';
   formActive = true;
+  formCategoryId: number = 0;
+  formSupplierId: number | null = null;
+  formCost: number = 0;
 
   private searchTimeout?: ReturnType<typeof setTimeout>;
 
   ngOnInit() {
-    this.loadItems();
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
+    forkJoin({
+      categories: this.adminService.listCategories(),
+      suppliers: this.adminService.listAllActiveSuppliers()
+    }).subscribe({
+      next: ({ categories, suppliers }) => {
+        this.categories.set(categories.categories?.filter(c => c.active) || []);
+        this.suppliers.set(suppliers.suppliers || []);
+        this.loadItems();
+      }
+    });
   }
 
   loadItems() {
@@ -370,6 +441,9 @@ export class ItemListComponent implements OnInit {
     this.formType = 'supply';
     this.formFrequency = 'monthly';
     this.formActive = true;
+    this.formCategoryId = this.categories().length > 0 ? this.categories()[0].id : 0;
+    this.formSupplierId = null;
+    this.formCost = 0;
     this.showModal.set(true);
   }
 
@@ -379,7 +453,14 @@ export class ItemListComponent implements OnInit {
     this.formType = item.type;
     this.formFrequency = item.inventory_frequency;
     this.formActive = item.active;
+    this.formCategoryId = item.category_id;
+    this.formSupplierId = item.supplier_id ?? null;
+    this.formCost = item.cost;
     this.showModal.set(true);
+  }
+
+  formatCost(cost: number): string {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(cost);
   }
 
   closeModal() {
@@ -388,7 +469,7 @@ export class ItemListComponent implements OnInit {
   }
 
   saveItem() {
-    if (!this.formName.trim()) return;
+    if (!this.formName.trim() || !this.formCategoryId) return;
 
     this.saving.set(true);
 
@@ -397,7 +478,10 @@ export class ItemListComponent implements OnInit {
         type: this.formType,
         name: this.formName.trim(),
         inventory_frequency: this.formFrequency,
-        active: this.formActive
+        active: this.formActive,
+        category_id: this.formCategoryId,
+        supplier_id: this.formSupplierId ?? undefined,
+        cost: this.formCost || 0
       };
 
       this.adminService.updateItem(this.editingItem()!.id, data).subscribe({
@@ -414,7 +498,10 @@ export class ItemListComponent implements OnInit {
       const data: CreateItemRequest = {
         type: this.formType,
         name: this.formName.trim(),
-        inventory_frequency: this.formFrequency
+        inventory_frequency: this.formFrequency,
+        category_id: this.formCategoryId,
+        supplier_id: this.formSupplierId ?? undefined,
+        cost: this.formCost || 0
       };
 
       this.adminService.createItem(data).subscribe({
