@@ -26,6 +26,14 @@ export const adminRoutes: Routes = [
       {
         path: 'employees',
         loadComponent: () => import('./employees/employee-list.component').then(m => m.EmployeeListComponent)
+      },
+      {
+        path: 'categories',
+        loadComponent: () => import('./categories/category-list.component').then(m => m.CategoryListComponent)
+      },
+      {
+        path: 'suppliers',
+        loadComponent: () => import('./suppliers/supplier-list.component').then(m => m.SupplierListComponent)
       }
     ]
   }

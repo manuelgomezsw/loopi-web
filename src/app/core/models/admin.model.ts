@@ -100,8 +100,13 @@ export interface Item {
   name: string;
   active: boolean;
   inventory_frequency: InventoryFrequency;
+  category_id: number;
+  supplier_id?: number;
+  cost: number;
   created_at: string;
   updated_at: string;
+  category?: { id: number; name: string };
+  supplier?: { id: number; business_name: string };
 }
 
 export interface ItemListResult {
@@ -125,6 +130,9 @@ export interface CreateItemRequest {
   type: ItemType;
   name: string;
   inventory_frequency: InventoryFrequency;
+  category_id: number;
+  supplier_id?: number;
+  cost: number;
 }
 
 export interface UpdateItemRequest {
@@ -132,6 +140,9 @@ export interface UpdateItemRequest {
   name: string;
   inventory_frequency: InventoryFrequency;
   active: boolean;
+  category_id: number;
+  supplier_id?: number;
+  cost: number;
 }
 
 // Employee models
@@ -192,5 +203,85 @@ export interface UpdateEmployeeRequest {
   email?: string;
   birth_date?: string;
   role: EmployeeRole;
+  active: boolean;
+}
+
+// Category models
+export interface Category {
+  id: number;
+  name: string;
+  display_order: number;
+  active: boolean;
+  item_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CategoryListResult {
+  categories: Category[];
+  total: number;
+}
+
+export interface CreateCategoryRequest {
+  name: string;
+}
+
+export interface UpdateCategoryRequest {
+  name: string;
+  active: boolean;
+}
+
+export interface CategoryOrderItem {
+  id: number;
+  display_order: number;
+}
+
+export interface ReorderCategoriesRequest {
+  orders: CategoryOrderItem[];
+}
+
+// Supplier models
+export interface Supplier {
+  id: number;
+  business_name: string;
+  tax_id: string;
+  contact_name: string;
+  contact_phone: string;
+  contact_email: string;
+  active: boolean;
+  item_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SupplierListResult {
+  suppliers: Supplier[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface SupplierFilter {
+  active?: boolean;
+  search?: string;
+  page?: number;
+  page_size?: number;
+}
+
+export interface CreateSupplierRequest {
+  business_name: string;
+  tax_id: string;
+  contact_name: string;
+  contact_phone: string;
+  contact_email: string;
+}
+
+export interface UpdateSupplierRequest {
+  business_name: string;
+  tax_id: string;
+  contact_name: string;
+  contact_phone: string;
+  contact_email: string;
   active: boolean;
 }

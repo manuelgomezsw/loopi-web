@@ -17,7 +17,17 @@ import {
   EmployeeListResult,
   EmployeeFilter,
   CreateEmployeeRequest,
-  UpdateEmployeeRequest
+  UpdateEmployeeRequest,
+  Category,
+  CategoryListResult,
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+  ReorderCategoriesRequest,
+  Supplier,
+  SupplierListResult,
+  SupplierFilter,
+  CreateSupplierRequest,
+  UpdateSupplierRequest
 } from '../models/admin.model';
 
 @Injectable({
@@ -120,5 +130,64 @@ export class AdminService {
 
   resetEmployeePassword(id: number): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/employees/${id}/reset-password`, {});
+  }
+
+  // --- Category Management ---
+
+  listCategories(): Observable<CategoryListResult> {
+    return this.http.get<CategoryListResult>(`${this.baseUrl}/categories`);
+  }
+
+  getCategory(id: number): Observable<Category> {
+    return this.http.get<Category>(`${this.baseUrl}/categories/${id}`);
+  }
+
+  createCategory(data: CreateCategoryRequest): Observable<Category> {
+    return this.http.post<Category>(`${this.baseUrl}/categories`, data);
+  }
+
+  updateCategory(id: number, data: UpdateCategoryRequest): Observable<Category> {
+    return this.http.put<Category>(`${this.baseUrl}/categories/${id}`, data);
+  }
+
+  updateCategoryStatus(id: number, active: boolean): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}/categories/${id}/status`, { active });
+  }
+
+  reorderCategories(data: ReorderCategoriesRequest): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/categories/reorder`, data);
+  }
+
+  // --- Supplier Management ---
+
+  listSuppliers(filter: SupplierFilter = {}): Observable<SupplierListResult> {
+    let params = new HttpParams();
+    
+    if (filter.page) params = params.set('page', filter.page.toString());
+    if (filter.page_size) params = params.set('page_size', filter.page_size.toString());
+    if (filter.active !== undefined) params = params.set('active', filter.active.toString());
+    if (filter.search) params = params.set('search', filter.search);
+
+    return this.http.get<SupplierListResult>(`${this.baseUrl}/suppliers`, { params });
+  }
+
+  listAllActiveSuppliers(): Observable<{ suppliers: Supplier[]; total: number }> {
+    return this.http.get<{ suppliers: Supplier[]; total: number }>(`${this.baseUrl}/suppliers/active`);
+  }
+
+  getSupplier(id: number): Observable<Supplier> {
+    return this.http.get<Supplier>(`${this.baseUrl}/suppliers/${id}`);
+  }
+
+  createSupplier(data: CreateSupplierRequest): Observable<Supplier> {
+    return this.http.post<Supplier>(`${this.baseUrl}/suppliers`, data);
+  }
+
+  updateSupplier(id: number, data: UpdateSupplierRequest): Observable<Supplier> {
+    return this.http.put<Supplier>(`${this.baseUrl}/suppliers/${id}`, data);
+  }
+
+  updateSupplierStatus(id: number, active: boolean): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}/suppliers/${id}/status`, { active });
   }
 }
