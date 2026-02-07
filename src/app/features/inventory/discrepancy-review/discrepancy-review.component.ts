@@ -22,6 +22,7 @@ export class DiscrepancyReviewComponent implements OnInit {
 
   discrepancies = signal<DiscrepancyItem[]>([]);
   hasDiscrepancies = signal(false);
+  requiresSales = signal(false);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -31,6 +32,7 @@ export class DiscrepancyReviewComponent implements OnInit {
       next: (response) => {
         this.discrepancies.set(response.items);
         this.hasDiscrepancies.set(response.has_discrepancies);
+        this.requiresSales.set(response.requires_sales);
         this.loading.set(false);
       },
       error: () => {

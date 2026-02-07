@@ -110,3 +110,16 @@ export interface CreateInventoryRequest {
   schedule?: Schedule;
   date: string;
 }
+
+export interface InProgressInventory {
+  id: number;
+  inventory_date: string;
+  inventory_type: InventoryType;
+  schedule?: Schedule;
+  started_at: string;
+}
+
+export interface InProgressInventoriesResponse {
+  inventories: InProgressInventory[];
+  count: number;
+}

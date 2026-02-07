@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-const TOKEN_KEY = 'loopi_token';
-const EMPLOYEE_KEY = 'loopi_employee';
+const TOKEN_KEY = 'token';
+const EMPLOYEE_KEY = 'employee';
 
 @Injectable({
   providedIn: 'root'

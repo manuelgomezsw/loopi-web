@@ -1,9 +1,10 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { InventoryService } from '../../../core/services/inventory.service';
-import { Inventory } from '../../../core/models';
+import { Inventory, InProgressInventory } from '../../../core/models';
 
 @Component({
   selector: 'app-home',
@@ -18,22 +19,41 @@ export class HomeComponent implements OnInit {
 
   employeeName = this.authService.employeeName;
   latestInventory = signal<Inventory | null>(null);
+  inProgressInventory = signal<InProgressInventory | null>(null);
   loading = signal(true);
 
   ngOnInit(): void {
-    this.loadLatestInventory();
+    this.loadData();
   }
 
-  loadLatestInventory(): void {
-    this.inventoryService.getLatestInventory().subscribe({
-      next: (response) => {
-        this.latestInventory.set(response.inventory);
+  loadData(): void {
+    forkJoin({
+      latest: this.inventoryService.getLatestInventory(),
+      inProgress: this.inventoryService.getInProgressInventories()
+    }).subscribe({
+      next: ({ latest, inProgress }) => {
+        this.latestInventory.set(latest.inventory);
+        // Take the first in-progress inventory (most recent)
+        if (inProgress.count > 0 && inProgress.inventories.length > 0) {
+          this.inProgressInventory.set(inProgress.inventories[0]);
+        }
         this.loading.set(false);
       },
       error: () => {
         this.loading.set(false);
       }
     });
+  }
+
+  hasInProgressInventory(): boolean {
+    return this.inProgressInventory() !== null;
+  }
+
+  continueInventory(): void {
+    const inventory = this.inProgressInventory();
+    if (inventory) {
+      this.router.navigate(['/inventory', inventory.id, 'item']);
+    }
   }
 
   startNewInventory(): void {
@@ -44,7 +64,7 @@ export class HomeComponent implements OnInit {
     this.authService.logout();
   }
 
-  formatInventoryType(inventory: Inventory): string {
+  formatInventoryType(inventory: Inventory | InProgressInventory): string {
     const typeMap: Record<string, string> = {
       'daily': 'Diario',
       'weekly': 'Semanal',
@@ -91,5 +111,23 @@ export class HomeComponent implements OnInit {
       minute: '2-digit',
       hour12: true
     });
+  }
+
+  formatStartedTime(dateTimeStr: string): string {
+    const date = new Date(dateTimeStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+    if (diffMins < 1) {
+      return 'hace un momento';
+    } else if (diffMins < 60) {
+      return `hace ${diffMins} min`;
+    } else if (diffHours < 24) {
+      return `hace ${diffHours}h`;
+    } else {
+      return this.formatTime(dateTimeStr);
+    }
   }
 }

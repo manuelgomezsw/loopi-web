@@ -87,7 +87,8 @@
   <!-- Footer - Fixed at bottom -->
   <footer class="flex-shrink-0 bg-white border-t safe-area-bottom">
     <div class="px-4 py-3">
-      @if (hasDiscrepancies()) {
+      @if (hasDiscrepancies() && requiresSales()) {
+        <!-- Has discrepancies AND requires sales entry (noon/closing inventories) -->
         <button
           (click)="continueToSales()"
           class="w-full btn-primary flex items-center justify-center gap-2 touch-manipulation min-h-[48px]"
@@ -101,7 +102,26 @@
         >
           Volver a revisar conteo
         </button>
+      } @else if (hasDiscrepancies()) {
+        <!-- Has discrepancies but NO sales required (opening inventory) -->
+        <p class="text-sm text-amber-600 mb-3 text-center">
+          Inventario de apertura: las diferencias se registrarán como issues.
+        </p>
+        <button
+          (click)="finishInventory()"
+          class="w-full btn-primary flex items-center justify-center gap-2 touch-manipulation min-h-[48px]"
+        >
+          <span>Ver resumen</span>
+          <span>→</span>
+        </button>
+        <button
+          (click)="goBackToItems()"
+          class="w-full mt-2 btn-secondary touch-manipulation min-h-[48px]"
+        >
+          Volver a revisar conteo
+        </button>
       } @else {
+        <!-- No discrepancies -->
         <button
           (click)="finishInventory()"
           class="w-full btn-primary flex items-center justify-center gap-2 touch-manipulation min-h-[48px]"

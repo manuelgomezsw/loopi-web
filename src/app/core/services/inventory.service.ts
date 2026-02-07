@@ -14,7 +14,8 @@ import {
   InventorySummary,
   CompleteInventoryResponse,
   CreateInventoryRequest,
-  InventoryItem
+  InventoryItem,
+  InProgressInventoriesResponse
 } from '../models';
 
 @Injectable({
@@ -46,6 +47,10 @@ export class InventoryService {
 
   getLatestInventory(): Observable<{ inventory: Inventory | null }> {
     return this.http.get<{ inventory: Inventory | null }>(`${environment.apiUrl}/inventories/latest`);
+  }
+
+  getInProgressInventories(): Observable<InProgressInventoriesResponse> {
+    return this.http.get<InProgressInventoriesResponse>(`${environment.apiUrl}/inventories/in-progress`);
   }
 
   createInventory(request: CreateInventoryRequest): Observable<Inventory> {

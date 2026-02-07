@@ -89,3 +89,108 @@ export interface UpdateDetailRequest {
   stock_received?: number;
   units_sold?: number;
 }
+
+// Item models
+export type ItemType = 'product' | 'supply';
+export type InventoryFrequency = 'daily' | 'weekly' | 'monthly';
+
+export interface Item {
+  id: number;
+  type: ItemType;
+  name: string;
+  active: boolean;
+  inventory_frequency: InventoryFrequency;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ItemListResult {
+  items: Item[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface ItemFilter {
+  type?: ItemType;
+  frequency?: InventoryFrequency;
+  active?: boolean;
+  search?: string;
+  page?: number;
+  page_size?: number;
+}
+
+export interface CreateItemRequest {
+  type: ItemType;
+  name: string;
+  inventory_frequency: InventoryFrequency;
+}
+
+export interface UpdateItemRequest {
+  type: ItemType;
+  name: string;
+  inventory_frequency: InventoryFrequency;
+  active: boolean;
+}
+
+// Employee models
+export type EmployeeRole = 'employee' | 'admin';
+
+export interface Employee {
+  id: number;
+  username: string;
+  name: string;
+  last_name: string;
+  document_type?: string;
+  document_number?: string;
+  phone?: string;
+  email?: string;
+  birth_date?: string;
+  role: EmployeeRole;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EmployeeListResult {
+  employees: Employee[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface EmployeeFilter {
+  role?: EmployeeRole;
+  active?: boolean;
+  search?: string;
+  page?: number;
+  page_size?: number;
+}
+
+export interface CreateEmployeeRequest {
+  username: string;
+  password: string;
+  name: string;
+  last_name: string;
+  document_type?: string;
+  document_number?: string;
+  phone?: string;
+  email?: string;
+  birth_date?: string;
+  role: EmployeeRole;
+}
+
+export interface UpdateEmployeeRequest {
+  username: string;
+  name: string;
+  last_name: string;
+  document_type?: string;
+  document_number?: string;
+  phone?: string;
+  email?: string;
+  birth_date?: string;
+  role: EmployeeRole;
+  active: boolean;
+}
