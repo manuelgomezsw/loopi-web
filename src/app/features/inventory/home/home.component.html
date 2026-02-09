@@ -23,18 +23,22 @@
 
   <!-- Main Content -->
   <main class="px-4 py-8">
-    <!-- Continue In-Progress Inventory -->
-    @if (hasInProgressInventory()) {
-      <button
-        (click)="continueInventory()"
-        class="w-full card hover:shadow-md transition-shadow duration-200 flex flex-col items-center justify-center py-12 mb-4 border-2 border-amber-400 bg-amber-50"
-      >
-        <div class="text-5xl mb-4">⏳</div>
-        <span class="text-xl font-semibold text-amber-800">Continuar Inventario</span>
-        <span class="text-sm text-amber-600 mt-1">
-          {{ formatInventoryType(inProgressInventory()!) }} · Iniciado {{ formatStartedTime(inProgressInventory()!.started_at) }}
-        </span>
-      </button>
+    <!-- Continue In-Progress Inventories -->
+    @if (hasInProgressInventories()) {
+      @for (inv of inProgressInventories(); track inv.id) {
+        <button
+          (click)="continueInventory(inv)"
+          class="w-full card hover:shadow-md transition-shadow duration-200 flex items-center gap-4 py-5 mb-3 border-2 border-amber-400 bg-amber-50"
+        >
+          <div class="flex-shrink-0 text-4xl pl-2">⏳</div>
+          <div class="flex flex-col items-start text-left">
+            <span class="text-lg font-semibold text-amber-800">Continuar Inventario</span>
+            <span class="text-sm text-amber-600 mt-0.5">
+              {{ formatInventoryType(inv) }} · Iniciado {{ formatStartedTime(inv.started_at) }}
+            </span>
+          </div>
+        </button>
+      }
       
       <!-- New Inventory Button (secondary) -->
       <button

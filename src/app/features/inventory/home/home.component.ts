@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
 
   employeeName = this.authService.employeeName;
   latestInventory = signal<Inventory | null>(null);
-  inProgressInventory = signal<InProgressInventory | null>(null);
+  inProgressInventories = signal<InProgressInventory[]>([]);
   loading = signal(true);
 
   ngOnInit(): void {
@@ -33,9 +33,8 @@ export class HomeComponent implements OnInit {
     }).subscribe({
       next: ({ latest, inProgress }) => {
         this.latestInventory.set(latest.inventory);
-        // Take the first in-progress inventory (most recent)
         if (inProgress.count > 0 && inProgress.inventories.length > 0) {
-          this.inProgressInventory.set(inProgress.inventories[0]);
+          this.inProgressInventories.set(inProgress.inventories);
         }
         this.loading.set(false);
       },
@@ -45,15 +44,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  hasInProgressInventory(): boolean {
-    return this.inProgressInventory() !== null;
+  hasInProgressInventories(): boolean {
+    return this.inProgressInventories().length > 0;
   }
 
-  continueInventory(): void {
-    const inventory = this.inProgressInventory();
-    if (inventory) {
-      this.router.navigate(['/inventory', inventory.id, 'item']);
-    }
+  continueInventory(inventory: InProgressInventory): void {
+    this.router.navigate(['/inventory', inventory.id, 'item']);
   }
 
   startNewInventory(): void {
