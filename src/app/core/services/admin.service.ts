@@ -67,6 +67,12 @@ export class AdminService {
     return this.http.put<void>(`${this.baseUrl}/inventories/${inventoryId}/details/${detailId}`, data);
   }
 
+  // --- Inventory Helpers ---
+
+  getActiveInventoriesCount(): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${this.baseUrl}/inventories/active-count`);
+  }
+
   // --- Item Management ---
 
   listItems(filter: ItemFilter = {}): Observable<ItemListResult> {

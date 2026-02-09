@@ -133,6 +133,7 @@ export interface CreateItemRequest {
   category_id: number;
   supplier_id?: number;
   cost: number;
+  add_to_active_inventories?: boolean;
 }
 
 export interface UpdateItemRequest {

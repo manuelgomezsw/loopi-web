@@ -291,6 +291,23 @@ import {
                     </select>
                   </div>
                 }
+
+                @if (!editingItem() && activeInventoriesCount() > 0) {
+                  <div class="flex items-start gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="formAddToActiveInventories"
+                      id="addToActive"
+                      class="mt-0.5 h-4 w-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500 cursor-pointer"
+                    />
+                    <label for="addToActive" class="text-sm text-amber-800 cursor-pointer">
+                      <span class="font-medium">Agregar a inventarios en curso</span>
+                      <span class="block text-amber-600 text-xs mt-0.5">
+                        Hay {{ activeInventoriesCount() }} {{ activeInventoriesCount() === 1 ? 'inventario activo' : 'inventarios activos' }}
+                      </span>
+                    </label>
+                  </div>
+                }
               </div>
 
               <div class="flex justify-end gap-3 mt-6">
@@ -329,6 +346,7 @@ export class ItemListComponent implements OnInit {
   saving = signal(false);
   categories = signal<Category[]>([]);
   suppliers = signal<Supplier[]>([]);
+  activeInventoriesCount = signal(0);
 
   // Filters
   searchQuery = '';
@@ -346,6 +364,7 @@ export class ItemListComponent implements OnInit {
   formCategoryId: number = 0;
   formSupplierId: number | null = null;
   formCost: number = 0;
+  formAddToActiveInventories = true;
 
   private searchTimeout?: ReturnType<typeof setTimeout>;
 
@@ -356,11 +375,13 @@ export class ItemListComponent implements OnInit {
   loadInitialData() {
     forkJoin({
       categories: this.adminService.listCategories(),
-      suppliers: this.adminService.listAllActiveSuppliers()
+      suppliers: this.adminService.listAllActiveSuppliers(),
+      activeCount: this.adminService.getActiveInventoriesCount()
     }).subscribe({
-      next: ({ categories, suppliers }) => {
+      next: ({ categories, suppliers, activeCount }) => {
         this.categories.set(categories.categories?.filter(c => c.active) || []);
         this.suppliers.set(suppliers.suppliers || []);
+        this.activeInventoriesCount.set(activeCount.count);
         this.loadItems();
       }
     });
@@ -444,6 +465,13 @@ export class ItemListComponent implements OnInit {
     this.formCategoryId = this.categories().length > 0 ? this.categories()[0].id : 0;
     this.formSupplierId = null;
     this.formCost = 0;
+    this.formAddToActiveInventories = true;
+
+    // Refresh active inventories count when opening modal
+    this.adminService.getActiveInventoriesCount().subscribe({
+      next: (result) => this.activeInventoriesCount.set(result.count)
+    });
+
     this.showModal.set(true);
   }
 
@@ -501,7 +529,8 @@ export class ItemListComponent implements OnInit {
         inventory_frequency: this.formFrequency,
         category_id: this.formCategoryId,
         supplier_id: this.formSupplierId ?? undefined,
-        cost: this.formCost || 0
+        cost: this.formCost || 0,
+        add_to_active_inventories: this.formAddToActiveInventories && this.activeInventoriesCount() > 0
       };
 
       this.adminService.createItem(data).subscribe({
