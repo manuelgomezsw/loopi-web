@@ -42,6 +42,7 @@ import { InventoryListItem, InventoryFilter } from '../../../core/models/admin.m
               <option value="daily">Diario</option>
               <option value="weekly">Semanal</option>
               <option value="monthly">Mensual</option>
+              <option value="initial">Inicial</option>
             </select>
           </div>
           <div>
@@ -275,7 +276,8 @@ export class InventoryListComponent implements OnInit {
     const types: Record<string, string> = {
       daily: 'Diario',
       weekly: 'Semanal',
-      monthly: 'Mensual'
+      monthly: 'Mensual',
+      initial: 'Inicial'
     };
     const schedules: Record<string, string> = {
       opening: 'Apertura',

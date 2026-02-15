@@ -1,4 +1,4 @@
-export type InventoryType = 'daily' | 'weekly' | 'monthly';
+export type InventoryType = 'daily' | 'weekly' | 'monthly' | 'initial';
 export type Schedule = 'opening' | 'noon' | 'closing';
 export type InventoryStatus = 'in_progress' | 'completed';
 

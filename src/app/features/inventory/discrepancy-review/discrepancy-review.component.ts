@@ -23,6 +23,7 @@ export class DiscrepancyReviewComponent implements OnInit {
   discrepancies = signal<DiscrepancyItem[]>([]);
   hasDiscrepancies = signal(false);
   requiresSales = signal(false);
+  isInitialInventory = signal(false);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -30,9 +31,27 @@ export class DiscrepancyReviewComponent implements OnInit {
 
     this.inventoryService.getDiscrepancies(id).subscribe({
       next: (response) => {
-        this.discrepancies.set(response.items);
-        this.hasDiscrepancies.set(response.has_discrepancies);
-        this.requiresSales.set(response.requires_sales);
+        const isInitial = response.inventory_type === 'initial';
+        this.isInitialInventory.set(isInitial);
+
+        // Inventario inicial: no hay diferencias que justificar ni ventas/compras
+        if (isInitial) {
+          this.discrepancies.set([]);
+          this.hasDiscrepancies.set(false);
+          this.requiresSales.set(false);
+        } else {
+          // Si todos tienen esperado 0, es primer inventario sin línea base: no mostrar como diferencias ni ventas/compras
+          const allExpectedZero = response.items.length > 0 && response.items.every((i) => i.suggested_value === 0);
+          if (allExpectedZero) {
+            this.discrepancies.set([]);
+            this.hasDiscrepancies.set(false);
+            this.requiresSales.set(false);
+          } else {
+            this.discrepancies.set(response.items);
+            this.hasDiscrepancies.set(response.has_discrepancies);
+            this.requiresSales.set(response.requires_sales);
+          }
+        }
         this.loading.set(false);
       },
       error: () => {

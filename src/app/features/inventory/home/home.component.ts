@@ -64,7 +64,8 @@ export class HomeComponent implements OnInit {
     const typeMap: Record<string, string> = {
       'daily': 'Diario',
       'weekly': 'Semanal',
-      'monthly': 'Mensual'
+      'monthly': 'Mensual',
+      'initial': 'Inicial'
     };
     const scheduleMap: Record<string, string> = {
       'opening': 'Apertura',

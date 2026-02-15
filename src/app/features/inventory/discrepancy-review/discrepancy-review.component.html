@@ -25,14 +25,21 @@
           </svg>
         </div>
       } @else if (!hasDiscrepancies()) {
-        <!-- No Discrepancies - Happy Path -->
+        <!-- No Discrepancies - Happy Path (o inventario inicial) -->
         <div class="text-center py-8">
           <div class="text-6xl mb-4">✅</div>
-          <h2 class="text-xl font-bold text-gray-900 mb-2">¡Todo cuadra!</h2>
-          <p class="text-gray-500 mb-6">
-            El conteo físico coincide con el inventario esperado.
-            No hay diferencias que justificar.
-          </p>
+          @if (isInitialInventory()) {
+            <h2 class="text-xl font-bold text-gray-900 mb-2">Conteo inicial completado</h2>
+            <p class="text-gray-500 mb-6">
+              Este inventario establece la línea base. Los valores registrados se usarán como referencia para los próximos conteos.
+            </p>
+          } @else {
+            <h2 class="text-xl font-bold text-gray-900 mb-2">¡Todo cuadra!</h2>
+            <p class="text-gray-500 mb-6">
+              El conteo físico coincide con el inventario esperado.
+              No hay diferencias que justificar.
+            </p>
+          }
         </div>
       } @else {
         <!-- Has Discrepancies -->

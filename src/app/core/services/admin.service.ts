@@ -8,6 +8,7 @@ import {
   InventoryFilter,
   InventoryDetailView,
   UpdateDetailRequest,
+  CreateInitialInventoryRequest,
   Item,
   ItemListResult,
   ItemFilter,
@@ -29,6 +30,7 @@ import {
   CreateSupplierRequest,
   UpdateSupplierRequest
 } from '../models/admin.model';
+import { Inventory } from '../models/inventory.model';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +75,10 @@ export class AdminService {
     return this.http.get<{ count: number }>(`${this.baseUrl}/inventories/active-count`);
   }
 
+  createInitialInventory(data: CreateInitialInventoryRequest): Observable<{ inventory: Inventory }> {
+    return this.http.post<{ inventory: Inventory }>(`${this.baseUrl}/inventories/initial`, data);
+  }
+
   // --- Item Management ---
 
   listItems(filter: ItemFilter = {}): Observable<ItemListResult> {
@@ -105,6 +111,10 @@ export class AdminService {
   }
 
   // --- Employee Management ---
+
+  listAllActiveEmployees(): Observable<{ employees: Employee[]; total: number }> {
+    return this.http.get<{ employees: Employee[]; total: number }>(`${this.baseUrl}/employees/active`);
+  }
 
   listEmployees(filter: EmployeeFilter = {}): Observable<EmployeeListResult> {
     let params = new HttpParams();
