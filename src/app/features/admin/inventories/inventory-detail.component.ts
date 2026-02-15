@@ -96,6 +96,7 @@ import { InventoryDetailView, InventoryDetailItem } from '../../../core/models/a
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Contado</th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Compras</th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ventas</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Mermas</th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencia</th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
               </tr>
@@ -105,7 +106,7 @@ import { InventoryDetailView, InventoryDetailItem } from '../../../core/models/a
                 <tr [class.bg-orange-50]="item.has_discrepancy">
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.item_name }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.item_type === 'product' ? 'Producto' : 'Insumo' }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ item.suggested_value ?? '-' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ item.expected_value }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                     @if (editingItem() === item.detail_id) {
                       <input 
@@ -137,6 +138,19 @@ import { InventoryDetailView, InventoryDetailItem } from '../../../core/models/a
                         class="w-20 text-center border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     } @else {
                       {{ item.units_sold ?? '-' }}
+                    }
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                    @if (editingItem() === item.detail_id && inventory()?.status === 'completed') {
+                      <input 
+                        type="number" 
+                        [(ngModel)]="editShrinkage"
+                        min="0"
+                        class="w-20 text-center border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    } @else if (editingItem() === item.detail_id) {
+                      <span class="text-gray-400 text-xs">Solo si completado</span>
+                    } @else {
+                      {{ item.shrinkage ?? '-' }}
                     }
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -207,6 +221,7 @@ export class InventoryDetailComponent implements OnInit {
   editRealValue: number | null = null;
   editStockReceived: number | null = null;
   editUnitsSold: number | null = null;
+  editShrinkage: number | null = null;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('inventoryID');
@@ -243,6 +258,7 @@ export class InventoryDetailComponent implements OnInit {
     this.editRealValue = item.real_value;
     this.editStockReceived = item.stock_received;
     this.editUnitsSold = item.units_sold;
+    this.editShrinkage = item.shrinkage;
   }
 
   cancelEdit(): void {
@@ -250,18 +266,24 @@ export class InventoryDetailComponent implements OnInit {
     this.editRealValue = null;
     this.editStockReceived = null;
     this.editUnitsSold = null;
+    this.editShrinkage = null;
   }
 
   saveEdit(item: InventoryDetailItem): void {
     const inv = this.inventory();
     if (!inv) return;
 
-    this.saving.set(true);
-    this.adminService.updateInventoryDetail(inv.id, item.detail_id, {
+    const payload: { real_value?: number; stock_received?: number; units_sold?: number; shrinkage?: number } = {
       real_value: this.editRealValue ?? undefined,
       stock_received: this.editStockReceived ?? undefined,
       units_sold: this.editUnitsSold ?? undefined
-    }).subscribe({
+    };
+    if (inv.status === 'completed') {
+      payload.shrinkage = this.editShrinkage ?? undefined;
+    }
+
+    this.saving.set(true);
+    this.adminService.updateInventoryDetail(inv.id, item.detail_id, payload).subscribe({
       next: () => {
         this.saving.set(false);
         this.cancelEdit();
@@ -291,7 +313,8 @@ export class InventoryDetailComponent implements OnInit {
     const types: Record<string, string> = {
       daily: 'Diario',
       weekly: 'Semanal',
-      monthly: 'Mensual'
+      monthly: 'Mensual',
+      initial: 'Inicial'
     };
     const schedules: Record<string, string> = {
       opening: 'Apertura',

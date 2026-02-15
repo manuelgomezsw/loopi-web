@@ -23,10 +23,14 @@ export interface DashboardData {
 }
 
 // Inventory list models
+export interface CreateInitialInventoryRequest {
+  responsible_id: number;
+}
+
 export interface InventoryListItem {
   id: number;
   inventory_date: string;
-  inventory_type: 'daily' | 'weekly' | 'monthly';
+  inventory_type: 'daily' | 'weekly' | 'monthly' | 'initial';
   schedule?: 'opening' | 'noon' | 'closing';
   status: 'in_progress' | 'completed';
   employee_id: number;
@@ -65,6 +69,9 @@ export interface InventoryDetailItem {
   real_value: number | null;
   stock_received: number | null;
   units_sold: number | null;
+  shrinkage: number | null;
+  /** Computed: suggested_value − shrinkage + stock_received − units_sold; used for discrepancy. */
+  expected_value: number;
   difference: number;
   has_discrepancy: boolean;
 }
@@ -72,7 +79,7 @@ export interface InventoryDetailItem {
 export interface InventoryDetailView {
   id: number;
   inventory_date: string;
-  inventory_type: 'daily' | 'weekly' | 'monthly';
+  inventory_type: 'daily' | 'weekly' | 'monthly' | 'initial';
   schedule?: 'opening' | 'noon' | 'closing';
   status: 'in_progress' | 'completed';
   employee_id: number;
@@ -88,6 +95,7 @@ export interface UpdateDetailRequest {
   real_value?: number;
   stock_received?: number;
   units_sold?: number;
+  shrinkage?: number;
 }
 
 // Item models
