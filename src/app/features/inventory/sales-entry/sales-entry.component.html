@@ -51,22 +51,31 @@
             <h2 class="text-xl font-bold text-gray-900">
               {{ currentItem()!.name }}
             </h2>
-            <div class="flex justify-center gap-4 mt-2 text-sm">
-              <div>
-                <span class="text-gray-500">Esperado:</span>
-                <span class="font-semibold text-gray-700 ml-1">{{ currentItem()!.suggested_value }}</span>
+            @if (!inventoryService.requiresPurchasesOnly()) {
+              <div class="flex justify-center gap-4 mt-2 text-sm">
+                <div>
+                  <span class="text-gray-500">Esperado:</span>
+                  <span class="font-semibold text-gray-700 ml-1">{{ currentItem()!.suggested_value }}</span>
+                </div>
+                <div>
+                  <span class="text-gray-500">Contado:</span>
+                  <span class="font-semibold text-gray-700 ml-1">{{ currentItem()!.real_value }}</span>
+                </div>
+                <div>
+                  <span class="text-gray-500">Diferencia:</span>
+                  <span class="font-semibold ml-1" [ngClass]="expectedAdjustment() > 0 ? 'text-red-600' : 'text-green-600'">
+                    {{ expectedAdjustment() > 0 ? '-' : '+' }}{{ Math.abs(expectedAdjustment()) }}
+                  </span>
+                </div>
               </div>
-              <div>
-                <span class="text-gray-500">Contado:</span>
-                <span class="font-semibold text-gray-700 ml-1">{{ currentItem()!.real_value }}</span>
+            } @else {
+              <div class="flex justify-center gap-4 mt-2 text-sm">
+                <div>
+                  <span class="text-gray-500">Contado:</span>
+                  <span class="font-semibold text-gray-700 ml-1">{{ currentItem()!.real_value }}</span>
+                </div>
               </div>
-              <div>
-                <span class="text-gray-500">Diferencia:</span>
-                <span class="font-semibold ml-1" [ngClass]="expectedAdjustment() > 0 ? 'text-red-600' : 'text-green-600'">
-                  {{ expectedAdjustment() > 0 ? '-' : '+' }}{{ Math.abs(expectedAdjustment()) }}
-                </span>
-              </div>
-            </div>
+            }
           </div>
 
           <!-- Stock Received -->
@@ -103,41 +112,43 @@
             </div>
           </div>
 
-          <!-- Units Sold -->
-          <div class="card py-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2 text-center">
-              💰 Ventas / Consumo
-            </label>
-            <div class="flex items-center justify-center gap-3">
-              <button
-                type="button"
-                (click)="decrementUnitsSold()"
-                class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-700 active:bg-gray-300 touch-manipulation"
-              >
-                −
-              </button>
-              <input
-                type="number"
-                [ngModel]="unitsSold()"
-                (ngModelChange)="unitsSold.set($event)"
-                (input)="onUnitsSoldChange($any($event.target).value)"
-                class="w-20 text-center text-3xl font-bold border-0 focus:ring-0 p-0 bg-transparent"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                min="0"
-              />
-              <button
-                type="button"
-                (click)="incrementUnitsSold()"
-                class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-700 active:bg-gray-300 touch-manipulation"
-              >
-                +
-              </button>
+          <!-- Units Sold (solo para inventarios que registran ventas) -->
+          @if (!inventoryService.requiresPurchasesOnly()) {
+            <div class="card py-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2 text-center">
+                💰 Ventas / Consumo
+              </label>
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  (click)="decrementUnitsSold()"
+                  class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-700 active:bg-gray-300 touch-manipulation"
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  [ngModel]="unitsSold()"
+                  (ngModelChange)="unitsSold.set($event)"
+                  (input)="onUnitsSoldChange($any($event.target).value)"
+                  class="w-20 text-center text-3xl font-bold border-0 focus:ring-0 p-0 bg-transparent"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  min="0"
+                />
+                <button
+                  type="button"
+                  (click)="incrementUnitsSold()"
+                  class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-700 active:bg-gray-300 touch-manipulation"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
+          }
 
-          <!-- Balance Indicator -->
-          @if (adjustmentBalance() !== 0) {
+          <!-- Balance Indicator (solo cuando se registran ventas) -->
+          @if (!inventoryService.requiresPurchasesOnly() && adjustmentBalance() !== 0) {
             <div class="p-3 rounded-lg" [ngClass]="adjustmentBalance() !== 0 ? 'bg-amber-50' : 'bg-green-50'">
               <p class="text-sm text-center" [ngClass]="adjustmentBalance() !== 0 ? 'text-amber-700' : 'text-green-700'">
                 @if (adjustmentBalance() > 0) {

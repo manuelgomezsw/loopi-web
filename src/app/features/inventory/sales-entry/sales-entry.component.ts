@@ -14,7 +14,8 @@ import { DiscrepancyItem } from '../../../core/models';
 export class SalesEntryComponent implements OnInit, AfterViewInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private inventoryService = inject(InventoryService);
+  /** Exposed for template (requiresPurchasesOnly) */
+  inventoryService = inject(InventoryService);
 
   @ViewChild('stockReceivedInput') stockReceivedInput!: ElementRef<HTMLInputElement>;
 

@@ -36,6 +36,7 @@ export interface InventoryItemsResponse {
   schedule?: Schedule;
   date: string;
   requires_sales: boolean;
+  requires_purchases_only: boolean;
   total_items: number;
   completed_items: number;
   items: InventoryItem[];
@@ -73,6 +74,7 @@ export interface DiscrepanciesResponse {
   schedule?: Schedule;
   date: string;
   requires_sales: boolean;
+  requires_purchases_only: boolean;
   total_items: number;
   has_discrepancies: boolean;
   items: DiscrepancyItem[];
@@ -94,6 +96,7 @@ export interface InventorySummary {
   inventory_type: InventoryType;
   schedule?: Schedule;
   date: string;
+  requires_purchases_only: boolean;
   total_items: number;
   items_with_issues: number;
   items: InventorySummaryItem[];

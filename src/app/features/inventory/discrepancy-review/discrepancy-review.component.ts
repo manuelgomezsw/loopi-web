@@ -13,7 +13,8 @@ import { DiscrepancyItem } from '../../../core/models';
 export class DiscrepancyReviewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private inventoryService = inject(InventoryService);
+  /** Exposed for template (requiresPurchasesOnly) */
+  inventoryService = inject(InventoryService);
 
   inventoryId = signal<number>(0);
   loading = signal(true);

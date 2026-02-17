@@ -14,7 +14,8 @@ import { InventoryItem } from '../../../core/models';
 export class ItemEntryComponent implements OnInit, AfterViewInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private inventoryService = inject(InventoryService);
+  /** Exposed for template (requiresPurchasesOnly) */
+  inventoryService = inject(InventoryService);
 
   @ViewChild('realValueInput') realValueInput!: ElementRef<HTMLInputElement>;
 

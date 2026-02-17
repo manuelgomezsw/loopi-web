@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   Inventory,
+  InventoryType,
   SuggestedSchedule,
   InventoryItemsResponse,
   SaveDetailRequest,
@@ -29,6 +30,8 @@ export class InventoryService {
   private currentItems = signal<InventoryItem[]>([]);
   private currentIndex = signal<number>(0);
   private requiresSalesFlag = signal<boolean>(false);
+  private requiresPurchasesOnlyFlag = signal<boolean>(false);
+  private currentInventoryType = signal<InventoryType | null>(null);
 
   // Discrepancy items for Phase 2
   private _discrepancyItems = signal<DiscrepancyItem[]>([]);
@@ -38,6 +41,8 @@ export class InventoryService {
   readonly items = this.currentItems.asReadonly();
   readonly currentItemIndex = this.currentIndex.asReadonly();
   readonly requiresSales = this.requiresSalesFlag.asReadonly();
+  readonly requiresPurchasesOnly = this.requiresPurchasesOnlyFlag.asReadonly();
+  readonly inventoryType = this.currentInventoryType.asReadonly();
   readonly discrepancyItems = this._discrepancyItems.asReadonly();
   readonly discrepancyIndex = this._discrepancyIndex.asReadonly();
 
@@ -66,6 +71,8 @@ export class InventoryService {
         tap(response => {
           this.currentItems.set(response.items);
           this.requiresSalesFlag.set(response.requires_sales);
+          this.requiresPurchasesOnlyFlag.set(response.requires_purchases_only ?? false);
+          this.currentInventoryType.set(response.inventory_type);
           // Find first incomplete item
           const firstIncomplete = response.items.findIndex(item => !item.is_complete);
           this.currentIndex.set(firstIncomplete >= 0 ? firstIncomplete : 0);
@@ -102,14 +109,19 @@ export class InventoryService {
           this._discrepancyItems.set(response.items);
           this._discrepancyIndex.set(0);
           this.requiresSalesFlag.set(response.requires_sales);
+          this.requiresPurchasesOnlyFlag.set(response.requires_purchases_only ?? false);
+          this.currentInventoryType.set(response.inventory_type);
         })
       );
   }
 
   saveSales(inventoryId: number, sales: SaveSalesRequest): Observable<SaveDetailResponse> {
+    const payload = this.requiresPurchasesOnlyFlag()
+      ? { ...sales, units_sold: 0 }
+      : sales;
     return this.http.post<SaveDetailResponse>(
       `${environment.apiUrl}/inventories/${inventoryId}/sales`,
-      sales
+      payload
     ).pipe(
       tap(() => {
         // Update discrepancy items state
@@ -119,8 +131,8 @@ export class InventoryService {
           const updated = [...items];
           updated[index] = {
             ...updated[index],
-            stock_received: sales.stock_received,
-            units_sold: sales.units_sold
+            stock_received: payload.stock_received,
+            units_sold: payload.units_sold ?? 0
           };
           this._discrepancyItems.set(updated);
         }
@@ -240,5 +252,7 @@ export class InventoryService {
     this._discrepancyItems.set([]);
     this._discrepancyIndex.set(0);
     this.requiresSalesFlag.set(false);
+    this.requiresPurchasesOnlyFlag.set(false);
+    this.currentInventoryType.set(null);
   }
 }

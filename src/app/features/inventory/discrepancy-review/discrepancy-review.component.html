@@ -50,7 +50,11 @@
           </div>
           <p class="text-sm text-gray-500">
             Los siguientes productos tienen diferencia entre el conteo y lo esperado.
-            En el siguiente paso podrás registrar ventas y compras.
+            @if (inventoryService.requiresPurchasesOnly()) {
+              En el siguiente paso podrás registrar compras.
+            } @else {
+              En el siguiente paso podrás registrar ventas y compras.
+            }
           </p>
         </div>
 
@@ -62,7 +66,11 @@
                 <div class="flex-1 min-w-0">
                   <p class="font-medium text-gray-900 truncate">{{ item.name }}</p>
                   <p class="text-xs text-gray-500">
-                    Esperado: {{ item.suggested_value }} | Real: {{ item.real_value }}
+                    @if (!inventoryService.requiresPurchasesOnly()) {
+                      Esperado: {{ item.suggested_value }} | Real: {{ item.real_value }}
+                    } @else {
+                      Real: {{ item.real_value }}
+                    }
                   </p>
                 </div>
                 <div class="flex-shrink-0 ml-3">
@@ -95,12 +103,12 @@
   <footer class="flex-shrink-0 bg-white border-t safe-area-bottom">
     <div class="px-4 py-3">
       @if (hasDiscrepancies() && requiresSales()) {
-        <!-- Has discrepancies AND requires sales entry (noon/closing inventories) -->
+        <!-- Has discrepancies AND requires sales/purchases entry -->
         <button
           (click)="continueToSales()"
           class="w-full btn-primary flex items-center justify-center gap-2 touch-manipulation min-h-[48px]"
         >
-          <span>Registrar ventas/compras</span>
+          <span>{{ inventoryService.requiresPurchasesOnly() ? 'Registrar compras' : 'Registrar ventas/compras' }}</span>
           <span>→</span>
         </button>
         <button
