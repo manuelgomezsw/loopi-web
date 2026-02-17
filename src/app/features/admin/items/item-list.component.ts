@@ -11,7 +11,8 @@ import {
   CreateItemRequest,
   UpdateItemRequest,
   Category,
-  Supplier
+  Supplier,
+  MeasurementUnit
 } from '../../../core/models/admin.model';
 
 @Component({
@@ -111,10 +112,8 @@ import {
               <thead class="bg-gray-50">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frecuencia</th>
-                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Costo</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                   <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                 </tr>
@@ -126,9 +125,6 @@ import {
                       <span class="text-sm font-medium text-gray-900">{{ item.name }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="text-sm text-gray-600">{{ item.category?.name || '-' }}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
                       <span
                         class="px-2 py-1 text-xs font-medium rounded-full"
                         [class]="item.type === 'product' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'"
@@ -138,9 +134,6 @@ import {
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="text-sm text-gray-600">{{ getFrequencyLabel(item.inventory_frequency) }}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                      <span class="text-sm text-gray-600">{{ formatCost(item.cost) }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <button
@@ -256,6 +249,18 @@ import {
                 </div>
 
                 <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de medida *</label>
+                  <select
+                    [(ngModel)]="formMeasurementUnitId"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  >
+                    @for (unit of measurementUnits(); track unit.id) {
+                      <option [ngValue]="unit.id">{{ unit.name }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Proveedor</label>
                   <select
                     [(ngModel)]="formSupplierId"
@@ -346,6 +351,7 @@ export class ItemListComponent implements OnInit {
   saving = signal(false);
   categories = signal<Category[]>([]);
   suppliers = signal<Supplier[]>([]);
+  measurementUnits = signal<MeasurementUnit[]>([]);
   activeInventoriesCount = signal(0);
 
   // Filters
@@ -362,6 +368,7 @@ export class ItemListComponent implements OnInit {
   formFrequency: InventoryFrequency = 'monthly';
   formActive = true;
   formCategoryId: number = 0;
+  formMeasurementUnitId: number = 1;
   formSupplierId: number | null = null;
   formCost: number = 0;
   formAddToActiveInventories = true;
@@ -376,11 +383,13 @@ export class ItemListComponent implements OnInit {
     forkJoin({
       categories: this.adminService.listCategories(),
       suppliers: this.adminService.listAllActiveSuppliers(),
+      measurementUnits: this.adminService.listMeasurementUnits(),
       activeCount: this.adminService.getActiveInventoriesCount()
     }).subscribe({
-      next: ({ categories, suppliers, activeCount }) => {
+      next: ({ categories, suppliers, measurementUnits, activeCount }) => {
         this.categories.set(categories.categories?.filter(c => c.active) || []);
         this.suppliers.set(suppliers.suppliers || []);
+        this.measurementUnits.set(measurementUnits || []);
         this.activeInventoriesCount.set(activeCount.count);
         this.loadItems();
       }
@@ -463,6 +472,8 @@ export class ItemListComponent implements OnInit {
     this.formFrequency = 'monthly';
     this.formActive = true;
     this.formCategoryId = this.categories().length > 0 ? this.categories()[0].id : 0;
+    const units = this.measurementUnits();
+    this.formMeasurementUnitId = units.length > 0 ? units[0].id : 1;
     this.formSupplierId = null;
     this.formCost = 0;
     this.formAddToActiveInventories = true;
@@ -482,6 +493,7 @@ export class ItemListComponent implements OnInit {
     this.formFrequency = item.inventory_frequency;
     this.formActive = item.active;
     this.formCategoryId = item.category_id;
+    this.formMeasurementUnitId = item.measurement_unit_id ?? 1;
     this.formSupplierId = item.supplier_id ?? null;
     this.formCost = item.cost;
     this.showModal.set(true);
@@ -497,7 +509,7 @@ export class ItemListComponent implements OnInit {
   }
 
   saveItem() {
-    if (!this.formName.trim() || !this.formCategoryId) return;
+    if (!this.formName.trim() || !this.formCategoryId || !this.formMeasurementUnitId) return;
 
     this.saving.set(true);
 
@@ -509,7 +521,8 @@ export class ItemListComponent implements OnInit {
         active: this.formActive,
         category_id: this.formCategoryId,
         supplier_id: this.formSupplierId ?? undefined,
-        cost: this.formCost || 0
+        cost: this.formCost || 0,
+        measurement_unit_id: this.formMeasurementUnitId
       };
 
       this.adminService.updateItem(this.editingItem()!.id, data).subscribe({
@@ -530,6 +543,7 @@ export class ItemListComponent implements OnInit {
         category_id: this.formCategoryId,
         supplier_id: this.formSupplierId ?? undefined,
         cost: this.formCost || 0,
+        measurement_unit_id: this.formMeasurementUnitId,
         add_to_active_inventories: this.formAddToActiveInventories && this.activeInventoriesCount() > 0
       };
 

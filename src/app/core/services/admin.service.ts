@@ -14,6 +14,7 @@ import {
   ItemFilter,
   CreateItemRequest,
   UpdateItemRequest,
+  MeasurementUnit,
   Employee,
   EmployeeListResult,
   EmployeeFilter,
@@ -80,6 +81,10 @@ export class AdminService {
   }
 
   // --- Item Management ---
+
+  listMeasurementUnits(): Observable<MeasurementUnit[]> {
+    return this.http.get<MeasurementUnit[]>(`${this.baseUrl}/measurement-units`);
+  }
 
   listItems(filter: ItemFilter = {}): Observable<ItemListResult> {
     let params = new HttpParams();

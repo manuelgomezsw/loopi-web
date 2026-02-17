@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AdminService } from '../../../core/services/admin.service';
-import { DashboardData, DiscrepancySummary, Employee } from '../../../core/models/admin.model';
+import { DashboardData, Employee } from '../../../core/models/admin.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -106,60 +106,6 @@ import { DashboardData, DiscrepancySummary, Employee } from '../../../core/model
           </div>
         </div>
 
-        <!-- Recent discrepancies -->
-        <div class="bg-white rounded-lg shadow">
-          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-800">Discrepancias Recientes (últimos 3 días)</h3>
-            <a 
-              routerLink="/admin/inventories" 
-              [queryParams]="{has_discrepancies: true}"
-              class="text-sm text-indigo-600 hover:text-indigo-800">
-              Ver todas →
-            </a>
-          </div>
-          <div class="overflow-x-auto">
-            @if (discrepancies().length === 0) {
-              <p class="text-gray-500 text-center py-8">
-                No hay discrepancias en los últimos 3 días.
-              </p>
-            } @else {
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Esperado</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contado</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencia</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  @for (item of discrepancies(); track item.inventory_id + '-' + item.item_id) {
-                    <tr class="hover:bg-gray-50">
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.item_name }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.expected_value }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.actual_value }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <span [class]="item.difference < 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'">
-                          {{ item.difference > 0 ? '+' : '' }}{{ item.difference }}
-                        </span>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatDate(item.inventory_date) }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatType(item.inventory_type) }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <a [routerLink]="['/admin/inventories', item.inventory_id]" class="text-indigo-600 hover:text-indigo-900">
-                          Ver →
-                        </a>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            }
-          </div>
-        </div>
       }
     </div>
 
@@ -249,7 +195,6 @@ export class DashboardComponent implements OnInit {
 
   loading = signal(true);
   data = signal<DashboardData | null>(null);
-  discrepancies = signal<DiscrepancySummary[]>([]);
   hasInitialInventory = signal(true); // default true to avoid flash
 
   // Initial inventory modal
@@ -269,7 +214,6 @@ export class DashboardComponent implements OnInit {
     this.adminService.getDashboard(3).subscribe({
       next: (data) => {
         this.data.set(data);
-        this.discrepancies.set(data.recent_discrepancies || []);
         this.loading.set(false);
       },
       error: () => {
@@ -335,20 +279,5 @@ export class DashboardComponent implements OnInit {
         this.modalError.set(message);
       }
     });
-  }
-
-  formatDate(dateStr: string): string {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' });
-  }
-
-  formatType(type: string): string {
-    const types: Record<string, string> = {
-      daily: 'Diario',
-      weekly: 'Semanal',
-      monthly: 'Mensual',
-      initial: 'Inicial'
-    };
-    return types[type] || type;
   }
 }

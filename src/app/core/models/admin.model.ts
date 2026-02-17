@@ -6,20 +6,8 @@ export interface DashboardStats {
   pending_inventories: number;
 }
 
-export interface DiscrepancySummary {
-  inventory_id: number;
-  item_id: number;
-  item_name: string;
-  expected_value: number;
-  actual_value: number;
-  difference: number;
-  inventory_date: string;
-  inventory_type: string;
-}
-
 export interface DashboardData {
   stats: DashboardStats;
-  recent_discrepancies: DiscrepancySummary[];
 }
 
 // Inventory list models
@@ -102,6 +90,12 @@ export interface UpdateDetailRequest {
 export type ItemType = 'product' | 'supply';
 export type InventoryFrequency = 'daily' | 'weekly' | 'monthly';
 
+export interface MeasurementUnit {
+  id: number;
+  code: string;
+  name: string;
+}
+
 export interface Item {
   id: number;
   type: ItemType;
@@ -111,10 +105,12 @@ export interface Item {
   category_id: number;
   supplier_id?: number;
   cost: number;
+  measurement_unit_id: number;
   created_at: string;
   updated_at: string;
   category?: { id: number; name: string };
   supplier?: { id: number; business_name: string };
+  measurement_unit?: MeasurementUnit;
 }
 
 export interface ItemListResult {
@@ -141,6 +137,7 @@ export interface CreateItemRequest {
   category_id: number;
   supplier_id?: number;
   cost: number;
+  measurement_unit_id: number;
   add_to_active_inventories?: boolean;
 }
 
@@ -152,6 +149,7 @@ export interface UpdateItemRequest {
   category_id: number;
   supplier_id?: number;
   cost: number;
+  measurement_unit_id: number;
 }
 
 // Employee models
