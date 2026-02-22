@@ -80,6 +80,7 @@ export interface InventoryDetailView {
 }
 
 export interface UpdateDetailRequest {
+  suggested_value?: number;
   real_value?: number;
   stock_received?: number;
   units_sold?: number;

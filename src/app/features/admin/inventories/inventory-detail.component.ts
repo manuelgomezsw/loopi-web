@@ -106,7 +106,17 @@ import { InventoryDetailView, InventoryDetailItem } from '../../../core/models/a
                 <tr [class.bg-orange-50]="item.has_discrepancy">
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.item_name }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.item_type === 'product' ? 'Producto' : 'Insumo' }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ item.expected_value }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                    @if (editingItem() === item.detail_id) {
+                      <input
+                        type="number"
+                        [(ngModel)]="editSuggestedValue"
+                        min="0"
+                        class="w-20 text-center border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    } @else {
+                      {{ item.expected_value }}
+                    }
+                  </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                     @if (editingItem() === item.detail_id) {
                       <input 
@@ -141,14 +151,12 @@ import { InventoryDetailView, InventoryDetailItem } from '../../../core/models/a
                     }
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                    @if (editingItem() === item.detail_id && inventory()?.status === 'completed') {
-                      <input 
-                        type="number" 
+                    @if (editingItem() === item.detail_id) {
+                      <input
+                        type="number"
                         [(ngModel)]="editShrinkage"
                         min="0"
                         class="w-20 text-center border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    } @else if (editingItem() === item.detail_id) {
-                      <span class="text-gray-400 text-xs">Solo si completado</span>
                     } @else {
                       {{ item.shrinkage ?? '-' }}
                     }
@@ -218,6 +226,7 @@ export class InventoryDetailComponent implements OnInit {
   editingItem = signal<number | null>(null);
   showOnlyDiscrepancies = false;
 
+  editSuggestedValue: number | null = null;
   editRealValue: number | null = null;
   editStockReceived: number | null = null;
   editUnitsSold: number | null = null;
@@ -255,6 +264,7 @@ export class InventoryDetailComponent implements OnInit {
 
   startEdit(item: InventoryDetailItem): void {
     this.editingItem.set(item.detail_id);
+    this.editSuggestedValue = item.suggested_value;
     this.editRealValue = item.real_value;
     this.editStockReceived = item.stock_received;
     this.editUnitsSold = item.units_sold;
@@ -263,6 +273,7 @@ export class InventoryDetailComponent implements OnInit {
 
   cancelEdit(): void {
     this.editingItem.set(null);
+    this.editSuggestedValue = null;
     this.editRealValue = null;
     this.editStockReceived = null;
     this.editUnitsSold = null;
@@ -273,14 +284,13 @@ export class InventoryDetailComponent implements OnInit {
     const inv = this.inventory();
     if (!inv) return;
 
-    const payload: { real_value?: number; stock_received?: number; units_sold?: number; shrinkage?: number } = {
+    const payload: { suggested_value?: number; real_value?: number; stock_received?: number; units_sold?: number; shrinkage?: number } = {
+      suggested_value: this.editSuggestedValue ?? undefined,
       real_value: this.editRealValue ?? undefined,
       stock_received: this.editStockReceived ?? undefined,
-      units_sold: this.editUnitsSold ?? undefined
+      units_sold: this.editUnitsSold ?? undefined,
+      shrinkage: this.editShrinkage ?? undefined
     };
-    if (inv.status === 'completed') {
-      payload.shrinkage = this.editShrinkage ?? undefined;
-    }
 
     this.saving.set(true);
     this.adminService.updateInventoryDetail(inv.id, item.detail_id, payload).subscribe({

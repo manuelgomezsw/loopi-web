@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { AdminService } from '../../../core/services/admin.service';
 import { InventoryListItem, InventoryFilter } from '../../../core/models/admin.model';
 
@@ -18,18 +19,18 @@ import { InventoryListItem, InventoryFilter } from '../../../core/models/admin.m
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Desde</label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               [(ngModel)]="filterDateFrom"
-              (change)="applyFilters()"
+              (change)="onDateFilterChange()"
               class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Hasta</label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               [(ngModel)]="filterDateTo"
-              (change)="applyFilters()"
+              (change)="onDateFilterChange()"
               class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
           </div>
           <div>
@@ -83,8 +84,6 @@ import { InventoryListItem, InventoryFilter } from '../../../core/models/admin.m
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empleado</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diferencias</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
               </tr>
@@ -95,21 +94,10 @@ import { InventoryListItem, InventoryFilter } from '../../../core/models/admin.m
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatDate(inv.inventory_date) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatType(inv.inventory_type, inv.schedule) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ inv.employee_name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ inv.total_items }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    @if (inv.items_with_diff > 0) {
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                        {{ inv.items_with_diff }}
-                      </span>
-                    } @else {
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        0
-                      </span>
-                    }
-                  </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     @if (inv.status === 'completed') {
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span [class]="inv.items_with_diff > 0 ? 'w-1.5 h-1.5 rounded-full bg-orange-500 flex-shrink-0' : 'w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0'"></span>
                         Completado
                       </span>
                     } @else {
@@ -176,7 +164,7 @@ import { InventoryListItem, InventoryFilter } from '../../../core/models/admin.m
     </div>
   `
 })
-export class InventoryListComponent implements OnInit {
+export class InventoryListComponent implements OnInit, OnDestroy {
   private adminService = inject(AdminService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -192,7 +180,13 @@ export class InventoryListComponent implements OnInit {
   filterType = '';
   filterDiscrepancies = '';
 
+  private dateFilter$ = new Subject<void>();
+  private dateFilterSub!: Subscription;
+
   ngOnInit(): void {
+    this.dateFilterSub = this.dateFilter$
+      .pipe(debounceTime(300))
+      .subscribe(() => this.applyFilters());
     // Read query params for initial filters
     this.route.queryParams.subscribe(params => {
       if (params['has_discrepancies']) {
@@ -238,9 +232,17 @@ export class InventoryListComponent implements OnInit {
     });
   }
 
+  onDateFilterChange(): void {
+    this.dateFilter$.next();
+  }
+
   applyFilters(): void {
     this.currentPage.set(1);
     this.loadInventories();
+  }
+
+  ngOnDestroy(): void {
+    this.dateFilterSub.unsubscribe();
   }
 
   clearFilters(): void {
