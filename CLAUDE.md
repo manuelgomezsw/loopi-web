@@ -64,3 +64,8 @@ Siempre que se agregue/cambie:
 - Un nuevo interceptor o guard → documentarlo en la sección de arquitectura
 - Una nueva variable de entorno (`environment.ts`) → actualizar sección de configuración
 - Un nuevo flujo de pantallas → actualizar sección de UX/navegación
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
